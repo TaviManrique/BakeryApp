@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(
@@ -18,22 +19,22 @@ sealed class Screen(
     object Home: Screen(
         route = "home_screen",
         title = "Home",
-        icon = Icons.Default.Home
+        icon = Icons.Outlined.Home
     )
     object Order: Screen(
         route = "order_screen",
         title = "Order",
-        icon = Icons.Default.List
+        icon = Icons.Outlined.List
     )
     object Cart: Screen(
         route = "cart_screen",
         title = "Cart",
-        icon = Icons.Default.ShoppingCart
+        icon = Icons.Outlined.ShoppingCart
     )
     object Profile: Screen(
         route = "profile_screen",
         title = "Profile",
-        icon = Icons.Default.Person
+        icon = Icons.Outlined.Person
     )
     object Details: Screen("details_screen/{foodId}") {
         fun passFoodId(foodId: Int): String {
