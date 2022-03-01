@@ -1,6 +1,7 @@
 package com.manriquetavi.bakeryapp.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,7 +59,7 @@ fun PromotionItem(
     imagePainter: Painter
 ) {
     Card(
-        modifier = Modifier.width(300.dp),
+        modifier = Modifier.width(300.dp).clickable {  },
         shape = RoundedCornerShape(8.dp),
         backgroundColor = backgroundColor,
         elevation = 0.dp
@@ -92,7 +93,8 @@ fun PromotionItem(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f),
-                painter = imagePainter, contentDescription = "",
+                painter = imagePainter,
+                contentDescription = "",
                 alignment = Alignment.CenterEnd,
                 contentScale = ContentScale.Crop
             )
