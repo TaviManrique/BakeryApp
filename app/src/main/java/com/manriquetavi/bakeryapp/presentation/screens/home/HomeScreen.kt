@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import com.manriquetavi.bakeryapp.presentation.components.CategoriesLazyRow
 import com.manriquetavi.bakeryapp.presentation.components.PromotionItem
 import com.manriquetavi.bakeryapp.presentation.components.PromotionsLazyRow
+import com.manriquetavi.bakeryapp.presentation.components.RecommendationsLazyRow
 
 @Composable
 fun HomeScreen(
@@ -36,6 +37,9 @@ fun Content() {
         Text(text = "Category", style = MaterialTheme.typography.h6)
         Spacer(modifier = Modifier.height(16.dp))
         CategoriesLazyRow()
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Recommendation", style = MaterialTheme.typography.h6)
+        RecommendationsLazyRow()
     }
 }
 
