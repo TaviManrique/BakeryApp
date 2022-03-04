@@ -99,7 +99,7 @@ fun CategoryItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                modifier = Modifier.size(48.dp).background(backgroundColor),
+                modifier = Modifier.size(48.dp),
                 painter = icon,
                 contentDescription = "Icon Category",
                 contentScale = ContentScale.Crop

@@ -39,7 +39,9 @@ fun Content() {
         CategoriesLazyRow()
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Recommendation", style = MaterialTheme.typography.h6)
+        Spacer(modifier = Modifier.height(16.dp))
         RecommendationsLazyRow()
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
