@@ -31,7 +31,7 @@ fun HomeTopBar(
             modifier = Modifier.weight(0.8f),
             text = "What do you like to eat?",
             maxLines = 2,
-            fontSize = MaterialTheme.typography.h3.fontSize,
+            fontSize = MaterialTheme.typography.h4.fontSize,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.titleColor
         )
