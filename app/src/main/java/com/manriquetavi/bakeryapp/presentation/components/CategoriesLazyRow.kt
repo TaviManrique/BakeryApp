@@ -59,25 +59,29 @@ fun CategoriesLazyRow() {
         item {
             CategoryItem(
                 title = "Bread",
-                icon = painterResource(id = R.drawable.item_bread)
+                icon = painterResource(id = R.drawable.item_bread),
+                backgroundColor = Color(0xffFEF4E7)
             )
         }
         item {
             CategoryItem(
                 title = "Cake",
-                icon = painterResource(id = R.drawable.item_cake)
+                icon = painterResource(id = R.drawable.item_cake),
+                backgroundColor = Color(0xffF6FBF3)
             )
         }
         item {
             CategoryItem(
                 title = "Drink",
-                icon = painterResource(id = R.drawable.item_drink)
+                icon = painterResource(id = R.drawable.item_drink),
+                backgroundColor = Color(0xffFFFBF3)
             )
         }
         item {
             CategoryItem(
                 title = "Wholewheat",
-                icon = painterResource(id = R.drawable.item_wholewheat)
+                icon = painterResource(id = R.drawable.item_wholewheat),
+                backgroundColor = Color(0xffF6E6E9)
             )
         }
     }

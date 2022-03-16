@@ -13,9 +13,18 @@ sealed class Screen(
     val title: String? = null,
     val icon: ImageVector? = null
 ) {
+    //Screens
     object Splash: Screen("splash_screen")
     object Welcome: Screen("welcome_screen")
     object Main: Screen("main_screen")
+    object Search: Screen("search_screen")
+    object Details: Screen("details_screen/{foodId}") {
+        fun passFoodId(foodId: Int): String {
+            return "details_screen/$foodId"
+        }
+    }
+
+    //BottomNav Screens
     object Home: Screen(
         route = "home_screen",
         title = "Home",
@@ -36,9 +45,4 @@ sealed class Screen(
         title = "Profile",
         icon = Icons.Outlined.Person
     )
-    object Details: Screen("details_screen/{foodId}") {
-        fun passFoodId(foodId: Int): String {
-            return "details_screen/$foodId"
-        }
-    }
 }

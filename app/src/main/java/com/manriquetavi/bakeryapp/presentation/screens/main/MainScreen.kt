@@ -26,7 +26,9 @@ import com.manriquetavi.bakeryapp.ui.theme.ShimmerDarkGray
 import com.manriquetavi.bakeryapp.ui.theme.ShimmerMediumGray
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(
+    navController: NavHostController
+) {
     val bottomNavController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = bottomNavController) }
