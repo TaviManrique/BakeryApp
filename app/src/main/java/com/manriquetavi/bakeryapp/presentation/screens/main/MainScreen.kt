@@ -1,12 +1,9 @@
 package com.manriquetavi.bakeryapp.presentation.screens.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,18 +19,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.navigation.BottomNavGraph
 import com.manriquetavi.bakeryapp.navigation.Screen
-import com.manriquetavi.bakeryapp.ui.theme.ShimmerDarkGray
 import com.manriquetavi.bakeryapp.ui.theme.ShimmerMediumGray
 
 @Composable
 fun MainScreen(
-    navController: NavHostController
+    screenNavController: NavHostController,
+    bottomNavController: NavHostController
 ) {
-    val bottomNavController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = bottomNavController) }
     ) {
-        BottomNavGraph(navController = bottomNavController)
+        BottomNavGraph(bottomNavController = bottomNavController, screenNavController = screenNavController)
     }
 }
 

@@ -1,7 +1,6 @@
 package com.manriquetavi.bakeryapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,14 +9,15 @@ import com.manriquetavi.bakeryapp.presentation.screens.home.HomeScreen
 import com.manriquetavi.bakeryapp.presentation.screens.order.OrderScreen
 import com.manriquetavi.bakeryapp.presentation.screens.profile.ProfileScreen
 
+
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNavGraph(bottomNavController: NavHostController, screenNavController: NavHostController) {
     NavHost(
-        navController = navController,
+        navController = bottomNavController,
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(screenNavController)
         }
         composable(route = Screen.Cart.route) {
             CartScreen()

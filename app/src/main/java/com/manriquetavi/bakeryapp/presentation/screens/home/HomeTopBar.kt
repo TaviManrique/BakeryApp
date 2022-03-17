@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.navigation.Screen
@@ -22,7 +23,7 @@ import com.manriquetavi.bakeryapp.ui.theme.*
 
 @Composable
 fun HomeTopBar(
-
+    screenNavController: NavHostController
 ) {
     Row(
         modifier = Modifier
@@ -41,7 +42,7 @@ fun HomeTopBar(
         )
         Icon(
             modifier = Modifier
-                .clickable { /*Navigation to search screen*/ }
+                .clickable { screenNavController.navigate(Screen.Search.route) }
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colors.buttonBackgroundColor)
                 .height(70.dp)
@@ -56,5 +57,5 @@ fun HomeTopBar(
 @Preview
 @Composable
 fun HomeTopBarPreview() {
-    HomeTopBar()
+    HomeTopBar(screenNavController = rememberNavController())
 }

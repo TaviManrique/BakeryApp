@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun WelcomeScreen(
-    navController: NavHostController
+    screenNavController: NavHostController
 ) {
 
 }

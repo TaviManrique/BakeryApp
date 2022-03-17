@@ -19,9 +19,10 @@ import com.manriquetavi.bakeryapp.presentation.components.RecommendationsLazyRow
 
 @Composable
 fun HomeScreen(
+    screenNavController: NavHostController
 ) {
     Scaffold(
-        topBar = { HomeTopBar() },
+        topBar = { HomeTopBar(screenNavController) },
         backgroundColor = Color.Transparent,
     ) {
         Content()
@@ -49,5 +50,5 @@ fun Content() {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(screenNavController = rememberNavController())
 }

@@ -5,6 +5,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 @Composable
-fun SplashScreen(navController: NavHostController) {
+fun SplashScreen(screenNavController: NavHostController) {
 
 }
