@@ -1,6 +1,7 @@
 package com.manriquetavi.bakeryapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +10,7 @@ import com.manriquetavi.bakeryapp.presentation.screens.search.SearchScreen
 import com.manriquetavi.bakeryapp.presentation.screens.splash.SplashScreen
 import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 
+@ExperimentalComposeUiApi
 @Composable
 fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: NavHostController) {
     NavHost(

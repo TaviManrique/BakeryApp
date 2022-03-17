@@ -48,10 +48,11 @@ fun SearchTopBar(
             }
         },
         backgroundColor = Color.Transparent,
+        elevation = 0.dp
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SearchTopBarPreview() {
     SearchTopBar(screenNavController = rememberNavController())
