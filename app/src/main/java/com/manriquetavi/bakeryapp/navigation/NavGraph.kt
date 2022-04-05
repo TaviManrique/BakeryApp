@@ -3,8 +3,11 @@ package com.manriquetavi.bakeryapp.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.manriquetavi.bakeryapp.presentation.screens.details.DetailsScreen
 import com.manriquetavi.bakeryapp.presentation.screens.main.MainScreen
 import com.manriquetavi.bakeryapp.presentation.screens.search.SearchScreen
 import com.manriquetavi.bakeryapp.presentation.screens.splash.SplashScreen
@@ -15,7 +18,7 @@ import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: NavHostController) {
     NavHost(
         navController = screenNavController,
-        startDestination = Screen.Main.route
+        startDestination = Screen.Details.route
     ) {
         composable(route = Screen.Splash.route) {
             SplashScreen(screenNavController = screenNavController)
@@ -28,6 +31,16 @@ fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: N
         }
         composable(route = Screen.Search.route) {
             SearchScreen(screenNavController = screenNavController)
+        }
+        composable(
+            route = Screen.Details.route,
+            arguments = listOf(
+                navArgument("foodId") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            DetailsScreen(screenNavController = screenNavController)
         }
     }
 }

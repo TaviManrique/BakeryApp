@@ -5,10 +5,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,14 +22,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
 import com.manriquetavi.bakeryapp.ui.theme.Shapes
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
 
 @Composable
-fun DetailsScreen() {
-    Column {
+fun DetailsScreen(
+    screenNavController: NavHostController
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         ParallaxToolbar()
         Content()
     }
@@ -43,7 +51,8 @@ fun ParallaxToolbar() {
     ) {
         Column {
             Box(
-                modifier = Modifier.height(344.dp)
+                modifier = Modifier
+                    .height(344.dp)
             ) {
                 Image(
                     modifier = Modifier
@@ -90,16 +99,28 @@ fun ParallaxToolbar() {
 
 @Composable
 fun Content() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        CounterFood()
-        Price()
+        //Price and Counter Food
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CounterFood()
+            Price()
+        }
+
+        //Add to cart button
+        ButtonAddToCart()
+
+        //Description food
+        Description()
     }
+
 }
 
 @Composable
@@ -122,7 +143,7 @@ fun CounterFood() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { /*TODO add number of food*/ }
+            onClick = {  }
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
@@ -135,7 +156,7 @@ fun CounterFood() {
             style = MaterialTheme.typography.h6
         )
         IconButton(
-            onClick = { /*TODO minus number of food*/ }
+            onClick = {  }
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
@@ -146,8 +167,38 @@ fun CounterFood() {
     }
 }
 
+@Composable
+fun ButtonAddToCart() {
+    Button(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
+        onClick = { /*TODO button add to cart*/ },
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Text(
+            modifier = Modifier.padding(8.dp),
+            text = "Add to cart"
+        )
+    }
+}
+
+@Composable
+fun Description() {
+    LazyColumn( ) {
+        item {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = "Description about the food description about the food,description about the food description about the food,description about the food description about the food, Description about the food description about the food,description about the food description about the food," +
+                        "Description about the food description about the food,description about the food description about the food,description about the food description about the food, Description about the food description about the food,description about the food description about the food",
+                style = MaterialTheme.typography.subtitle1
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {
-    DetailsScreen()
+    DetailsScreen(screenNavController = rememberNavController())
 }
