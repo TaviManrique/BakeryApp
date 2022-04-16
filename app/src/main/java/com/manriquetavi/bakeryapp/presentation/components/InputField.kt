@@ -94,7 +94,7 @@ fun SearchCakeInputField(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SearchCakeInputFieldPreview() {
     SearchCakeInputField(

@@ -47,7 +47,7 @@ fun Content() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(screenNavController = rememberNavController())

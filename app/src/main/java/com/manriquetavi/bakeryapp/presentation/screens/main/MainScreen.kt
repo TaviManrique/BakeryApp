@@ -91,5 +91,5 @@ fun RowScope.AddItem(
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    BottomBar(navController = rememberNavController())
+    MainScreen(screenNavController = rememberNavController(), bottomNavController = rememberNavController())
 }

@@ -24,7 +24,7 @@ import com.manriquetavi.bakeryapp.R
 @Composable
 fun PromotionsLazyRow() {
     LazyRow(
-        modifier = Modifier.height(160.dp),
+        modifier = Modifier.height(120.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -59,7 +59,7 @@ fun PromotionItem(
     imagePainter: Painter
 ) {
     Card(
-        modifier = Modifier.width(300.dp).clickable {  },
+        modifier = Modifier.width(240.dp).clickable {  },
         shape = RoundedCornerShape(8.dp),
         backgroundColor = backgroundColor,
         elevation = 0.dp

@@ -6,10 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.manriquetavi.bakeryapp.navigation.SetupNavGraph
 import com.manriquetavi.bakeryapp.ui.theme.BakeryAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalPagerApi
 @ExperimentalComposeUiApi
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var screenNavController: NavHostController
