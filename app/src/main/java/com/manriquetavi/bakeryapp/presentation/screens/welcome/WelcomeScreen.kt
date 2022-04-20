@@ -138,7 +138,7 @@ fun FinishButton(
         }
     }
 }
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun FirstOnBoardingScreenPreview() {
     Column(modifier = Modifier.fillMaxSize()) {

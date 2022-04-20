@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.presentation.components.CategoriesLazyRow
-import com.manriquetavi.bakeryapp.presentation.components.PromotionItem
 import com.manriquetavi.bakeryapp.presentation.components.PromotionsLazyRow
 import com.manriquetavi.bakeryapp.presentation.components.RecommendationsLazyRow
 
@@ -25,12 +24,12 @@ fun HomeScreen(
         topBar = { HomeTopBar(screenNavController) },
         backgroundColor = Color.Transparent,
     ) {
-        Content()
+        HomeContent()
     }
 }
 
 @Composable
-fun Content() {
+fun HomeContent() {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {

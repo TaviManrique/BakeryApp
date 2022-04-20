@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +25,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
-import com.manriquetavi.bakeryapp.ui.theme.Shapes
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
 
 @Composable
@@ -37,7 +35,7 @@ fun DetailsScreen(
         modifier = Modifier.fillMaxWidth()
     ) {
         ParallaxToolbar()
-        Content()
+        DetailsContent()
     }
 }
 
@@ -98,7 +96,7 @@ fun ParallaxToolbar() {
 }
 
 @Composable
-fun Content() {
+fun DetailsContent() {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -185,7 +183,7 @@ fun ButtonAddToCart() {
 
 @Composable
 fun Description() {
-    LazyColumn( ) {
+    LazyColumn {
         item {
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),

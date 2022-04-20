@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlinx-serialization'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -112,6 +113,18 @@ dependencies {
 
     //Icons
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    //Firebase
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    //Firebase Authentication and Cloud Firestore
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
+    //Tasks google services
+    implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation 'com.google.android.gms:play-services-tasks:18.0.1'
 
     // Testing
     androidTestImplementation "androidx.test:runner:1.4.0"

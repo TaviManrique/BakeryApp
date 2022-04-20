@@ -16,6 +16,8 @@ sealed class Screen(
     //Screens
     object Splash: Screen("splash_screen")
     object Welcome: Screen("welcome_screen")
+    object Login: Screen("login_screen")
+    object Register: Screen("register_screen")
     object Main: Screen("main_screen")
     object Search: Screen("search_screen")
     object Details: Screen("details_screen/{foodId}") {

@@ -9,7 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.manriquetavi.bakeryapp.presentation.screens.details.DetailsScreen
+import com.manriquetavi.bakeryapp.presentation.screens.login.LoginScreen
 import com.manriquetavi.bakeryapp.presentation.screens.main.MainScreen
+import com.manriquetavi.bakeryapp.presentation.screens.register.RegisterScreen
 import com.manriquetavi.bakeryapp.presentation.screens.search.SearchScreen
 import com.manriquetavi.bakeryapp.presentation.screens.splash.SplashScreen
 import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
@@ -20,13 +22,19 @@ import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: NavHostController) {
     NavHost(
         navController = screenNavController,
-        startDestination = Screen.Splash.route
+        startDestination = Screen.Login.route
     ) {
         composable(route = Screen.Splash.route) {
             SplashScreen(screenNavController = screenNavController)
         }
         composable(route = Screen.Welcome.route) {
             WelcomeScreen(screenNavController = screenNavController)
+        }
+        composable(route = Screen.Login.route) {
+            LoginScreen(screenNavController = screenNavController)
+        }
+        composable(route = Screen.Register.route) {
+            RegisterScreen(screenNavController = screenNavController)
         }
         composable(route = Screen.Main.route) {
             MainScreen(screenNavController = screenNavController, bottomNavController = bottomNavController)
