@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -20,15 +23,14 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.manriquetavi.bakeryapp.presentation.components.EmailInputField
-import com.manriquetavi.bakeryapp.presentation.components.PasswordInputField
-import com.manriquetavi.bakeryapp.presentation.components.PhoneInputField
-import com.manriquetavi.bakeryapp.presentation.components.UsernameInputField
+import com.manriquetavi.bakeryapp.presentation.components.*
 
 @Composable
 fun RegisterScreen(
@@ -72,68 +74,99 @@ fun RegisterContent(screenNavController: NavHostController) {
     val validateRepeatPassword = rememberSaveable { mutableStateOf(true) }
 
     TitleText()
-    UsernameInputField(
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = username,
-        isError = !validateUsername.value,
-        focusManager = focusManager,
+        placeholder = "Username",
+        leadingIconImageVector = Icons.Default.Person,
+        leadingIconDescription = "Person Icon",
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Down)
             }
         ),
-        errorMessage = "Please, input a valid username"
+        errorMessage = "Please, input a valid username",
+        isError = !validateUsername.value,
     )
-    EmailInputField(
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = email,
-        isError = !validateEmail.value,
-        focusManager = focusManager,
+        placeholder = "Email",
+        leadingIconImageVector = Icons.Default.Email,
+        leadingIconDescription = "Email Icon",
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Down)
             }
         ),
-        errorMessage = "Please, input a valid email"
+        errorMessage = "Please, input a valid email",
+        isError = !validateEmail.value,
     )
-    PhoneInputField(
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = phoneNumber,
-        isError = !validatePhoneNumber.value,
-        focusManager = focusManager,
+        placeholder = "Phone number",
+        leadingIconImageVector = Icons.Default.PhoneAndroid,
+        leadingIconDescription = "Phone Icon",
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Down)
             }
         ),
-        errorMessage = "Please, input a valid phone number with 9 digits"
+        errorMessage = "Please, input a valid phone number with 9 digits",
+        isError = !validatePhoneNumber.value,
     )
-    PasswordInputField(
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = password,
-        isError = !validatePassword.value,
-        focusManager = focusManager,
-        isVisiblePassword = isVisiblePassword,
+        placeholder = "Password",
+        leadingIconImageVector = Icons.Default.Lock,
+        leadingIconDescription = "Password Icon",
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Down)
             }
         ),
-        errorMessage = "Must mix capital and non-capital letters, a number, special character and a minimum length of 8"
+        isPasswordField = true,
+        isVisiblePassword = isVisiblePassword,
+        errorMessage = "Must mix capital and non-capital letters, a number, special character and a minimum length of 8",
+        isError = !validatePassword.value,
     )
-    PasswordInputField(
+
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = repeatPassword,
-        isError = !validateRepeatPassword.value,
-        focusManager = focusManager,
         placeholder = "Repeat Password",
-        isVisiblePassword = isVisibleRepeatPassword,
+        leadingIconImageVector = Icons.Default.Lock,
+        leadingIconDescription = "Password Icon",
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.clearFocus()
             }
         ),
-        errorMessage = "Passwords must be equal"
+        isPasswordField = true,
+        isVisiblePassword = isVisibleRepeatPassword,
+        errorMessage = "Passwords must be equal",
+        isError = !validateRepeatPassword.value,
     )
     ButtonRegister(
         username = username.value,

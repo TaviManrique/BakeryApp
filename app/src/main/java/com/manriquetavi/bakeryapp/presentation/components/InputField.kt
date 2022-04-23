@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -94,180 +95,17 @@ fun SearchCakeInputField(
 }
 
 @Composable
-fun UsernameInputField(
+fun InputField(
     modifier: Modifier,
     text: MutableState<String>,
-    focusManager: FocusManager?,
-    isError: Boolean,
+    placeholder: String = "",
+    leadingIconImageVector: ImageVector,
+    leadingIconDescription: String,
+    isPasswordField: Boolean = false,
+    isVisiblePassword: MutableState<Boolean> = mutableStateOf(false),
+    keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    errorMessage: String = ""
-) {
-    Column {
-        OutlinedTextField(
-            modifier = modifier.fillMaxWidth(),
-            value = text.value,
-            onValueChange = { text.value = it},
-            placeholder = {
-                Text(
-                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                    text = "Username"
-                )
-            },
-            isError = isError,
-            textStyle = TextStyle(
-                color = MaterialTheme.colors.descriptionColor
-            ),
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Person Icon",
-                    tint = MaterialTheme.colors.descriptionColor
-                )
-            },
-            trailingIcon = {
-                if (isError) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Purple500
-            )
-        )
-        if (isError) {
-            Text(
-                modifier = Modifier.padding(top = 1.dp),
-                text = errorMessage,
-                color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption
-            )
-        }
-    }
-}
-
-@Composable
-fun EmailInputField(
-    modifier: Modifier,
-    text: MutableState<String>,
-    focusManager: FocusManager?,
-    isError: Boolean,
-    keyboardActions: KeyboardActions,
-    errorMessage: String = ""
-) {
-    Column {
-        OutlinedTextField(
-            modifier = modifier.fillMaxWidth(),
-            value = text.value,
-            onValueChange = { text.value = it},
-            placeholder = {
-                Text(
-                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                    text = "Email"
-                )
-            },
-            isError = isError,
-            textStyle = TextStyle(
-                color = MaterialTheme.colors.descriptionColor
-            ),
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = "Email Icon",
-                    tint = MaterialTheme.colors.descriptionColor
-                )
-            },
-            trailingIcon = {
-                if (isError) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Purple500
-            )
-        )
-        if (isError) {
-            Text(
-                modifier = Modifier.padding(top = 1.dp),
-                text = errorMessage,
-                color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption
-            )
-        }
-    }
-}
-
-@Composable
-fun PhoneInputField(
-    modifier: Modifier,
-    text: MutableState<String>,
-    focusManager: FocusManager?,
-    isError: Boolean,
-    keyboardActions: KeyboardActions,
-    errorMessage: String = ""
-) {
-    Column {
-        OutlinedTextField(
-            modifier = modifier.fillMaxWidth(),
-            value = text.value,
-            onValueChange = { text.value = it},
-            placeholder = {
-                Text(
-                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                    text = "Phone number"
-                )
-            },
-            isError = isError,
-            textStyle = TextStyle(
-                color = MaterialTheme.colors.descriptionColor
-            ),
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Phone,
-                    contentDescription = "Person Icon",
-                    tint = MaterialTheme.colors.descriptionColor
-                )
-            },
-            trailingIcon = {
-                if (isError) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Purple500
-            )
-        )
-        if (isError) {
-            Text(
-                modifier = Modifier.padding(top = 1.dp),
-                text = errorMessage,
-                color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption
-            )
-        }
-    }
-}
-
-@Composable
-fun PasswordInputField(
-    modifier: Modifier,
-    text: MutableState<String>,
-    focusManager: FocusManager?,
-    isError: Boolean,
-    placeholder: String = "Password",
-    isVisiblePassword: MutableState<Boolean>,
-    keyboardActions: KeyboardActions,
+    isError: Boolean = false,
     errorMessage: String = ""
 ) {
     Column {
@@ -288,26 +126,27 @@ fun PasswordInputField(
             singleLine = true,
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "Lock Icon",
+                    imageVector = leadingIconImageVector,
+                    contentDescription = leadingIconDescription,
                     tint = MaterialTheme.colors.descriptionColor
                 )
             },
             trailingIcon = {
-                IconButton(
-                    onClick = { isVisiblePassword.value = !isVisiblePassword.value }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Visibility,
-                        contentDescription = "Visibility Icon",
-                        tint = MaterialTheme.colors.descriptionColor
-                    )
+                if (isError && !isPasswordField) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
+                if (isPasswordField) {
+                    IconButton(
+                        onClick = { isVisiblePassword.value = !isVisiblePassword.value }
+                    ) {
+                        Icon(
+                            imageVector = if (isVisiblePassword.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = "Visibility Icon",
+                            tint = MaterialTheme.colors.descriptionColor
+                        )
+                    }
                 }
             },
-            visualTransformation = if (isVisiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
+            visualTransformation = if (isPasswordField && !isVisiblePassword.value) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
@@ -324,8 +163,6 @@ fun PasswordInputField(
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

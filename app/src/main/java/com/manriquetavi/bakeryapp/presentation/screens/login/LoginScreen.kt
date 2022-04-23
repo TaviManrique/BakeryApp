@@ -6,7 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,8 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
-import com.manriquetavi.bakeryapp.presentation.components.EmailInputField
-import com.manriquetavi.bakeryapp.presentation.components.PasswordInputField
+import com.manriquetavi.bakeryapp.presentation.components.InputField
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
@@ -83,28 +89,39 @@ fun LoginContent(
     val isVisiblePassword = rememberSaveable { mutableStateOf(false) }
     
     TitleText()
-    EmailInputField(
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = email,
-        isError = false,
-        focusManager = focusManager,
+        placeholder = "Email",
+        leadingIconImageVector = Icons.Default.Email,
+        leadingIconDescription = "Email Icon",
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Down)
             }
         )
     )
-    PasswordInputField(
+    InputField(
         modifier = Modifier.padding(top = 16.dp),
         text = password,
-        isError = false,
-        focusManager = focusManager,
-        isVisiblePassword = isVisiblePassword,
+        placeholder = "Password",
+        leadingIconImageVector = Icons.Default.Lock,
+        leadingIconDescription = "Password Icon",
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
+        ),
         keyboardActions =  KeyboardActions(
             onNext = {
                 focusManager.clearFocus()
             }
-        )
+        ),
+        isPasswordField = true,
+        isVisiblePassword = isVisiblePassword,
     )
     ButtonLogin(
         email = email.value.trim(),
