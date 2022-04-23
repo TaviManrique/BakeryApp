@@ -7,6 +7,8 @@ import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.use_cases.UseCases
 import com.manriquetavi.bakeryapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
 import com.manriquetavi.bakeryapp.domain.use_cases.save_onboarding.SaveOnBoardingUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_email_password.SignInWithEmailAndPassword
+import com.manriquetavi.bakeryapp.domain.use_cases.sign_out.SignOut
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +31,9 @@ object RepositoryModule {
     fun provideUseCases(repository: Repository): UseCases {
         return UseCases(
             saveOnBoardingUseCase = SaveOnBoardingUseCase(repository),
-            readOnBoardingUseCase = ReadOnBoardingUseCase(repository)
+            readOnBoardingUseCase = ReadOnBoardingUseCase(repository),
+            signInWithEmailAndPassword = SignInWithEmailAndPassword(repository),
+            signOut = SignOut(repository)
         )
     }
 

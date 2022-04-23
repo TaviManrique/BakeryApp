@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -29,7 +30,6 @@ import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
 @Composable
 fun SearchCakeInputField(
     text: MutableState<String>,
-    //onTextChange: (String) -> Unit,
     onSearchClicked: (String) -> Unit,
     onCloseClicked: () -> Unit,
     focusManager: FocusManager?,
@@ -98,38 +98,54 @@ fun UsernameInputField(
     modifier: Modifier,
     text: MutableState<String>,
     focusManager: FocusManager?,
-    keyboardActions: KeyboardActions
+    isError: Boolean,
+    keyboardActions: KeyboardActions,
+    errorMessage: String = ""
 ) {
-    OutlinedTextField(
-        modifier = modifier.padding(vertical = 16.dp).fillMaxWidth(),
-        value = text.value,
-        onValueChange = { text.value = it},
-        placeholder = {
-            Text(
-                modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                text = "Username"
+    Column {
+        OutlinedTextField(
+            modifier = modifier.fillMaxWidth(),
+            value = text.value,
+            onValueChange = { text.value = it},
+            placeholder = {
+                Text(
+                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
+                    text = "Username"
+                )
+            },
+            isError = isError,
+            textStyle = TextStyle(
+                color = MaterialTheme.colors.descriptionColor
+            ),
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Person Icon",
+                    tint = MaterialTheme.colors.descriptionColor
+                )
+            },
+            trailingIcon = {
+                if (isError) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = keyboardActions,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Purple500
             )
-        },
-        textStyle = TextStyle(
-            color = MaterialTheme.colors.descriptionColor
-        ),
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Person Icon",
-                tint = MaterialTheme.colors.descriptionColor
-            )
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next
-        ),
-        keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent,
-            cursorColor = Purple500
         )
-    )
+        if (isError) {
+            Text(
+                modifier = Modifier.padding(top = 1.dp),
+                text = errorMessage,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption
+            )
+        }
+    }
 }
 
 @Composable
@@ -137,38 +153,54 @@ fun EmailInputField(
     modifier: Modifier,
     text: MutableState<String>,
     focusManager: FocusManager?,
-    keyboardActions: KeyboardActions
+    isError: Boolean,
+    keyboardActions: KeyboardActions,
+    errorMessage: String = ""
 ) {
-    OutlinedTextField(
-        modifier = modifier.padding(vertical = 16.dp).fillMaxWidth(),
-        value = text.value,
-        onValueChange = { text.value = it},
-        placeholder = {
-            Text(
-                modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                text = "Email"
+    Column {
+        OutlinedTextField(
+            modifier = modifier.fillMaxWidth(),
+            value = text.value,
+            onValueChange = { text.value = it},
+            placeholder = {
+                Text(
+                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
+                    text = "Email"
+                )
+            },
+            isError = isError,
+            textStyle = TextStyle(
+                color = MaterialTheme.colors.descriptionColor
+            ),
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Email Icon",
+                    tint = MaterialTheme.colors.descriptionColor
+                )
+            },
+            trailingIcon = {
+                if (isError) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = keyboardActions,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Purple500
             )
-        },
-        textStyle = TextStyle(
-            color = MaterialTheme.colors.descriptionColor
-        ),
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = "Email Icon",
-                tint = MaterialTheme.colors.descriptionColor
-            )
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next
-        ),
-        keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent,
-            cursorColor = Purple500
         )
-    )
+        if (isError) {
+            Text(
+                modifier = Modifier.padding(top = 1.dp),
+                text = errorMessage,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption
+            )
+        }
+    }
 }
 
 @Composable
@@ -176,39 +208,55 @@ fun PhoneInputField(
     modifier: Modifier,
     text: MutableState<String>,
     focusManager: FocusManager?,
-    keyboardActions: KeyboardActions
+    isError: Boolean,
+    keyboardActions: KeyboardActions,
+    errorMessage: String = ""
 ) {
-    OutlinedTextField(
-        modifier = modifier.padding(vertical = 16.dp).fillMaxWidth(),
-        value = text.value,
-        onValueChange = { text.value = it},
-        placeholder = {
-            Text(
-                modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                text = "Phone number"
+    Column {
+        OutlinedTextField(
+            modifier = modifier.fillMaxWidth(),
+            value = text.value,
+            onValueChange = { text.value = it},
+            placeholder = {
+                Text(
+                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
+                    text = "Phone number"
+                )
+            },
+            isError = isError,
+            textStyle = TextStyle(
+                color = MaterialTheme.colors.descriptionColor
+            ),
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = "Person Icon",
+                    tint = MaterialTheme.colors.descriptionColor
+                )
+            },
+            trailingIcon = {
+                if (isError) Icon(imageVector = Icons.Filled.Error, contentDescription = "Icon Error")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = keyboardActions,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Purple500
             )
-        },
-        textStyle = TextStyle(
-            color = MaterialTheme.colors.descriptionColor
-        ),
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Phone,
-                contentDescription = "Person Icon",
-                tint = MaterialTheme.colors.descriptionColor
-            )
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next
-        ),
-        keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent,
-            cursorColor = Purple500
         )
-    )
+        if (isError) {
+            Text(
+                modifier = Modifier.padding(top = 1.dp),
+                text = errorMessage,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption
+            )
+        }
+    }
 }
 
 @Composable
@@ -216,51 +264,65 @@ fun PasswordInputField(
     modifier: Modifier,
     text: MutableState<String>,
     focusManager: FocusManager?,
+    isError: Boolean,
+    placeholder: String = "Password",
     isVisiblePassword: MutableState<Boolean>,
-    keyboardActions: KeyboardActions
+    keyboardActions: KeyboardActions,
+    errorMessage: String = ""
 ) {
-    OutlinedTextField(
-        modifier = modifier.padding(vertical = 16.dp).fillMaxWidth(),
-        value = text.value,
-        onValueChange = { text.value = it},
-        placeholder = {
-            Text(
-                modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                text = "Password"
-            )
-        },
-        textStyle = TextStyle(
-            color = MaterialTheme.colors.descriptionColor
-        ),
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Lock,
-                contentDescription = "Lock Icon",
-                tint = MaterialTheme.colors.descriptionColor
-            )
-        },
-        trailingIcon = {
-            IconButton(
-                onClick = { isVisiblePassword.value = !isVisiblePassword.value }
-            ) {
+    Column {
+        OutlinedTextField(
+            modifier = modifier.fillMaxWidth(),
+            value = text.value,
+            onValueChange = { text.value = it},
+            placeholder = {
+                Text(
+                    modifier = Modifier.alpha(alpha = ContentAlpha.medium),
+                    text = placeholder
+                )
+            },
+            isError = isError,
+            textStyle = TextStyle(
+                color = MaterialTheme.colors.descriptionColor
+            ),
+            singleLine = true,
+            leadingIcon = {
                 Icon(
-                    imageVector = Icons.Default.Visibility,
-                    contentDescription = "Visibility Icon",
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "Lock Icon",
                     tint = MaterialTheme.colors.descriptionColor
                 )
-            }
-        },
-        visualTransformation = if (isVisiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next
-        ),
-        keyboardActions = keyboardActions,
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent,
-            cursorColor = Purple500
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = { isVisiblePassword.value = !isVisiblePassword.value }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Visibility,
+                        contentDescription = "Visibility Icon",
+                        tint = MaterialTheme.colors.descriptionColor
+                    )
+                }
+            },
+            visualTransformation = if (isVisiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = keyboardActions,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                cursorColor = Purple500
+            )
         )
-    )
+        if (isError) {
+            Text(
+                modifier = Modifier.padding(top = 1.dp),
+                text = errorMessage,
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption
+            )
+        }
+    }
 }
 
 
