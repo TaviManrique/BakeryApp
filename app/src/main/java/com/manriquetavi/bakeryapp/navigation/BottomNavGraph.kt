@@ -11,7 +11,9 @@ import com.manriquetavi.bakeryapp.presentation.screens.profile.ProfileScreen
 
 
 @Composable
-fun BottomNavGraph(bottomNavController: NavHostController, screenNavController: NavHostController) {
+fun BottomNavGraph(
+    bottomNavController: NavHostController, screenNavController: NavHostController
+) {
     NavHost(
         navController = bottomNavController,
         startDestination = Screen.Home.route
@@ -26,7 +28,7 @@ fun BottomNavGraph(bottomNavController: NavHostController, screenNavController: 
             OrderScreen()
         }
         composable(route = Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(screenNavController, bottomNavController)
         }
     }
 }

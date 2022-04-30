@@ -1,5 +1,7 @@
 package com.manriquetavi.bakeryapp.data.repository
 
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseUser
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.repository.FirebaseAuthSource
@@ -24,4 +26,10 @@ class Repository
     ): Flow<Response<Boolean>> = firebaseAuth.firebaseAuthSignInWithEmailAndPassword(email = email, password = password)
 
     suspend fun firebaseAuthSignOut(): Flow<Response<Boolean>> = firebaseAuth.firebaseAuthSignOut()
+
+    suspend fun signInWithCredential(authCredential: AuthCredential): Flow<Response<Boolean>> = firebaseAuth.signInWithCredential(authCredential)
+
+    fun isUserAuthenticated(): Boolean = firebaseAuth.isUserAuthenticated()
+
+    fun getUser(): FirebaseUser? = firebaseAuth.getUser()
 }

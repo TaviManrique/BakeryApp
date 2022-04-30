@@ -27,21 +27,21 @@ fun MainScreen(
     bottomNavController: NavHostController
 ) {
     Scaffold(
-        bottomBar = { BottomBar(navController = bottomNavController) }
+        bottomBar = { BottomBar(bottomNavController = bottomNavController) }
     ) {
         BottomNavGraph(bottomNavController = bottomNavController, screenNavController = screenNavController)
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(bottomNavController: NavHostController) {
     val screens = listOf(
         Screen.Home,
         Screen.Cart,
         Screen.Order,
         Screen.Profile,
     )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     
     BottomNavigation(
@@ -55,7 +55,7 @@ fun BottomBar(navController: NavHostController) {
             AddItem(
                 screen = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                bottomNavController = bottomNavController
             )
         }
     }
@@ -65,7 +65,7 @@ fun BottomBar(navController: NavHostController) {
 fun RowScope.AddItem(
     screen: Screen,
     currentDestination: NavDestination?,
-    navController: NavHostController
+    bottomNavController: NavHostController
 ) {
     BottomNavigationItem(
         label = { Text(text = screen.title.toString()) },
@@ -77,8 +77,8 @@ fun RowScope.AddItem(
         },
         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
         onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
+            bottomNavController.navigate(screen.route) {
+                popUpTo(bottomNavController.graph.findStartDestination().id)
                 launchSingleTop = true
             }
         },

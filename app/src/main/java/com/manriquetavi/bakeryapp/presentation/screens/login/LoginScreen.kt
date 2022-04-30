@@ -1,6 +1,12 @@
 package com.manriquetavi.bakeryapp.presentation.screens.login
 
+import android.content.Intent
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,18 +17,16 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Password
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +37,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.manriquetavi.bakeryapp.R
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.InputField
@@ -46,6 +54,20 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val response = loginViewModel.signInState.value
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            val authCredential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+            loginViewModel.signInWithCredential(authCredential)
+        } catch (e: Exception) {
+            Log.e("TAG", "Google sign in failed", e)
+        }
+    }
+
     Scaffold(
         topBar = {  }
     ) {
@@ -58,11 +80,11 @@ fun LoginScreen(
         ) {
             LoginContent(
                 screenNavController = screenNavController,
-                loginViewModel = loginViewModel
+                loginViewModel = loginViewModel,
+                launcher = launcher
             )
         }
     }
-
     when (response) {
         is Response.Loading -> ProgressBar()
         is Response.Success -> if(response.data) {
@@ -78,10 +100,13 @@ fun LoginScreen(
     }
 }
 
+
+
 @Composable
 fun LoginContent(
     screenNavController: NavHostController,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
     val focusManager = LocalFocusManager.current
     val email = loginViewModel.email
@@ -128,7 +153,9 @@ fun LoginContent(
         password = password.value.trim(),
         loginViewModel = loginViewModel
     )
-    ButtonGmail()
+    ButtonGmail(
+        launcher = launcher
+    )
     TextButtonRegister(screenNavController = screenNavController)
 }
 
@@ -155,12 +182,24 @@ fun ButtonLogin(
 }
 
 @Composable
-fun ButtonGmail() {
+fun ButtonGmail(launcher: ManagedActivityResultLauncher<Intent, ActivityResult>) {
+    val token = stringResource(R.string.default_web_client_id)
+    val context = LocalContext.current
     OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        onClick = {  },
+        onClick = {
+
+            val gso = GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(token)
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(context,gso)
+            launcher.launch(googleSignInClient.signInIntent)
+
+        },
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(

@@ -5,8 +5,11 @@ import com.manriquetavi.bakeryapp.data.repository.DataStoreOperationsImpl
 import com.manriquetavi.bakeryapp.data.repository.Repository
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.use_cases.UseCases
+import com.manriquetavi.bakeryapp.domain.use_cases.get_user.GetUser
+import com.manriquetavi.bakeryapp.domain.use_cases.is_user_authenticated.IsUserAuthenticated
 import com.manriquetavi.bakeryapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
 import com.manriquetavi.bakeryapp.domain.use_cases.save_onboarding.SaveOnBoardingUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_credential.SignInWithCredential
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_email_password.SignInWithEmailAndPassword
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_out.SignOut
 import dagger.Module
@@ -33,7 +36,10 @@ object RepositoryModule {
             saveOnBoardingUseCase = SaveOnBoardingUseCase(repository),
             readOnBoardingUseCase = ReadOnBoardingUseCase(repository),
             signInWithEmailAndPassword = SignInWithEmailAndPassword(repository),
-            signOut = SignOut(repository)
+            signInWithCredential = SignInWithCredential(repository),
+            signOut = SignOut(repository),
+            isUserAuthenticated = IsUserAuthenticated(repository),
+            getUser = GetUser(repository)
         )
     }
 

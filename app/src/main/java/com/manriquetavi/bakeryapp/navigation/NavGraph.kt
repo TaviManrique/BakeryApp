@@ -22,7 +22,7 @@ import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: NavHostController) {
     NavHost(
         navController = screenNavController,
-        startDestination = Screen.Login.route
+        startDestination = Screen.Splash.route
     ) {
         composable(route = Screen.Splash.route) {
             SplashScreen(screenNavController = screenNavController)

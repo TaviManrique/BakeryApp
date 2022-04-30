@@ -22,6 +22,7 @@ fun SplashScreen(
     splashViewModel: SplashViewModel = hiltViewModel()
 ) {
     val onBoardingPageCompleted by splashViewModel.onBoardingCompleted.collectAsState()
+    val isUserAuthenticated = splashViewModel.isUserAuthenticated
     val degrees = remember { Animatable(0f) }
     
     LaunchedEffect(key1 = true) {
@@ -34,8 +35,13 @@ fun SplashScreen(
         )
         screenNavController.popBackStack()
         if(onBoardingPageCompleted) {
-            screenNavController.navigate(Screen.Main.route)
-        } else {
+            if(isUserAuthenticated) {
+                screenNavController.navigate(Screen.Main.route)
+            } else {
+                screenNavController.navigate(Screen.Login.route)
+            }
+        }
+        else {
             screenNavController.navigate(Screen.Welcome.route)
         }
     }

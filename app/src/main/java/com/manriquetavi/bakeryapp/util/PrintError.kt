@@ -5,7 +5,7 @@ import android.util.Log
 class Util {
     companion object {
         fun printError(message: String) {
-            Log.d("TAG", message)
+            Log.d("Print error", message)
         }
     }
 }
