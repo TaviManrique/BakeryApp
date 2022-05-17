@@ -14,6 +14,7 @@ class Repository
     private val firebaseAuth: FirebaseAuthSource
 ) {
 
+    //DataStore
     suspend fun saveOnBoardingState(completed: Boolean) {
         dataStore.saveOnBoardingState(completed = completed)
     }
@@ -32,4 +33,13 @@ class Repository
     fun isUserAuthenticated(): Boolean = firebaseAuth.isUserAuthenticated()
 
     fun getUser(): FirebaseUser? = firebaseAuth.getUser()
+
+    fun getAuthState(): Flow<Boolean> = firebaseAuth.getAuthState()
+
+    suspend fun signUp(
+        username: String,
+        email: String,
+        password: String,
+        phoneNumber: String
+    ): Flow<Response<Boolean>> = firebaseAuth.signUp(username = username, email = email, password = password, phoneNumber = phoneNumber)
 }

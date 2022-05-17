@@ -22,6 +22,9 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.signOut().collect { response ->
                 _signOutState.value = response
+                if (response == Response.Success(true)) {
+
+                }
             }
         }
     }

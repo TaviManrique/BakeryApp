@@ -5,6 +5,7 @@ import com.manriquetavi.bakeryapp.data.repository.DataStoreOperationsImpl
 import com.manriquetavi.bakeryapp.data.repository.Repository
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.use_cases.UseCases
+import com.manriquetavi.bakeryapp.domain.use_cases.get_auth_state.GetAuthState
 import com.manriquetavi.bakeryapp.domain.use_cases.get_user.GetUser
 import com.manriquetavi.bakeryapp.domain.use_cases.is_user_authenticated.IsUserAuthenticated
 import com.manriquetavi.bakeryapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
@@ -12,6 +13,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.save_onboarding.SaveOnBoardin
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_credential.SignInWithCredential
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_email_password.SignInWithEmailAndPassword
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_out.SignOut
+import com.manriquetavi.bakeryapp.domain.use_cases.sign_up.SignUp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,7 +41,9 @@ object RepositoryModule {
             signInWithCredential = SignInWithCredential(repository),
             signOut = SignOut(repository),
             isUserAuthenticated = IsUserAuthenticated(repository),
-            getUser = GetUser(repository)
+            getUser = GetUser(repository),
+            getAuthState = GetAuthState(repository),
+            signUp = SignUp(repository)
         )
     }
 

@@ -1,7 +1,7 @@
 package com.manriquetavi.bakeryapp.presentation.screens.register
 
-import android.util.Log
 import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -28,14 +28,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.*
+import com.manriquetavi.bakeryapp.util.ToastMessage
+import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
 fun RegisterScreen(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
+
+    val response = registerViewModel.signUpState.value
+
     Scaffold(
         topBar = {  }
     ) {
@@ -47,13 +55,27 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            RegisterContent(screenNavController)
+            RegisterContent(screenNavController, registerViewModel)
+        }
+    }
+
+    when (response) {
+        is Response.Loading -> ProgressBar()
+        is Response.Success -> if(response.data) {
+            ToastMessage(duration = Toast.LENGTH_SHORT, message = "Success add new user")
+        }
+        is Response.Error -> {
+            Util.printError(response.message)
+            ToastMessage(duration = Toast.LENGTH_SHORT, message = "Error add new user")
         }
     }
 }
 
 @Composable
-fun RegisterContent(screenNavController: NavHostController) {
+fun RegisterContent(
+    screenNavController: NavHostController,
+    registerViewModel: RegisterViewModel
+) {
 
     val focusManager = LocalFocusManager.current
 
@@ -169,16 +191,17 @@ fun RegisterContent(screenNavController: NavHostController) {
         isError = !validateRepeatPassword.value,
     )
     ButtonRegister(
-        username = username.value,
-        email = email.value,
-        phoneNumber = phoneNumber.value,
-        password = password.value,
-        repeatPassword = repeatPassword.value,
+        username = username,
+        email = email,
+        phoneNumber = phoneNumber,
+        password = password,
+        repeatPassword = repeatPassword,
         validateUsername = validateUsername,
         validateEmail = validateEmail,
         validatePhoneNumber = validatePhoneNumber,
         validatePassword = validatePassword,
-        validateRepeatPassword = validateRepeatPassword
+        validateRepeatPassword = validateRepeatPassword,
+        registerViewModel = registerViewModel
     )
     TextButtonLogin(screenNavController)
 }
@@ -202,34 +225,44 @@ fun TextButtonLogin(screenNavController: NavHostController) {
 
 @Composable
 fun ButtonRegister(
-    username: String,
-    email: String,
-    phoneNumber: String,
-    password: String,
-    repeatPassword: String,
+    username: MutableState<String>,
+    email: MutableState<String>,
+    phoneNumber: MutableState<String>,
+    password: MutableState<String>,
+    repeatPassword: MutableState<String>,
     validateUsername: MutableState<Boolean>,
     validateEmail: MutableState<Boolean>,
     validatePhoneNumber: MutableState<Boolean>,
     validatePassword: MutableState<Boolean>,
-    validateRepeatPassword: MutableState<Boolean>
+    validateRepeatPassword: MutableState<Boolean>,
+    registerViewModel: RegisterViewModel
 ) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         onClick = {
-                  validateData(
-                      username = username,
-                      email = email,
-                      phoneNumber = phoneNumber,
-                      password = password,
-                      repeatPassword = repeatPassword,
-                      validateUsername = validateUsername,
-                      validateEmail = validateEmail,
-                      validatePhoneNumber = validatePhoneNumber,
-                      validatePassword = validatePassword,
-                      validateRepeatPassword = validateRepeatPassword
-                  )
+            if (
+                validateData(
+                    username = username.value,
+                    email = email.value,
+                    phoneNumber = phoneNumber.value,
+                    password = password.value,
+                    repeatPassword = repeatPassword.value,
+                    validateUsername = validateUsername,
+                    validateEmail = validateEmail,
+                    validatePhoneNumber = validatePhoneNumber,
+                    validatePassword = validatePassword,
+                    validateRepeatPassword = validateRepeatPassword
+                )
+            ) {
+                registerViewModel.signUp(username = username.value, email = email.value, password = password.value, phoneNumber = phoneNumber.value)
+                username.value = ""
+                email.value = ""
+                phoneNumber.value = ""
+                password.value = ""
+                repeatPassword.value = ""
+            }
         },
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -285,5 +318,5 @@ fun validateData(
 @Preview(showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen(rememberNavController())
+    RegisterScreen(rememberNavController(), registerViewModel = hiltViewModel())
 }

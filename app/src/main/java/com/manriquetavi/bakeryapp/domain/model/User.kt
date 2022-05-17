@@ -1,6 +1,9 @@
 package com.manriquetavi.bakeryapp.domain.model
 
 data class User(
-    val email: String,
-    val displayName: String
+    var uid: String = "",
+    var username: String = "",
+    val email: String = "",
+    val password: String = "",
+    val phoneNumber: String = ""
 )

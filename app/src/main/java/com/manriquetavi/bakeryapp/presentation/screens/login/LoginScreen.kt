@@ -53,6 +53,8 @@ fun LoginScreen(
     screenNavController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
+
+
     val response = loginViewModel.signInState.value
 
     val launcher = rememberLauncherForActivityResult(
@@ -109,8 +111,8 @@ fun LoginContent(
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
     val focusManager = LocalFocusManager.current
-    val email = loginViewModel.email
-    val password = loginViewModel.password
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
     val isVisiblePassword = rememberSaveable { mutableStateOf(false) }
     
     TitleText()

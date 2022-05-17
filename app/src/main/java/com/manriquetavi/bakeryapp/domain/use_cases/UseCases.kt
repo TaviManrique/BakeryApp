@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.domain.use_cases
 
+import com.manriquetavi.bakeryapp.domain.use_cases.get_auth_state.GetAuthState
 import com.manriquetavi.bakeryapp.domain.use_cases.get_user.GetUser
 import com.manriquetavi.bakeryapp.domain.use_cases.is_user_authenticated.IsUserAuthenticated
 import com.manriquetavi.bakeryapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
@@ -7,6 +8,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.save_onboarding.SaveOnBoardin
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_credential.SignInWithCredential
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_email_password.SignInWithEmailAndPassword
 import com.manriquetavi.bakeryapp.domain.use_cases.sign_out.SignOut
+import com.manriquetavi.bakeryapp.domain.use_cases.sign_up.SignUp
 
 data class UseCases(
     val saveOnBoardingUseCase: SaveOnBoardingUseCase,
@@ -15,5 +17,7 @@ data class UseCases(
     val signInWithCredential: SignInWithCredential,
     val signOut: SignOut,
     val isUserAuthenticated: IsUserAuthenticated,
-    val getUser: GetUser
+    val getUser: GetUser,
+    val signUp: SignUp,
+    val getAuthState: GetAuthState
 )

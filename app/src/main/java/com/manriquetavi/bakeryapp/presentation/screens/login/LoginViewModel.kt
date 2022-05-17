@@ -25,26 +25,12 @@ class LoginViewModel @Inject constructor(
     private val _signInState = mutableStateOf<Response<Boolean>>(Response.Success(false))
     val signInState: State<Response<Boolean>> = _signInState
 
-    private val _user: MutableStateFlow<User?> = MutableStateFlow(null)
-    val user: StateFlow<User?> = _user
-
-    private val _email = mutableStateOf("")
-    val email = _email
-
-    private val _password = mutableStateOf("")
-    val password = _password
-
     fun signInWithEmailAndPassword(email: String, password: String) {
         viewModelScope.launch {
             useCases.signInWithEmailAndPassword(email,password).collect { response ->
                 _signInState.value = response
             }
         }
-    }
-
-    suspend fun sigInWithGoogle(email: String, displayName: String) {
-        delay(2000)
-        _user.value = User(email, displayName)
     }
 
     fun signInWithCredential(authCredential: AuthCredential) {

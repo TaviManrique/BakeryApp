@@ -1,4 +1,4 @@
-package com.manriquetavi.bakeryapp.presentation.screens.splash
+package com.manriquetavi.bakeryapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +11,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
-class SplashViewModel @Inject constructor(
+class AuthenticationViewModel @Inject constructor(
     private val useCases: UseCases
 ): ViewModel() {
 
@@ -20,6 +21,8 @@ class SplashViewModel @Inject constructor(
     val onBoardingCompleted: StateFlow<Boolean> = _onBoardingCompleted
 
     val isUserAuthenticated get() = useCases.isUserAuthenticated()
+
+
 
     init {
         viewModelScope.launch(Dispatchers.IO){

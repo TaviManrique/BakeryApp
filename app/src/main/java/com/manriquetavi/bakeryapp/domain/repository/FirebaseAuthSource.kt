@@ -7,8 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface FirebaseAuthSource {
     fun isUserAuthenticated(): Boolean
+    fun getAuthState(): Flow<Boolean>
     suspend fun firebaseAuthSignInWithEmailAndPassword(email: String, password: String): Flow<Response<Boolean>>
+    suspend fun signUp(username: String, email: String, password: String, phoneNumber: String): Flow<Response<Boolean>>
     suspend fun firebaseAuthSignOut(): Flow<Response<Boolean>>
     suspend fun signInWithCredential(authCredential: AuthCredential): Flow<Response<Boolean>>
     fun getUser(): FirebaseUser?
+
 }
