@@ -2,18 +2,20 @@ package com.manriquetavi.bakeryapp.di
 
 import android.content.Context
 import com.manriquetavi.bakeryapp.data.repository.DataStoreOperationsImpl
-import com.manriquetavi.bakeryapp.data.repository.Repository
+import com.manriquetavi.bakeryapp.data.repository.RepositoryAuthentication
+import com.manriquetavi.bakeryapp.data.repository.RepositoryOnBoardingPage
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
-import com.manriquetavi.bakeryapp.domain.use_cases.UseCases
-import com.manriquetavi.bakeryapp.domain.use_cases.get_auth_state.GetAuthState
-import com.manriquetavi.bakeryapp.domain.use_cases.get_user.GetUser
-import com.manriquetavi.bakeryapp.domain.use_cases.is_user_authenticated.IsUserAuthenticated
-import com.manriquetavi.bakeryapp.domain.use_cases.read_onboarding.ReadOnBoardingUseCase
-import com.manriquetavi.bakeryapp.domain.use_cases.save_onboarding.SaveOnBoardingUseCase
-import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_credential.SignInWithCredential
-import com.manriquetavi.bakeryapp.domain.use_cases.sign_in_email_password.SignInWithEmailAndPassword
-import com.manriquetavi.bakeryapp.domain.use_cases.sign_out.SignOut
-import com.manriquetavi.bakeryapp.domain.use_cases.sign_up.SignUp
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.get_auth_state.GetAuthState
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.get_user_details.GetUserDetails
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.is_user_authenticated.IsUserAuthenticated
+import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.read_onboarding.ReadOnBoardingUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.save_onboarding.SaveOnBoardingUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_in_credential.SignInWithCredential
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_in_email_password.SignInWithEmailAndPassword
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_out.SignOut
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_up.SignUp
+import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,17 +35,25 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(repository: Repository): UseCases {
-        return UseCases(
-            saveOnBoardingUseCase = SaveOnBoardingUseCase(repository),
-            readOnBoardingUseCase = ReadOnBoardingUseCase(repository),
-            signInWithEmailAndPassword = SignInWithEmailAndPassword(repository),
-            signInWithCredential = SignInWithCredential(repository),
-            signOut = SignOut(repository),
-            isUserAuthenticated = IsUserAuthenticated(repository),
-            getUser = GetUser(repository),
-            getAuthState = GetAuthState(repository),
-            signUp = SignUp(repository)
+    fun provideUseCasesAuthentication(repositoryAuthentication: RepositoryAuthentication): UseCasesAuthentication {
+
+        return UseCasesAuthentication(
+            signInWithEmailAndPassword = SignInWithEmailAndPassword(repositoryAuthentication),
+            signInWithCredential = SignInWithCredential(repositoryAuthentication),
+            signOut = SignOut(repositoryAuthentication),
+            isUserAuthenticated = IsUserAuthenticated(repositoryAuthentication),
+            getUserDetails = GetUserDetails(repositoryAuthentication),
+            getAuthState = GetAuthState(repositoryAuthentication),
+            signUp = SignUp(repositoryAuthentication)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUseCasesOnBoardingPage(repositoryOnBoardingPage: RepositoryOnBoardingPage): UseCasesOnBoardingPage {
+        return UseCasesOnBoardingPage(
+            saveOnBoardingUseCase = SaveOnBoardingUseCase(repositoryOnBoardingPage),
+            readOnBoardingUseCase = ReadOnBoardingUseCase(repositoryOnBoardingPage)
         )
     }
 

@@ -11,18 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.presentation.AuthenticationViewModel
 
 @Composable
 fun SplashScreen(
     screenNavController: NavHostController,
+    authenticationViewModel: AuthenticationViewModel = hiltViewModel(),
     splashViewModel: SplashViewModel = hiltViewModel()
 ) {
     val onBoardingPageCompleted by splashViewModel.onBoardingCompleted.collectAsState()
-    val isUserAuthenticated = splashViewModel.isUserAuthenticated
+    val isUserAuthenticated = authenticationViewModel.isUserAuthenticated
     val degrees = remember { Animatable(0f) }
     
     LaunchedEffect(key1 = true) {

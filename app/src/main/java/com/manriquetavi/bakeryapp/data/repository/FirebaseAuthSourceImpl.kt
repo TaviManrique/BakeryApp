@@ -22,7 +22,7 @@ class FirebaseAuthSourceImpl(
     var wasOperationSuccessful: Boolean = false
 
     override fun isUserAuthenticated(): Boolean = auth.currentUser != null
-    override fun getAuthState(): Flow<Boolean> = callbackFlow {
+    override suspend fun getAuthState(): Flow<Boolean> = callbackFlow {
         val authStateListener = FirebaseAuth.AuthStateListener {
             trySend(auth.currentUser == null)
         }
@@ -31,8 +31,6 @@ class FirebaseAuthSourceImpl(
             auth.removeAuthStateListener(authStateListener)
         }
     }
-
-    override fun getUser(): FirebaseUser? = auth.currentUser
 
     override suspend fun firebaseAuthSignInWithEmailAndPassword(
         email: String,

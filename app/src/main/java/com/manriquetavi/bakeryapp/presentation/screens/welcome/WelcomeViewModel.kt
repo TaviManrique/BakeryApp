@@ -2,7 +2,8 @@ package com.manriquetavi.bakeryapp.presentation.screens.welcome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.manriquetavi.bakeryapp.domain.use_cases.UseCases
+import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
+import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,11 +11,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val useCases: UseCases
+    private val useCasesOnBoardingPage: UseCasesOnBoardingPage
 ): ViewModel(){
     fun saveOnBoardingState(completed: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            useCases.saveOnBoardingUseCase(completed = completed)
+            useCasesOnBoardingPage.saveOnBoardingUseCase(completed = completed)
         }
     }
 }

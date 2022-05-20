@@ -43,6 +43,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.presentation.AuthenticationViewModel
 import com.manriquetavi.bakeryapp.presentation.components.InputField
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.util.ToastMessage
@@ -51,11 +52,11 @@ import com.manriquetavi.bakeryapp.util.Util
 @Composable
 fun LoginScreen(
     screenNavController: NavHostController,
-    loginViewModel: LoginViewModel = hiltViewModel()
+    authenticationViewModel: AuthenticationViewModel = hiltViewModel()
 ) {
 
 
-    val response = loginViewModel.signInState.value
+    val response = authenticationViewModel.signInState.value
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -64,7 +65,7 @@ fun LoginScreen(
         try {
             val account = task.getResult(ApiException::class.java)!!
             val authCredential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-            loginViewModel.signInWithCredential(authCredential)
+            authenticationViewModel.signInWithCredential(authCredential)
         } catch (e: Exception) {
             Log.e("TAG", "Google sign in failed", e)
         }
@@ -82,19 +83,22 @@ fun LoginScreen(
         ) {
             LoginContent(
                 screenNavController = screenNavController,
-                loginViewModel = loginViewModel,
+                authenticationViewModel = authenticationViewModel,
                 launcher = launcher
             )
         }
     }
     when (response) {
         is Response.Loading -> ProgressBar()
-        is Response.Success -> if(response.data) {
-            LaunchedEffect(response.data) {
-                screenNavController.popBackStack()
-                screenNavController.navigate(Screen.Main.route)
+        is Response.Success ->
+            if(response.data) {
+                LaunchedEffect(response.data) {
+                    screenNavController.popBackStack()
+                    screenNavController.navigate(Screen.Main.route)
+                }
+            } else {
+                ToastMessage(duration = Toast.LENGTH_SHORT, message = "Sign In Failed")
             }
-        }
         is Response.Error -> {
             Util.printError(response.message)
             ToastMessage(duration = Toast.LENGTH_SHORT, message = "Email or Password incorrect")
@@ -107,7 +111,7 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     screenNavController: NavHostController,
-    loginViewModel: LoginViewModel,
+    authenticationViewModel: AuthenticationViewModel,
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
     val focusManager = LocalFocusManager.current
@@ -153,7 +157,7 @@ fun LoginContent(
     ButtonLogin(
         email = email.value.trim(),
         password = password.value.trim(),
-        loginViewModel = loginViewModel
+        authenticationViewModel = authenticationViewModel
     )
     ButtonGmail(
         launcher = launcher
@@ -165,14 +169,14 @@ fun LoginContent(
 fun ButtonLogin(
     email:String,
     password: String,
-    loginViewModel: LoginViewModel
+    authenticationViewModel: AuthenticationViewModel
 ) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         onClick = {
-                  loginViewModel.signInWithEmailAndPassword(email, password)
+            authenticationViewModel.signInWithEmailAndPassword(email, password)
         },
         shape = RoundedCornerShape(16.dp)
     ) {

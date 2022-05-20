@@ -1,24 +1,18 @@
 package com.manriquetavi.bakeryapp.data.repository
 
 import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FirebaseUser
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.repository.FirebaseAuthSource
+import com.manriquetavi.bakeryapp.domain.repository.FirestoreDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class Repository
+class RepositoryAuthentication
 @Inject constructor(
-    private val dataStore: DataStoreOperations,
-    private val firebaseAuth: FirebaseAuthSource
+    private val firebaseAuth: FirebaseAuthSource,
+    private val firestore: FirestoreDataSource
 ) {
-
-    //DataStore
-    suspend fun saveOnBoardingState(completed: Boolean) {
-        dataStore.saveOnBoardingState(completed = completed)
-    }
-    fun readOnBoardingState(): Flow<Boolean> = dataStore.readOnBoardingState()
 
     //Firebase Auth
     suspend fun firebaseAuthSignInWithEmailAndPassword(
@@ -32,9 +26,9 @@ class Repository
 
     fun isUserAuthenticated(): Boolean = firebaseAuth.isUserAuthenticated()
 
-    fun getUser(): FirebaseUser? = firebaseAuth.getUser()
+    suspend fun getUserDetails(uid: String) = firestore.getUserDetails(uid)
 
-    fun getAuthState(): Flow<Boolean> = firebaseAuth.getAuthState()
+    suspend fun getAuthState(): Flow<Boolean> = firebaseAuth.getAuthState()
 
     suspend fun signUp(
         username: String,

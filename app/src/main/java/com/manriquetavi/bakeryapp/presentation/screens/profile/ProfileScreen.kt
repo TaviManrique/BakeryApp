@@ -17,8 +17,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.presentation.AuthenticationViewModel
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.util.Util
 
@@ -26,11 +28,11 @@ import com.manriquetavi.bakeryapp.util.Util
 fun ProfileScreen(
     screenNavController: NavHostController,
     bottomNavController: NavHostController,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    authenticationViewModel: AuthenticationViewModel = hiltViewModel(),
 ) {
     val activity = (LocalContext.current as? Activity)
-    val user = profileViewModel.user
-    val signOutState = profileViewModel.signOutState.value
+    val signOutState = authenticationViewModel.signOutState.value
+    val user = FirebaseAuth.getInstance().currentUser
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -63,7 +65,7 @@ fun ProfileScreen(
             }
             Button(
                 onClick = {
-                    profileViewModel.signOut()
+                    authenticationViewModel.signOut()
                 }
             ) {
                 Text("SIGN OUT")
@@ -84,13 +86,4 @@ fun ProfileScreen(
         }
     }
 
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen(
-        rememberNavController(),
-        rememberNavController()
-    )
 }
