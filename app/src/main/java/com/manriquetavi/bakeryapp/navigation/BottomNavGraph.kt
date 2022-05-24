@@ -10,6 +10,7 @@ import com.manriquetavi.bakeryapp.presentation.screens.order.OrderScreen
 import com.manriquetavi.bakeryapp.presentation.screens.profile.ProfileScreen
 
 
+/*
 @Composable
 fun BottomNavGraph(
     bottomNavController: NavHostController, screenNavController: NavHostController
@@ -31,4 +32,4 @@ fun BottomNavGraph(
             ProfileScreen(screenNavController, bottomNavController)
         }
     }
-}
+}*/

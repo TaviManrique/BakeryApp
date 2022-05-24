@@ -43,7 +43,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
-import com.manriquetavi.bakeryapp.presentation.AuthenticationViewModel
 import com.manriquetavi.bakeryapp.presentation.components.InputField
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.util.ToastMessage
@@ -52,11 +51,11 @@ import com.manriquetavi.bakeryapp.util.Util
 @Composable
 fun LoginScreen(
     screenNavController: NavHostController,
-    authenticationViewModel: AuthenticationViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
 
 
-    val response = authenticationViewModel.signInState.value
+    val response = loginViewModel.signInState.value
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -65,7 +64,7 @@ fun LoginScreen(
         try {
             val account = task.getResult(ApiException::class.java)!!
             val authCredential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-            authenticationViewModel.signInWithCredential(authCredential)
+            loginViewModel.signInWithCredential(authCredential)
         } catch (e: Exception) {
             Log.e("TAG", "Google sign in failed", e)
         }
@@ -83,7 +82,7 @@ fun LoginScreen(
         ) {
             LoginContent(
                 screenNavController = screenNavController,
-                authenticationViewModel = authenticationViewModel,
+                loginViewModel = loginViewModel,
                 launcher = launcher
             )
         }
@@ -111,7 +110,7 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     screenNavController: NavHostController,
-    authenticationViewModel: AuthenticationViewModel,
+    loginViewModel: LoginViewModel,
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
     val focusManager = LocalFocusManager.current
@@ -157,7 +156,7 @@ fun LoginContent(
     ButtonLogin(
         email = email.value.trim(),
         password = password.value.trim(),
-        authenticationViewModel = authenticationViewModel
+        loginViewModel = loginViewModel
     )
     ButtonGmail(
         launcher = launcher
@@ -169,14 +168,14 @@ fun LoginContent(
 fun ButtonLogin(
     email:String,
     password: String,
-    authenticationViewModel: AuthenticationViewModel
+    loginViewModel: LoginViewModel
 ) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         onClick = {
-            authenticationViewModel.signInWithEmailAndPassword(email, password)
+            loginViewModel.signInWithEmailAndPassword(email, password)
         },
         shape = RoundedCornerShape(16.dp)
     ) {

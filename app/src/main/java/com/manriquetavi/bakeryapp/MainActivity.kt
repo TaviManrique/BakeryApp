@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var screenNavController: NavHostController
-    private lateinit var bottomNavController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +24,7 @@ class MainActivity : ComponentActivity() {
             BakeryAppTheme {
                 // A surface container using the 'background' color from the theme
                 screenNavController =  rememberNavController()
-                bottomNavController = rememberNavController()
-                SetupNavGraph(screenNavController = screenNavController, bottomNavController = bottomNavController)
+                SetupNavGraph(screenNavController = screenNavController)
             }
         }
     }

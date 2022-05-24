@@ -19,7 +19,7 @@ import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 @ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @Composable
-fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: NavHostController) {
+fun SetupNavGraph(screenNavController: NavHostController) {
     NavHost(
         navController = screenNavController,
         startDestination = Screen.Splash.route
@@ -37,7 +37,7 @@ fun SetupNavGraph(screenNavController: NavHostController, bottomNavController: N
             RegisterScreen(screenNavController = screenNavController)
         }
         composable(route = Screen.Main.route) {
-            MainScreen(screenNavController = screenNavController, bottomNavController = bottomNavController)
+            MainScreen(screenNavController = screenNavController)
         }
         composable(route = Screen.Search.route) {
             SearchScreen(screenNavController = screenNavController)

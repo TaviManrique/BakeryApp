@@ -12,26 +12,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
-import com.manriquetavi.bakeryapp.presentation.AuthenticationViewModel
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
 fun ProfileScreen(
     screenNavController: NavHostController,
-    bottomNavController: NavHostController,
-    authenticationViewModel: AuthenticationViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val activity = (LocalContext.current as? Activity)
-    val signOutState = authenticationViewModel.signOutState.value
+    val signOutState = profileViewModel.signOutState.value
     val user = FirebaseAuth.getInstance().currentUser
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -65,7 +60,7 @@ fun ProfileScreen(
             }
             Button(
                 onClick = {
-                    authenticationViewModel.signOut()
+                    profileViewModel.signOut()
                 }
             ) {
                 Text("SIGN OUT")
@@ -75,12 +70,13 @@ fun ProfileScreen(
 
     when(signOutState) {
         is Response.Loading -> ProgressBar()
-        is Response.Success -> if(signOutState.data) {
-            //Show screen final session
-            LaunchedEffect(signOutState.data) {
-                activity?.finish()
+        is Response.Success ->
+            if(signOutState.data) {
+                LaunchedEffect(signOutState.data) {
+                    screenNavController.popBackStack()
+                    screenNavController.navigate(Screen.Login.route)
+                }
             }
-        }
         is Response.Error -> LaunchedEffect(Unit) {
             Util.printError(signOutState.message)
         }

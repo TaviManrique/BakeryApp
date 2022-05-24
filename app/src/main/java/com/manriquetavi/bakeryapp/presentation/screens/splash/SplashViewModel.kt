@@ -1,6 +1,7 @@
 package com.manriquetavi.bakeryapp.presentation.screens.splash
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
 import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
@@ -26,6 +27,12 @@ class SplashViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO){
             _onBoardingCompleted.value = useCasesOnBoardingPage.readOnBoardingUseCase().stateIn(viewModelScope).value
+        }
+    }
+
+    fun getAuthState() = liveData(Dispatchers.IO) {
+        useCasesAuthentication.getAuthState().collect { response ->
+            emit(response)
         }
     }
 }

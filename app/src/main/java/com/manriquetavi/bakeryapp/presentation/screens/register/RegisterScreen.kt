@@ -32,7 +32,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.Response
-import com.manriquetavi.bakeryapp.presentation.AuthenticationViewModel
 import com.manriquetavi.bakeryapp.presentation.components.*
 import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
@@ -40,10 +39,10 @@ import com.manriquetavi.bakeryapp.util.Util
 @Composable
 fun RegisterScreen(
     screenNavController: NavHostController,
-    authenticationViewModel: AuthenticationViewModel = hiltViewModel()
+    registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
 
-    val response = authenticationViewModel.signUpState.value
+    val response = registerViewModel.signUpState.value
 
     Scaffold(
         topBar = {  }
@@ -56,7 +55,7 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            RegisterContent(screenNavController, authenticationViewModel)
+            RegisterContent(screenNavController, registerViewModel)
         }
     }
 
@@ -75,7 +74,7 @@ fun RegisterScreen(
 @Composable
 fun RegisterContent(
     screenNavController: NavHostController,
-    authenticationViewModel: AuthenticationViewModel
+    registerViewModel: RegisterViewModel
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -202,7 +201,7 @@ fun RegisterContent(
         validatePhoneNumber = validatePhoneNumber,
         validatePassword = validatePassword,
         validateRepeatPassword = validateRepeatPassword,
-        authenticationViewModel = authenticationViewModel
+        registerViewModel = registerViewModel
     )
     TextButtonLogin(screenNavController)
 }
@@ -236,7 +235,7 @@ fun ButtonRegister(
     validatePhoneNumber: MutableState<Boolean>,
     validatePassword: MutableState<Boolean>,
     validateRepeatPassword: MutableState<Boolean>,
-    authenticationViewModel: AuthenticationViewModel
+    registerViewModel: RegisterViewModel
 ) {
     Button(
         modifier = Modifier
@@ -257,7 +256,7 @@ fun ButtonRegister(
                     validateRepeatPassword = validateRepeatPassword
                 )
             ) {
-                authenticationViewModel.signUp(username = username.value, email = email.value, password = password.value, phoneNumber = phoneNumber.value)
+                registerViewModel.signUp(username = username.value, email = email.value, password = password.value, phoneNumber = phoneNumber.value)
                 username.value = ""
                 email.value = ""
                 phoneNumber.value = ""
@@ -319,5 +318,5 @@ fun validateData(
 @Preview(showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen(rememberNavController(), authenticationViewModel = hiltViewModel())
+    RegisterScreen(rememberNavController(), registerViewModel = hiltViewModel())
 }

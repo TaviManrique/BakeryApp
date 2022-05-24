@@ -48,3 +48,10 @@ sealed class Screen(
         icon = Icons.Outlined.Person
     )
 }
+
+val bottomScreens = listOf(
+    Screen.Home,
+    Screen.Cart,
+    Screen.Order,
+    Screen.Profile,
+)
