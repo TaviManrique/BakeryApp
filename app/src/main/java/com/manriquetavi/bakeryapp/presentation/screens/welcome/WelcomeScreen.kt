@@ -67,7 +67,7 @@ fun WelcomeScreen(
             pagerState = pagerState
         ) {
             screenNavController.popBackStack()
-            screenNavController.navigate(Screen.Main.route)
+            screenNavController.navigate(Screen.Login.route)
             welcomeViewModel.saveOnBoardingState(completed = true)
         }
         

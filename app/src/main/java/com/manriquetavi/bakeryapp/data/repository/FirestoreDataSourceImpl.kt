@@ -14,7 +14,8 @@ class FirestoreDataSourceImpl(
     override suspend fun getUserDetails(uid: String): Flow<Response<User>> = callbackFlow {
         val snapshotListener = firestore
             .collection("users")
-            .document(uid).addSnapshotListener { snapshot, e ->
+            .document(uid)
+            .addSnapshotListener { snapshot, e ->
                 val response =
                     if(snapshot!= null) {
                         val userDetails = snapshot.toObject(User::class.java)
@@ -23,7 +24,7 @@ class FirestoreDataSourceImpl(
                         Response.Error(e?.message ?: e.toString())
                     }
                 trySend(response).isSuccess
-        }
+            }
         awaitClose {
             snapshotListener.remove()
         }

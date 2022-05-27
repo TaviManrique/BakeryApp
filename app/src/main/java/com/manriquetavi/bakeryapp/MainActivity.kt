@@ -3,6 +3,7 @@ package com.manriquetavi.bakeryapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
                 screenNavController =  rememberNavController()
                 SetupNavGraph(screenNavController = screenNavController)
             }
+
         }
     }
 }

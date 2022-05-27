@@ -1,5 +1,7 @@
 package com.manriquetavi.bakeryapp.presentation.screens.splash
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -14,13 +16,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.util.ToastMessage
 
 @Composable
 fun SplashScreen(
     screenNavController: NavHostController,
     splashViewModel: SplashViewModel = hiltViewModel(),
 ) {
-    //splashViewModel.getAuthState()
     val onBoardingPageCompleted by splashViewModel.onBoardingCompleted.collectAsState()
     val isUserAuthenticated = splashViewModel.isUserAuthenticated
     val degrees = remember { Animatable(0f) }
@@ -35,10 +37,12 @@ fun SplashScreen(
         )
         screenNavController.popBackStack()
         if(onBoardingPageCompleted) {
+            Log.d("Splash Screen", "OnBoardingPage: Completed")
             if(isUserAuthenticated) {
                 screenNavController.navigate(Screen.Main.route)
-            } else {
-                screenNavController.navigate(Screen.Login.route)
+            }
+            else {
+                screenNavController.navigate(Screen.Main.route)
             }
         }
         else {

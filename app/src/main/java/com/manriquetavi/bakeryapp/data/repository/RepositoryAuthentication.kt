@@ -26,8 +26,6 @@ class RepositoryAuthentication
 
     fun isUserAuthenticated(): Boolean = firebaseAuth.isUserAuthenticated()
 
-    suspend fun getUserDetails(uid: String) = firestore.getUserDetails(uid)
-
     suspend fun getAuthState(): Flow<Boolean> = firebaseAuth.getAuthState()
 
     suspend fun signUp(

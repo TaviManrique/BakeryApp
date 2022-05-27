@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.manriquetavi.bakeryapp.data.repository.FirebaseAuthSourceImpl
 import com.manriquetavi.bakeryapp.data.repository.FirestoreDataSourceImpl
 import com.manriquetavi.bakeryapp.domain.repository.FirebaseAuthSource
@@ -27,6 +28,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
 
     @Provides
     @Singleton

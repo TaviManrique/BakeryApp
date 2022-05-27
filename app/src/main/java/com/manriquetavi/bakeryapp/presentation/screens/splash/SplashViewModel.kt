@@ -19,11 +19,9 @@ class SplashViewModel @Inject constructor(
     private val useCasesOnBoardingPage: UseCasesOnBoardingPage
 ): ViewModel() {
 
+    val isUserAuthenticated get() = useCasesAuthentication.isUserAuthenticated()
     private val _onBoardingCompleted: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val onBoardingCompleted: StateFlow<Boolean> = _onBoardingCompleted
-
-    val isUserAuthenticated get() = useCasesAuthentication.isUserAuthenticated()
-
     init {
         viewModelScope.launch(Dispatchers.IO){
             _onBoardingCompleted.value = useCasesOnBoardingPage.readOnBoardingUseCase().stateIn(viewModelScope).value

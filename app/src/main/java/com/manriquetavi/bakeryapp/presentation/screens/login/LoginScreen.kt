@@ -55,6 +55,7 @@ fun LoginScreen(
 ) {
 
 
+    ToastMessage(duration = Toast.LENGTH_SHORT, message = "Login Screen")
     val response = loginViewModel.signInState.value
 
     val launcher = rememberLauncherForActivityResult(
