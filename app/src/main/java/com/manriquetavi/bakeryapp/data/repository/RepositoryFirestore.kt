@@ -8,4 +8,5 @@ class RepositoryFirestore
     private val firestore: FirestoreDataSource
 ) {
     suspend fun getUserDetails(uid: String) = firestore.getUserDetails(uid)
+    suspend fun searchFoods(name: String) = firestore.searchFoods(name)
 }

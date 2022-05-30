@@ -31,6 +31,7 @@ import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
 @Composable
 fun SearchCakeInputField(
     text: MutableState<String>,
+    onTextChange: (String) -> Unit,
     onSearchClicked: (String) -> Unit,
     onCloseClicked: () -> Unit,
     focusManager: FocusManager?,
@@ -42,7 +43,8 @@ fun SearchCakeInputField(
         value = text.value,
         onValueChange = {
             /* After need to change onTextChange(it)*/
-            text.value = it
+            //text.value = it
+            onTextChange(it)
         },
         placeholder = {
             Text(
@@ -169,9 +171,9 @@ fun InputField(
 fun SearchCakeInputFieldPreview() {
     SearchCakeInputField(
         text = rememberSaveable { mutableStateOf("") },
-        //onTextChange = {},
+        onTextChange = {},
         onSearchClicked = {},
         onCloseClicked = {},
-        focusManager = null
+        focusManager = null,
     )
 }
