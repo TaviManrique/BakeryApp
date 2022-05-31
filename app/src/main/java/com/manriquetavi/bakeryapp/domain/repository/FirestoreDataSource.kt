@@ -9,4 +9,6 @@ interface FirestoreDataSource {
 
     suspend fun getUserDetails(uid: String): Flow<Response<User>>
     suspend fun searchFoods(name: String): Flow<Response<List<Food>?>>
+    suspend fun getSelectedFood(foodId: String): Flow<Response<Food?>>
+
 }

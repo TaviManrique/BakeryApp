@@ -1,7 +1,8 @@
 package com.manriquetavi.bakeryapp.presentation.screens.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,7 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.manriquetavi.bakeryapp.domain.model.Food
+import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.presentation.common.FoodItem
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.presentation.components.SearchCakeInputField
+import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
+import com.manriquetavi.bakeryapp.util.Util
 
 @ExperimentalComposeUiApi
 @Composable
@@ -26,7 +33,7 @@ fun SearchScreen(
         topBar = { SearchTopBar(screenNavController) },
         backgroundColor = Color.Transparent
     ) {
-        Content(
+        SearchActionComponent(
             screenNavController = screenNavController,
             searchViewModel = searchViewModel
         )
@@ -34,26 +41,54 @@ fun SearchScreen(
 }
 
 @Composable
-fun Content(
+fun SearchActionComponent(
     screenNavController: NavHostController,
     searchViewModel: SearchViewModel
 ) {
     val focusManager = LocalFocusManager.current
-    //val text = rememberSaveable { mutableStateOf("") }
     val searchQuery = searchViewModel.searchQuery
-    val searchedFoods by searchViewModel.searchedFoods
+    val searchedFoods = searchViewModel.searchedFoods.value
 
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
         SearchCakeInputField(
             text = searchQuery,
             onTextChange = { searchViewModel.updateSearchQuery(query = it) },
             onSearchClicked = {
                 searchViewModel.searchFoods(query = it)
-                Log.d("SearchScreen", "searchedFoods: $searchedFoods")
                               },
             onCloseClicked = { screenNavController.popBackStack() },
             focusManager = focusManager
         )
+        when(searchedFoods) {
+            is Response.Loading -> ProgressBar()
+            is Response.Success -> ListFoodFound(foods = searchedFoods.data, screenNavController = screenNavController)
+            is Response.Error -> Util.printError(searchedFoods.message)
+        }
+    }
+
+}
+
+@Composable
+fun ListFoodFound(
+    foods: List<Food>?,
+    screenNavController: NavHostController
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(all = SMALL_PADDING),
+        verticalArrangement = Arrangement.spacedBy(SMALL_PADDING)
+    ) {
+        foods?.let {
+            items(
+                items = foods,
+                key = { food ->
+                    food.id!!
+                }
+            ) { food ->
+                FoodItem(food = food, screenNavController = screenNavController)
+            }
+        }
     }
 }
 

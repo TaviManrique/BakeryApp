@@ -21,7 +21,7 @@ sealed class Screen(
     object Main: Screen("main_screen")
     object Search: Screen("search_screen")
     object Details: Screen("details_screen/{foodId}") {
-        fun passFoodId(foodId: Int): String {
+        fun passFoodId(foodId: String): String {
             return "details_screen/$foodId"
         }
     }

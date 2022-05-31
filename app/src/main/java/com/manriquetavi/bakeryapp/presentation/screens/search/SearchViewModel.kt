@@ -19,7 +19,7 @@ class SearchViewModel @Inject constructor(
     private val _searchQuery = mutableStateOf("")
     val searchQuery = _searchQuery
 
-    private val _searchedFoods = mutableStateOf<Response<List<Food>?>>(Response.Loading)
+    private val _searchedFoods = mutableStateOf<Response<List<Food>?>>(Response.Success(null))
     val searchedFoods: MutableState<Response<List<Food>?>> = _searchedFoods
 
     fun updateSearchQuery(query: String) {

@@ -46,7 +46,7 @@ fun SetupNavGraph(screenNavController: NavHostController) {
             route = Screen.Details.route,
             arguments = listOf(
                 navArgument("foodId") {
-                    type = NavType.IntType
+                    type = NavType.StringType
                 }
             )
         ) {

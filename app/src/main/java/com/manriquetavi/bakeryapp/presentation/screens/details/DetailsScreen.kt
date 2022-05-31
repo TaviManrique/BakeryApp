@@ -1,15 +1,16 @@
 package com.manriquetavi.bakeryapp.presentation.screens.details
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,26 +22,70 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
+import com.manriquetavi.bakeryapp.util.ToastMessage
+import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
 fun DetailsScreen(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    detailsViewModel: DetailsViewModel = hiltViewModel()
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+
+    when(val selectedFood = detailsViewModel.selectedFood.value) {
+        is Response.Loading -> ProgressBar()
+        is Response.Success -> ToastMessage(duration = Toast.LENGTH_SHORT, message = "Selected Food was: ${selectedFood.data?.name.toString()}")
+        is Response.Error -> Util.printError(selectedFood.message)
+    }
+    Column {
         ParallaxToolbar()
         DetailsContent()
+    }
+    IconsToolbar(screenNavController)
+}
+
+@Composable
+fun IconsToolbar(
+    screenNavController: NavHostController
+) {
+    Box {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                modifier = Modifier
+                    .clickable { screenNavController.popBackStack() },
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back Icon",
+                tint = MaterialTheme.colors.buttonBackgroundColor
+            )
+
+            Icon(
+                modifier = Modifier
+                    .clickable { },
+                imageVector = Icons.Default.FavoriteBorder,
+                contentDescription = "Favorite Icon",
+                tint = MaterialTheme.colors.buttonBackgroundColor
+            )
+        }
     }
 }
 
 @Composable
-fun ParallaxToolbar() {
+fun ParallaxToolbar(
+
+) {
     TopAppBar(
         modifier = Modifier
             .height(400.dp),
