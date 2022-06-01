@@ -82,6 +82,7 @@ class FirestoreDataSourceImpl(
     override suspend fun getAllCategories(): Flow<Response<List<Category>?>> = callbackFlow {
         val snapshotListener = firestore
             .collection("categories")
+            .orderBy("name")
             .addSnapshotListener { snapshot, e ->
                 val response =
                     if (snapshot != null) {

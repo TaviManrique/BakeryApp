@@ -57,7 +57,7 @@ fun CategoryItem(
             .width(72.dp)
             .clickable { },
         shape = RoundedCornerShape(8.dp),
-        elevation = 0.dp
+        elevation = 8.dp
     ) {
         Column(
             modifier = Modifier.padding(4.dp),
