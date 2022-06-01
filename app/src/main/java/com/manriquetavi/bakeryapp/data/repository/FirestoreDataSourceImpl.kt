@@ -2,6 +2,7 @@ package com.manriquetavi.bakeryapp.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.manriquetavi.bakeryapp.domain.model.Category
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.model.User
@@ -9,8 +10,6 @@ import com.manriquetavi.bakeryapp.domain.repository.FirestoreDataSource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Singleton
 
 @Singleton
@@ -24,7 +23,7 @@ class FirestoreDataSourceImpl(
             .document(uid)
             .addSnapshotListener { snapshot, e ->
                 val response =
-                    if(snapshot!= null) {
+                    if (snapshot != null) {
                         val userDetails = snapshot.toObject(User::class.java)
                         Response.Success(userDetails!!)
                     } else {
@@ -41,7 +40,7 @@ class FirestoreDataSourceImpl(
         val snapshotListener = firestore
             .collection("foods")
             .whereEqualTo("name", name)
-            .addSnapshotListener { snapshot,e ->
+            .addSnapshotListener { snapshot, e ->
                 val response =
                     if (snapshot != null) {
                         val foodsFounded = snapshot.toObjects(Food::class.java)
@@ -74,27 +73,27 @@ class FirestoreDataSourceImpl(
             }
             .addOnFailureListener { e ->
                 trySend(Response.Error(e.message ?: e.toString())).isFailure
-        }
+            }
         awaitClose {
             document.isCanceled
         }
     }
-    /*
-        val document = firestore
-            .collection("foods")
-            .document(foodId)
-            .get()
-            .addOnSuccessListener { document ->
-                val response = if(document!=null) {
-                    val food = document.toObject(Food::class.java)
-                    Response.Success(food)
-                } else {
-                    Response.Error("No such document")
-                }
+
+    override suspend fun getAllCategories(): Flow<Response<List<Category>?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("categories")
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val categories = snapshot.toObjects(Category::class.java)
+                        Response.Success(categories)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
                 trySend(response).isSuccess
             }
-            .addOnFailureListener { e ->
-                trySend(Response.Error(e.message ?: e.toString())).isSuccess
-            }
-    }*/
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
 }

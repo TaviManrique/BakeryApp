@@ -10,5 +10,5 @@ class RepositoryFirestore
     suspend fun getUserDetails(uid: String) = firestore.getUserDetails(uid)
     suspend fun searchFoods(name: String) = firestore.searchFoods(name)
     suspend fun getSelectedFood(foodId: String) = firestore.getSelectedFood(foodId)
-
+    suspend fun getAllCategories() = firestore.getAllCategories()
 }

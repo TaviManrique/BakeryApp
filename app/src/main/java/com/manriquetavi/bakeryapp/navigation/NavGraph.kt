@@ -39,7 +39,16 @@ fun SetupNavGraph(screenNavController: NavHostController) {
         composable(route = Screen.Main.route) {
             MainScreen(screenNavController = screenNavController)
         }
-        composable(route = Screen.Search.route) {
+        composable(
+            route = Screen.Search.route,
+            arguments = listOf(
+                navArgument("category") {
+                    type = NavType.StringType
+                    defaultValue = null
+                    nullable = true
+                }
+            )
+        ) {
             SearchScreen(screenNavController = screenNavController)
         }
         composable(

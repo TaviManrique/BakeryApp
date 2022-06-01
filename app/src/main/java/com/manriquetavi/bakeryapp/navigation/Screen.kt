@@ -19,7 +19,11 @@ sealed class Screen(
     object Login: Screen("login_screen")
     object Register: Screen("register_screen")
     object Main: Screen("main_screen")
-    object Search: Screen("search_screen")
+    object Search: Screen("search_screen?category={category}") {
+        fun passCategory(category: String? = null): String {
+            return "search_screen?category=$category"
+        }
+    }
     object Details: Screen("details_screen/{foodId}") {
         fun passFoodId(foodId: String): String {
             return "details_screen/$foodId"
