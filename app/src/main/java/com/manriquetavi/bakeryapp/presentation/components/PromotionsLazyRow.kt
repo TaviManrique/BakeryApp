@@ -59,10 +59,12 @@ fun PromotionItem(
     imagePainter: Painter
 ) {
     Card(
-        modifier = Modifier.width(240.dp).clickable {  },
+        modifier = Modifier
+            .width(240.dp)
+            .clickable {  },
         shape = RoundedCornerShape(8.dp),
         backgroundColor = backgroundColor,
-        elevation = 0.dp
+        elevation = 8.dp
     ) {
         Row {
             Column(

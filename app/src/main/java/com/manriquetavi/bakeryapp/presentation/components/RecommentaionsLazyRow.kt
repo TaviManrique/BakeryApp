@@ -78,7 +78,8 @@ fun RecommendationItem(
     Card(
         modifier = Modifier.width(160.dp).clickable {  },
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = Purple200
+        backgroundColor = Purple200,
+        elevation = 8.dp
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
