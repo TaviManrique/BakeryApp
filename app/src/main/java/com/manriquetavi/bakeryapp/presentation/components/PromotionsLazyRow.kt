@@ -1,26 +1,25 @@
 package com.manriquetavi.bakeryapp.presentation.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.InspectableModifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.domain.model.Promotion
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.screens.home.HomeViewModel
@@ -67,13 +66,9 @@ fun PromotionsLazyRowContent(
 fun PromotionItem(
     promotion: Promotion
 ) {
-    val painter = rememberImagePainter(promotion.image)
-    val painterState = painter.state
-
     Card(
         modifier = Modifier
-            .width(240.dp)
-            .clickable { },
+            .width(240.dp),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = promotion.backgroundColor?.let { Color(it) }!!,
         elevation = 0.dp
@@ -103,6 +98,19 @@ fun PromotionItem(
                     fontWeight = FontWeight.Bold
                 )
             }
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(promotion.image)
+                    .crossfade(2000)
+                    .build(),
+                alignment = Alignment.CenterEnd,
+                contentScale = ContentScale.Crop,
+                contentDescription = "Image Promotions"
+            )
+            /*
             Image(
                 modifier = Modifier
                     .fillMaxHeight(),
@@ -110,7 +118,7 @@ fun PromotionItem(
                 contentDescription = "",
                 alignment = Alignment.CenterEnd,
                 contentScale = ContentScale.Crop
-            )
+            )*/
         }
     }
 }
@@ -126,8 +134,11 @@ fun PromotionProgressBar() {
     }
 }
 
+@ExperimentalCoilApi
 @Preview
 @Composable
 fun PromotionsLazyRowPreview() {
-    PromotionsLazyRow(homeViewModel = hiltViewModel())
+    PromotionItem(
+        Promotion()
+    )
 }

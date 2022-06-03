@@ -15,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,6 +33,7 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
@@ -97,10 +100,15 @@ fun RecommendationItem(
                     .fillMaxWidth()
                     .height(100.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Purple500),
-                model = food.image,
+                    .background(Color.White),
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(food.image)
+                    .crossfade(2000)
+                    .build(),
                 placeholder = painterResource(R.drawable.ic_placeholder),
-                contentScale = ContentScale.FillBounds,
+                error = painterResource(R.drawable.ic_placeholder),
+                contentScale = ContentScale.Crop,
                 contentDescription = "Image Food"
             )
             Text(

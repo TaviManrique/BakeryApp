@@ -1,7 +1,5 @@
 package com.manriquetavi.bakeryapp.presentation.screens.details
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
-import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
@@ -41,12 +42,19 @@ fun DetailsScreen(
 
     when(val selectedFood = detailsViewModel.selectedFood.value) {
         is Response.Loading -> ProgressBar()
-        is Response.Success -> ToastMessage(duration = Toast.LENGTH_SHORT, message = "Selected Food was: ${selectedFood.data?.name.toString()}")
+        is Response.Success -> DetailsScreenContent(selectedFood.data!!, screenNavController)
         is Response.Error -> Util.printError(selectedFood.message)
     }
+}
+
+@Composable
+fun DetailsScreenContent(
+    food: Food,
+    screenNavController: NavHostController
+) {
     Column {
-        ParallaxToolbar()
-        DetailsContent()
+        ParallaxToolbar(food)
+        DetailsContent(food)
     }
     IconsToolbar(screenNavController)
 }
@@ -84,7 +92,7 @@ fun IconsToolbar(
 
 @Composable
 fun ParallaxToolbar(
-
+    food: Food
 ) {
     TopAppBar(
         modifier = Modifier
@@ -97,12 +105,18 @@ fun ParallaxToolbar(
                 modifier = Modifier
                     .height(344.dp)
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxSize(),
-                    painter = painterResource(id = R.drawable.strawberry_pie_1),
-                    contentDescription = "Image Food",
-                    contentScale = ContentScale.Crop
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(food.image)
+                        .crossfade(2000)
+                        .build(),
+                    placeholder = painterResource(R.drawable.ic_placeholder),
+                    error = painterResource(R.drawable.ic_placeholder),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Image Food"
                 )
                 Row(
                     modifier = Modifier
@@ -115,7 +129,7 @@ fun ParallaxToolbar(
                             .clip(RoundedCornerShape(16.dp))
                             .background(Color.LightGray)
                             .padding(8.dp),
-                        text = "Dessert",
+                        text = food.category.toString(),
                         style = MaterialTheme.typography.caption,
                         color = Color.Black
                     )
@@ -130,7 +144,7 @@ fun ParallaxToolbar(
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
-                    text = "Strawberry Pie",
+                    text = food.name.toString(),
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -141,7 +155,9 @@ fun ParallaxToolbar(
 }
 
 @Composable
-fun DetailsContent() {
+fun DetailsContent(
+    food: Food
+) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -154,22 +170,24 @@ fun DetailsContent() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CounterFood()
-            Price()
+            Price(food.price.toString())
         }
 
         //Add to cart button
         ButtonAddToCart()
 
         //Description food
-        Description()
+        Description(food.description.toString())
     }
 
 }
 
 @Composable
-fun Price() {
+fun Price(
+    price: String
+) {
     Text(
-        text = "$ 0.99",
+        text = price,
         style = MaterialTheme.typography.h5,
         fontWeight = FontWeight.Bold
     )
@@ -227,13 +245,14 @@ fun ButtonAddToCart() {
 }
 
 @Composable
-fun Description() {
+fun Description(
+    description: String
+) {
     LazyColumn {
         item {
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
-                text = "Description about the food description about the food,description about the food description about the food,description about the food description about the food, Description about the food description about the food,description about the food description about the food," +
-                        "Description about the food description about the food,description about the food description about the food,description about the food description about the food, Description about the food description about the food,description about the food description about the food",
+                text = description,
                 style = MaterialTheme.typography.subtitle1
             )
         }

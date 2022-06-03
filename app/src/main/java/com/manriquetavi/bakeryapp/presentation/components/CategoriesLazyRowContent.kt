@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,6 +26,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.domain.model.Category
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.screens.home.HomeViewModel
@@ -86,9 +88,14 @@ fun CategoryItem(
 
             AsyncImage(
                 modifier = Modifier.size(48.dp),
-                model = category.image,
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(category.image)
+                    .crossfade(2000)
+                    .build(),
                 placeholder = painterResource(R.drawable.ic_placeholder),
-                contentScale = ContentScale.FillBounds,
+                error = painterResource(R.drawable.ic_placeholder),
+                contentScale = ContentScale.Crop,
                 contentDescription = "Icon Category"
             )
             Text(
@@ -115,11 +122,12 @@ fun CategoryProgressBar() {
     }
 }
 
+@ExperimentalCoilApi
 @Preview(showBackground = true)
 @Composable
 fun CategoriesLazyRowPreview() {
-    CategoriesLazyRowContent(
-        listOf<Category>(),
+    CategoryItem(
+        category = Category(),
         rememberNavController()
     )
 }
