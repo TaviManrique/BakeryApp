@@ -2,10 +2,8 @@ package com.manriquetavi.bakeryapp.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.manriquetavi.bakeryapp.domain.model.Category
-import com.manriquetavi.bakeryapp.domain.model.Food
-import com.manriquetavi.bakeryapp.domain.model.Response
-import com.manriquetavi.bakeryapp.domain.model.User
+import com.google.firebase.firestore.Query
+import com.manriquetavi.bakeryapp.domain.model.*
 import com.manriquetavi.bakeryapp.domain.repository.FirestoreDataSource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -88,6 +86,43 @@ class FirestoreDataSourceImpl(
                     if (snapshot != null) {
                         val categories = snapshot.toObjects(Category::class.java)
                         Response.Success(categories)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
+
+    override suspend fun getAllPromotions(): Flow<Response<List<Promotion>?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("promotions")
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val promotions = snapshot.toObjects(Promotion::class.java)
+                        Response.Success(promotions)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
+
+    override suspend fun getRecommendations(): Flow<Response<List<Food>?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("foods")
+            .orderBy("stars", Query.Direction.DESCENDING).limit(5)
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val recommendations = snapshot.toObjects(Food::class.java)
+                        Response.Success(recommendations)
                     } else {
                         Response.Error(e?.message ?: e.toString())
                     }

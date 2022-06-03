@@ -11,5 +11,6 @@ data class Food(
     val price: String? = "",
     val description: String? = "",
     val image: String? = "",
-    val onStock: Boolean? = null
+    val onStock: Boolean? = null,
+    val stars: Float? = 0f
 )

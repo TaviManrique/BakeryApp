@@ -54,7 +54,7 @@ fun BottomBar(
 ) {
     BottomNavigation(
         modifier = Modifier
-            .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
+            .padding(start = 16.dp, bottom = 8.dp, end = 16.dp)
             .clip(RoundedCornerShape(30)),
         backgroundColor = ShimmerMediumGray,
         elevation = 10.dp
@@ -195,4 +195,13 @@ fun RowScope.AddItem(
 @Composable
 fun MainScreenPreview() {
     MainScreen(screenNavController = rememberNavController())
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomBarPreview() {
+    BottomBar(
+        selectedItem = remember { mutableStateOf(1) },
+        onSelectedItem = {  }
+    )
 }

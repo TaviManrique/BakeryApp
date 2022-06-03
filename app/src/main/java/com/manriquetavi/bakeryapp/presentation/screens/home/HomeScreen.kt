@@ -13,51 +13,41 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.manriquetavi.bakeryapp.domain.model.Category
-import com.manriquetavi.bakeryapp.domain.model.Response
-import com.manriquetavi.bakeryapp.presentation.components.CategoriesLazyRow
-import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
-import com.manriquetavi.bakeryapp.presentation.components.PromotionsLazyRow
-import com.manriquetavi.bakeryapp.presentation.components.RecommendationsLazyRow
-import com.manriquetavi.bakeryapp.util.Util
+import coil.annotation.ExperimentalCoilApi
+import com.manriquetavi.bakeryapp.presentation.components.*
 
+@ExperimentalCoilApi
 @Composable
 fun HomeScreen(
     screenNavController: NavHostController,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-
-    val allCategories = homeViewModel.allCategories.value
-
     Scaffold(
         topBar = { HomeTopBar(screenNavController) },
         backgroundColor = Color.Transparent,
     ) {
-        when(allCategories) {
-            is Response.Loading -> ProgressBar()
-            is Response.Success -> HomeContent(categories = allCategories.data, screenNavController = screenNavController)
-            is Response.Error -> Util.printError(allCategories.message)
-        }
+        HomeContent(screenNavController = screenNavController, homeViewModel = homeViewModel)
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 fun HomeContent(
-    categories: List<Category>?,
+    homeViewModel: HomeViewModel,
     screenNavController: NavHostController
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        PromotionsLazyRow()
+        PromotionsLazyRow(homeViewModel)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Category", style = MaterialTheme.typography.h6)
         Spacer(modifier = Modifier.height(16.dp))
-        CategoriesLazyRow(categories, screenNavController)
+        CategoriesLazyRow(homeViewModel, screenNavController)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Recommendation", style = MaterialTheme.typography.h6)
         Spacer(modifier = Modifier.height(16.dp))
-        RecommendationsLazyRow()
+        RecommendationsLazyRow(homeViewModel, screenNavController)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

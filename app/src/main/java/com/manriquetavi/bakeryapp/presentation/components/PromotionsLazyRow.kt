@@ -4,67 +4,79 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.manriquetavi.bakeryapp.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import com.manriquetavi.bakeryapp.domain.model.Promotion
+import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.presentation.screens.home.HomeViewModel
+import com.manriquetavi.bakeryapp.util.Util
 
+
+@ExperimentalCoilApi
 @Composable
-fun PromotionsLazyRow() {
+fun PromotionsLazyRow(
+    homeViewModel: HomeViewModel
+) {
+    when(val allPromotions = homeViewModel.allPromotions.value) {
+        is Response.Loading -> PromotionProgressBar()
+        is Response.Success -> PromotionsLazyRowContent(allPromotions.data)
+        is Response.Error -> Util.printError(allPromotions.message)
+    }
+}
+
+@ExperimentalCoilApi
+@Composable
+fun PromotionsLazyRowContent(
+    promotions: List<Promotion>?
+) {
     LazyRow(
         modifier = Modifier.height(120.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            PromotionItem(
-                imagePainter = painterResource(id = R.drawable.promotion),
-                title = "Fruit",
-                subtitle = "Start @",
-                header = "$1",
-                backgroundColor = MaterialTheme.colors.primary
-            )
-        }
-
-        item {
-            PromotionItem(
-                imagePainter = painterResource(id = R.drawable.promotion),
-                title = "Meat",
-                subtitle = "Discount",
-                header = "20%",
-                backgroundColor = Color(0xff6EB6F5)
-            )
+        promotions?.let {
+            items(
+                items = promotions,
+                key = { promotion ->
+                    promotion.id!!
+                }
+            ) { promotion ->
+                PromotionItem(promotion)
+            }
         }
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 fun PromotionItem(
-    title: String = "",
-    subtitle: String = "",
-    header: String = "",
-    backgroundColor: Color = Color.Transparent,
-    imagePainter: Painter
+    promotion: Promotion
 ) {
+    val painter = rememberImagePainter(promotion.image)
+    val painterState = painter.state
+
     Card(
         modifier = Modifier
             .width(240.dp)
-            .clickable {  },
+            .clickable { },
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = backgroundColor,
-        elevation = 8.dp
+        backgroundColor = promotion.backgroundColor?.let { Color(it) }!!,
+        elevation = 0.dp
     ) {
         Row {
             Column(
@@ -74,18 +86,18 @@ fun PromotionItem(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = title,
+                    text = promotion.title.toString(),
                     fontSize = 14.sp,
                     color = Color.White
                 )
                 Text(
-                    text = subtitle,
+                    text = promotion.subtitle.toString(),
                     fontSize = 16.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = header,
+                    text = promotion.header.toString(),
                     fontSize = 28.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -93,9 +105,8 @@ fun PromotionItem(
             }
             Image(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-                painter = imagePainter,
+                    .fillMaxHeight(),
+                painter = painter,
                 contentDescription = "",
                 alignment = Alignment.CenterEnd,
                 contentScale = ContentScale.Crop
@@ -104,8 +115,19 @@ fun PromotionItem(
     }
 }
 
+@Composable
+fun PromotionProgressBar() {
+    Row(
+        modifier = Modifier
+            .height(120.dp)
+            .fillMaxWidth()
+    ) {
+        ProgressBar()
+    }
+}
+
 @Preview
 @Composable
 fun PromotionsLazyRowPreview() {
-    PromotionsLazyRow()
+    PromotionsLazyRow(homeViewModel = hiltViewModel())
 }

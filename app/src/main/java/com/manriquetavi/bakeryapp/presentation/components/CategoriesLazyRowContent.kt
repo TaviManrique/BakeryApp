@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.components
 
+import com.manriquetavi.bakeryapp.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -21,12 +21,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Category
+import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.presentation.screens.home.HomeViewModel
+import com.manriquetavi.bakeryapp.util.Util
 
+@ExperimentalCoilApi
 @Composable
 fun CategoriesLazyRow(
+    homeViewModel: HomeViewModel,
+    screenNavController: NavHostController
+) {
+    when(val allCategories = homeViewModel.allCategories.value) {
+        is Response.Loading -> CategoryProgressBar()
+        is Response.Success -> CategoriesLazyRowContent(categories = allCategories.data, screenNavController = screenNavController)
+        is Response.Error -> Util.printError(allCategories.message)
+    }
+}
+
+@ExperimentalCoilApi
+@Composable
+fun CategoriesLazyRowContent(
     categories: List<Category>?,
     screenNavController: NavHostController
 ) {
@@ -47,6 +66,7 @@ fun CategoriesLazyRow(
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 fun CategoryItem(
     category: Category,
@@ -63,13 +83,14 @@ fun CategoryItem(
             modifier = Modifier.padding(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(48.dp),
-                painter = rememberImagePainter(category.image),
-                contentDescription = "Icon Category",
-                contentScale = ContentScale.Crop
-            )
 
+            AsyncImage(
+                modifier = Modifier.size(48.dp),
+                model = category.image,
+                placeholder = painterResource(R.drawable.ic_placeholder),
+                contentScale = ContentScale.FillBounds,
+                contentDescription = "Icon Category"
+            )
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = category.name.toString(),
@@ -82,10 +103,22 @@ fun CategoryItem(
     }
 }
 
+@ExperimentalCoilApi
+@Composable
+fun CategoryProgressBar() {
+    Row(
+        modifier = Modifier
+            .height(72.dp)
+            .fillMaxWidth()
+    ) {
+        ProgressBar()
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CategoriesLazyRowPreview() {
-    CategoriesLazyRow(
+    CategoriesLazyRowContent(
         listOf<Category>(),
         rememberNavController()
     )
