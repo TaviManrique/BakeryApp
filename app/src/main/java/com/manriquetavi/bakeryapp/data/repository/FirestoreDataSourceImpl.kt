@@ -132,4 +132,27 @@ class FirestoreDataSourceImpl(
             snapshotListener.remove()
         }
     }
+
+    override suspend fun getAllFoodsSelectedCategory(category: String): Flow<Response<List<Food>?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("foods")
+            .whereEqualTo("category", category)
+            .orderBy("stars", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val foods = snapshot.toObjects(Food::class.java)
+                        Log.d("TAG", "DocumentSnapshot all foods selected category: ${snapshot.documents}")
+                        Response.Success(foods)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
+
+
 }

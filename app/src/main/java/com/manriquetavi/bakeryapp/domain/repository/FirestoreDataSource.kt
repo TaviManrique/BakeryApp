@@ -11,5 +11,6 @@ interface FirestoreDataSource {
     suspend fun getAllCategories(): Flow<Response<List<Category>?>>
     suspend fun getAllPromotions(): Flow<Response<List<Promotion>?>>
     suspend fun getRecommendations(): Flow<Response<List<Food>?>>
+    suspend fun getAllFoodsSelectedCategory(category: String): Flow<Response<List<Food>?>>
 
 }
