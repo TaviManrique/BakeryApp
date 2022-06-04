@@ -29,6 +29,7 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.domain.model.Category
 import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.screens.home.HomeViewModel
 import com.manriquetavi.bakeryapp.util.Util
 
@@ -77,7 +78,7 @@ fun CategoryItem(
     Card(
         modifier = Modifier
             .width(72.dp)
-            .clickable { },
+            .clickable { screenNavController.navigate(Screen.Search.passCategory(category = category.name))},
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp
     ) {
