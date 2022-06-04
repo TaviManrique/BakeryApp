@@ -17,6 +17,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_out.SignO
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_up.SignUp
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.UseCasesFirestore
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_categories.GetAllCategories
+import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_foods.GetAllFoods
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_foods_selected_category.GetAllFoodsSelectedCategory
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_promotions.GetAllPromotions
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_recommendations.GetRecommendations
@@ -73,7 +74,8 @@ object RepositoryModule {
             getAllCategories = GetAllCategories(repositoryFirestore),
             getAllPromotions = GetAllPromotions(repositoryFirestore),
             getRecommendations = GetRecommendations(repositoryFirestore),
-            getAllFoodsSelectedCategory = GetAllFoodsSelectedCategory(repositoryFirestore)
+            getAllFoodsSelectedCategory = GetAllFoodsSelectedCategory(repositoryFirestore),
+            getAllFoods = GetAllFoods(repositoryFirestore)
         )
     }
 
