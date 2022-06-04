@@ -12,12 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.ui.theme.*
@@ -28,8 +36,6 @@ fun FoodItem(
     screenNavController: NavHostController,
     isFoodCartItem: Boolean = false
 ) {
-    val painter = rememberImagePainter(food.image)
-
     Card(
         modifier = Modifier
             .padding(EXTRA_SMALL_PADDING)
@@ -48,9 +54,20 @@ fun FoodItem(
                     .size(150.dp),
                 elevation = 4.dp
             ) {
-                Image(
-                    painter = painter,
-                    contentDescription = "Food Image"
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White),
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(food.image)
+                        .crossfade(2000)
+                        .build(),
+                    placeholder = painterResource(R.drawable.ic_placeholder),
+                    error = painterResource(R.drawable.ic_placeholder),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Image Food"
                 )
             }
             Column(
