@@ -15,5 +15,6 @@ class RepositoryFirestore
     suspend fun getAllPromotions() = firestore.getAllPromotions()
     suspend fun getRecommendations() = firestore.getRecommendations()
     suspend fun getAllFoodsSelectedCategory(category: String) = firestore.getAllFoodsSelectedCategory(category)
+    suspend fun getAllFoods() = firestore.getAllFoods()
 
 }

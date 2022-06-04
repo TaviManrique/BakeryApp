@@ -154,5 +154,21 @@ class FirestoreDataSourceImpl(
         }
     }
 
-
+    override suspend fun getAllFoods(): Flow<Response<List<Food>?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("foods")
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val foods = snapshot.toObjects(Food::class.java)
+                        Response.Success(foods)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
 }
