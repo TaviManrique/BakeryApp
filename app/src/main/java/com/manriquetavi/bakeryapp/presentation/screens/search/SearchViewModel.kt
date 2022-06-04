@@ -48,6 +48,10 @@ class SearchViewModel @Inject constructor(
                 useCasesFirestore.getAllFoodsSelectedCategory(category).collect {
                     _searchedFoods.value = it
                 }
+            } ?: run {
+                useCasesFirestore.getAllFoods().collect {
+                    _searchedFoods.value = it
+                }
             }
         }
     }
