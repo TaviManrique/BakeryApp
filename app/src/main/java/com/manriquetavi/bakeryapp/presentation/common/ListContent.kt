@@ -27,21 +27,21 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
+import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.ui.theme.*
 
 @Composable
 fun FoodItem(
     food: Food,
-    screenNavController: NavHostController,
-    isFoodCartItem: Boolean = false
+    screenNavController: NavHostController
 ) {
     Card(
         modifier = Modifier
             .padding(EXTRA_SMALL_PADDING)
             .fillMaxWidth()
             .height(FOOD_ITEM_HEIGHT)
-            .clickable { if(!isFoodCartItem) screenNavController.navigate(Screen.Details.passFoodId(food.id!!)) },
+            .clickable { screenNavController.navigate(Screen.Details.passFoodId(food.id!!)) },
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -71,7 +71,7 @@ fun FoodItem(
                 )
             }
             Column(
-                modifier = Modifier.weight(0.4f)
+                modifier = Modifier.weight(0.5f)
             ) {
                 Text(
                     text = food.name.toString(),
@@ -88,19 +88,77 @@ fun FoodItem(
                     style = MaterialTheme.typography.h6
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun FoodCartItem(
+    foodCart: FoodCart,
+) {
+    Card(
+        modifier = Modifier
+            .padding(EXTRA_SMALL_PADDING)
+            .fillMaxWidth()
+            .height(FOOD_ITEM_HEIGHT),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                modifier = Modifier
+                    .padding(SMALL_PADDING)
+                    .weight(0.5f)
+                    .size(150.dp),
+                elevation = 4.dp
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White),
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(foodCart.image)
+                        .crossfade(2000)
+                        .build(),
+                    placeholder = painterResource(R.drawable.ic_placeholder),
+                    error = painterResource(R.drawable.ic_placeholder),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Image Food"
+                )
+            }
+            Column(
+                modifier = Modifier.weight(0.3f)
+            ) {
+                Text(
+                    text = foodCart.name.toString(),
+                    style = MaterialTheme.typography.h6,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = foodCart.category.toString(),
+                    style = MaterialTheme.typography.caption
+                )
+                Text(
+                    text = foodCart.price.toString(),
+                    style = MaterialTheme.typography.h6
+                )
+            }
             Column(
                 modifier = Modifier
-                    .alpha(if (!isFoodCartItem) 0f else 1f)
+                    .padding(SMALL_PADDING)
                     .border(
                         BorderStroke(1.dp, LightGray),
                         shape = RoundedCornerShape(16.dp)
                     )
-                    .weight(0.1f),
+                    .weight(0.2f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconButton(
-                    onClick = { Log.d("FoodItem", "add item") },
-                    enabled = isFoodCartItem
+                    onClick = { Log.d("FoodItem", "add item") }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -113,8 +171,7 @@ fun FoodItem(
                     style = MaterialTheme.typography.h6
                 )
                 IconButton(
-                    onClick = { Log.d("FoodItem", "minues item") },
-                    enabled = isFoodCartItem
+                    onClick = { Log.d("FoodItem", "minues item") }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Remove,
@@ -132,7 +189,6 @@ fun FoodItem(
 fun FoodItemPreview() {
     FoodItem(
         food = Food(),
-        screenNavController = rememberNavController(),
-        isFoodCartItem = false
+        screenNavController = rememberNavController()
     )
 }

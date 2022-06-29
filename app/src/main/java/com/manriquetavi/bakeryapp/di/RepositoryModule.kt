@@ -1,10 +1,7 @@
 package com.manriquetavi.bakeryapp.di
 
 import android.content.Context
-import com.manriquetavi.bakeryapp.data.repository.DataStoreOperationsImpl
-import com.manriquetavi.bakeryapp.data.repository.RepositoryAuthentication
-import com.manriquetavi.bakeryapp.data.repository.RepositoryFirestore
-import com.manriquetavi.bakeryapp.data.repository.RepositoryOnBoardingPage
+import com.manriquetavi.bakeryapp.data.repository.*
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.get_auth_state.GetAuthState
@@ -24,6 +21,10 @@ import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_recommendations
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_selected_food.GetSelectedFood
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.search_foods.SearchFoods
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.user.GetUserDetails
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLocalDataSource
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.delete_all_foodscart.DeleteAllFoodsCart
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.get_all_foodscart.GetAllFoodsCart
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.insert_foodcart.InsertFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
 import dagger.Module
 import dagger.Provides
@@ -76,6 +77,16 @@ object RepositoryModule {
             getRecommendations = GetRecommendations(repositoryFirestore),
             getAllFoodsSelectedCategory = GetAllFoodsSelectedCategory(repositoryFirestore),
             getAllFoods = GetAllFoods(repositoryFirestore)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUseCasesLocalDataSources(repositoryLocalDataSource: RepositoryLocalDataSource): UseCasesLocalDataSource {
+        return UseCasesLocalDataSource(
+            getAllFoodsCart = GetAllFoodsCart(repositoryLocalDataSource),
+            insertFoodCart = InsertFoodCart(repositoryLocalDataSource),
+            deleteAllFoodsCart = DeleteAllFoodsCart(repositoryLocalDataSource)
         )
     }
 

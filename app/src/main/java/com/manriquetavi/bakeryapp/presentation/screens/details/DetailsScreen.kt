@@ -11,6 +11,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
+import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
@@ -42,7 +46,7 @@ fun DetailsScreen(
 
     when(val selectedFood = detailsViewModel.selectedFood.value) {
         is Response.Loading -> ProgressBar()
-        is Response.Success -> DetailsScreenContent(selectedFood.data!!, screenNavController)
+        is Response.Success -> DetailsScreenContent(selectedFood.data!!, screenNavController, detailsViewModel)
         is Response.Error -> Util.printError(selectedFood.message)
     }
 }
@@ -50,11 +54,12 @@ fun DetailsScreen(
 @Composable
 fun DetailsScreenContent(
     food: Food,
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    detailsViewModel: DetailsViewModel
 ) {
     Column {
         ParallaxToolbar(food)
-        DetailsContent(food)
+        DetailsContent(food, detailsViewModel)
     }
     IconsToolbar(screenNavController)
 }
@@ -156,8 +161,11 @@ fun ParallaxToolbar(
 
 @Composable
 fun DetailsContent(
-    food: Food
+    food: Food,
+    detailsViewModel: DetailsViewModel
 ) {
+    val countFood = remember { mutableStateOf(1) }
+
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -169,12 +177,14 @@ fun DetailsContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CounterFood()
-            Price(food.price.toString())
+            CounterFood(countFood)
+            food.price?.let { price ->
+                Price(price = price.toDouble(), countFood = countFood.value)
+            }
         }
 
         //Add to cart button
-        ButtonAddToCart()
+        ButtonAddToCart(detailsViewModel)
 
         //Description food
         Description(food.description.toString())
@@ -184,17 +194,20 @@ fun DetailsContent(
 
 @Composable
 fun Price(
-    price: String
+    price: Double,
+    countFood: Int
 ) {
     Text(
-        text = price,
+        text = String.format("%.2f", price*countFood),
         style = MaterialTheme.typography.h5,
         fontWeight = FontWeight.Bold
     )
 }
 
 @Composable
-fun CounterFood() {
+fun CounterFood(
+    countFood: MutableState<Int>
+) {
     Row(
         modifier = Modifier
             .border(
@@ -204,7 +217,7 @@ fun CounterFood() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = {  }
+            onClick = { if(countFood.value != 1) countFood.value-- }
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
@@ -213,11 +226,11 @@ fun CounterFood() {
             )
         }
         Text(
-            text = "1",
+            text = countFood.value.toString(),
             style = MaterialTheme.typography.h6
         )
         IconButton(
-            onClick = {  }
+            onClick = { if(countFood.value != 10) countFood.value++ }
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
@@ -229,12 +242,26 @@ fun CounterFood() {
 }
 
 @Composable
-fun ButtonAddToCart() {
+fun ButtonAddToCart(
+    detailsViewModel: DetailsViewModel
+) {
     Button(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
-        onClick = { /*TODO button add to cart*/ },
+        onClick = {
+            detailsViewModel.insertFoodCart(
+                FoodCart(
+                    idFood = "1",
+                    name = "cupcake",
+                    category = "dessert",
+                    image = "https://firebasestorage.googleapis.com/v0/b/bakeryapp-d3dfa.appspot.com/o/foods_images%2Fcupcake.jpg?alt=media&token=889f2e4d-8de5-44c1-93bc-570c97a9b6e8",
+                    description = "description",
+                    quantity = 1,
+                    price = 10.0
+                )
+            )
+                  },
         shape = RoundedCornerShape(16.dp)
     ) {
         Text(

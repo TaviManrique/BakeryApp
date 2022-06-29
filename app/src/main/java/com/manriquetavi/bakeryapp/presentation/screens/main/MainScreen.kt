@@ -2,7 +2,6 @@ package com.manriquetavi.bakeryapp.presentation.screens.main
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,12 +19,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartScreen
 import com.manriquetavi.bakeryapp.presentation.screens.home.HomeScreen
 import com.manriquetavi.bakeryapp.presentation.screens.order.OrderScreen
 import com.manriquetavi.bakeryapp.presentation.screens.profile.ProfileScreen
 import com.manriquetavi.bakeryapp.ui.theme.ShimmerMediumGray
 
+@ExperimentalCoilApi
 @Composable
 fun MainScreen(
     screenNavController: NavHostController
@@ -191,6 +192,7 @@ fun RowScope.AddItem(
 }*/
 
 
+@ExperimentalCoilApi
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
