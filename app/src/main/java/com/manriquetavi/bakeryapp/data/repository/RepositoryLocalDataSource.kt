@@ -12,4 +12,5 @@ class RepositoryLocalDataSource
     fun getAllFoodsCart(): Flow<List<FoodCart>> = local.getAllFoodsCart()
     suspend fun insertFoodCart(foodCart: FoodCart) = local.insertFoodCart(foodCart)
     suspend fun deleteAllFoodsCart() = local.deleteAllFoodsCart()
+    suspend fun increaseQuantityFoodCart(foodCartId: Int) = local.increaseQuantityFoodCart(foodCartId)
 }

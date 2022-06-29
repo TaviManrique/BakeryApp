@@ -39,24 +39,26 @@ fun CartScreen(
         },
         floatingActionButtonPosition = FabPosition.Center
     ) {
-        CartScreenContent(foodsCart)
+        CartScreenContent(foodsCart, cartViewModel)
     }
 }
 
 @Composable
 fun CartScreenContent(
-    foodsCart: List<FoodCart>
+    foodsCart: List<FoodCart>,
+    cartViewModel: CartViewModel
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        ListFoodCart(foodsCart)
+        ListFoodCart(foodsCart,cartViewModel)
     }
 }
 
 @Composable
 fun ListFoodCart(
-    foodsCart: List<FoodCart>
+    foodsCart: List<FoodCart>,
+    cartViewModel: CartViewModel
 ) {
     LazyColumn(
         contentPadding = PaddingValues(all = SMALL_PADDING),
@@ -69,7 +71,7 @@ fun ListFoodCart(
                     foodCart.id!!
                 }
             ) { foodCart ->
-                FoodCartItem(foodCart = foodCart)
+                FoodCartItem(foodCart = foodCart, cartViewModel = cartViewModel)
             }
         }
     }

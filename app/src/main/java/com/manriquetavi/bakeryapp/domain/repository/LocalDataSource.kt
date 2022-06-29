@@ -9,4 +9,5 @@ interface LocalDataSource {
     fun getAllFoodsCart(): Flow<List<FoodCart>>
     suspend fun insertFoodCart(foodCart: FoodCart)
     suspend fun deleteAllFoodsCart()
+    suspend fun increaseQuantityFoodCart(foodCartId: Int)
 }

@@ -24,6 +24,7 @@ class DetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val useCasesLocalDataSource: UseCasesLocalDataSource
 ): ViewModel() {
+
     private val _selectedFood: MutableState<Response<Food?>> = mutableStateOf(Response.Loading)
     val selectedFood: State<Response<Food?>> = _selectedFood
 

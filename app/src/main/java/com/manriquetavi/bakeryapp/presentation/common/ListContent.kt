@@ -29,6 +29,7 @@ import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 import com.manriquetavi.bakeryapp.ui.theme.*
 
 @Composable
@@ -95,6 +96,7 @@ fun FoodItem(
 @Composable
 fun FoodCartItem(
     foodCart: FoodCart,
+    cartViewModel: CartViewModel,
 ) {
     Card(
         modifier = Modifier
@@ -158,7 +160,7 @@ fun FoodCartItem(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconButton(
-                    onClick = { Log.d("FoodItem", "add item") }
+                    onClick = { cartViewModel.increaseQuantityFoodCart() }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,

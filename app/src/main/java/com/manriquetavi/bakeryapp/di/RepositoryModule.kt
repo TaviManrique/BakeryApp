@@ -24,6 +24,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.firestore.user.GetUserDetails
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLocalDataSource
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.delete_all_foodscart.DeleteAllFoodsCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.get_all_foodscart.GetAllFoodsCart
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.increase_quantity.IncreaseQuantityFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.insert_foodcart.InsertFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
 import dagger.Module
@@ -86,7 +87,8 @@ object RepositoryModule {
         return UseCasesLocalDataSource(
             getAllFoodsCart = GetAllFoodsCart(repositoryLocalDataSource),
             insertFoodCart = InsertFoodCart(repositoryLocalDataSource),
-            deleteAllFoodsCart = DeleteAllFoodsCart(repositoryLocalDataSource)
+            deleteAllFoodsCart = DeleteAllFoodsCart(repositoryLocalDataSource),
+            increaseQuantityFoodCart = IncreaseQuantityFoodCart(repositoryLocalDataSource)
         )
     }
 
