@@ -16,4 +16,7 @@ class LocalDataSourceImpl(
     override suspend fun insertFoodCart(foodCart: FoodCart) = foodCartDao.insertFoodCart(foodCart)
     override suspend fun deleteAllFoodsCart() = foodCartDao.deleteAllFoodsCart()
     override suspend fun increaseQuantityFoodCart(foodCartId: Int) = foodCartDao.increaseQuantityFoodCart(foodCartId)
+    override suspend fun minusQuantityFoodCart(foodCartId: Int) = foodCartDao.minusQuantityFoodCart(foodCartId)
+    override suspend fun deleteFoodCart(foodCartId: Int) = foodCartDao.deleteFoodCart(foodCartId)
+
 }

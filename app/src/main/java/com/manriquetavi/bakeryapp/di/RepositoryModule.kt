@@ -23,9 +23,11 @@ import com.manriquetavi.bakeryapp.domain.use_cases.firestore.search_foods.Search
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.user.GetUserDetails
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLocalDataSource
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.delete_all_foodscart.DeleteAllFoodsCart
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.delete_foodcart.DeleteFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.get_all_foodscart.GetAllFoodsCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.increase_quantity.IncreaseQuantityFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.insert_foodcart.InsertFoodCart
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.minus_quantity.MinusQuantityFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
 import dagger.Module
 import dagger.Provides
@@ -88,7 +90,9 @@ object RepositoryModule {
             getAllFoodsCart = GetAllFoodsCart(repositoryLocalDataSource),
             insertFoodCart = InsertFoodCart(repositoryLocalDataSource),
             deleteAllFoodsCart = DeleteAllFoodsCart(repositoryLocalDataSource),
-            increaseQuantityFoodCart = IncreaseQuantityFoodCart(repositoryLocalDataSource)
+            deleteFoodCart = DeleteFoodCart(repositoryLocalDataSource),
+            increaseQuantityFoodCart = IncreaseQuantityFoodCart(repositoryLocalDataSource),
+            minusQuantityFoodCart = MinusQuantityFoodCart(repositoryLocalDataSource)
         )
     }
 

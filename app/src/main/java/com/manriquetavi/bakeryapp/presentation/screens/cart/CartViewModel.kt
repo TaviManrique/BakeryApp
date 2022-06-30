@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLocalDataSource
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.delete_foodcart.DeleteFoodCart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,13 @@ class CartViewModel @Inject constructor(
     fun deleteAllFoodCart() {
         viewModelScope.launch { useCasesLocalDataSource.deleteAllFoodsCart() }
     }
-    fun increaseQuantityFoodCart() {
-        viewModelScope.launch { useCasesLocalDataSource.increaseQuantityFoodCart(11) }
+    fun increaseQuantityFoodCart(foodCartId: Int) {
+        viewModelScope.launch { useCasesLocalDataSource.increaseQuantityFoodCart(foodCartId) }
+    }
+    fun minusQuantityFoodCart(foodCartId: Int) {
+        viewModelScope.launch { useCasesLocalDataSource.minusQuantityFoodCart(foodCartId) }
+    }
+    fun deleteFoodCart(foodCartId: Int) {
+        viewModelScope.launch { useCasesLocalDataSource.deleteFoodCart(foodCartId) }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -145,7 +146,7 @@ fun FoodCartItem(
                     style = MaterialTheme.typography.caption
                 )
                 Text(
-                    text = foodCart.price.toString(),
+                    text = (foodCart.quantity?.let { foodCart.price?.times(it) }).toString(),
                     style = MaterialTheme.typography.h6
                 )
             }
@@ -160,7 +161,7 @@ fun FoodCartItem(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconButton(
-                    onClick = { cartViewModel.increaseQuantityFoodCart() }
+                    onClick = { foodCart.id?.let { cartViewModel.increaseQuantityFoodCart(it) } }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -169,17 +170,31 @@ fun FoodCartItem(
                     )
                 }
                 Text(
-                    text = "1",
+                    text = foodCart.quantity.toString(),
                     style = MaterialTheme.typography.h6
                 )
                 IconButton(
-                    onClick = { Log.d("FoodItem", "minues item") }
+                    onClick = {
+                        if (foodCart.quantity != 0) {
+                            foodCart.id?.let { cartViewModel.minusQuantityFoodCart(it) }
+                        } else {
+                            foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
+                        }
+                    }
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Remove,
-                        tint = MaterialTheme.colors.buttonBackgroundColor,
-                        contentDescription = "Remove Icon",
-                    )
+                    if (foodCart.quantity != 0) {
+                        Icon(
+                            imageVector = Icons.Filled.Remove,
+                            tint = MaterialTheme.colors.buttonBackgroundColor,
+                            contentDescription = "Remove Icon",
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            tint = MaterialTheme.colors.buttonBackgroundColor,
+                            contentDescription = "Remove Icon",
+                        )
+                    }
                 }
             }
         }
