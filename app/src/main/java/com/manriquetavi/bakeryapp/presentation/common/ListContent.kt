@@ -146,7 +146,7 @@ fun FoodCartItem(
                     style = MaterialTheme.typography.caption
                 )
                 Text(
-                    text = (foodCart.quantity?.let { foodCart.price?.times(it) }).toString(),
+                    text = String.format("%.2f",foodCart.quantity?.let { foodCart.price?.times(it) }),
                     style = MaterialTheme.typography.h6
                 )
             }

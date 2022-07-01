@@ -46,7 +46,7 @@ fun DetailsScreen(
 
     when(val selectedFood = detailsViewModel.selectedFood.value) {
         is Response.Loading -> ProgressBar()
-        is Response.Success -> DetailsScreenContent(selectedFood.data!!, screenNavController, detailsViewModel)
+        is Response.Success -> selectedFood.data?.let { DetailsScreenContent(it, screenNavController, detailsViewModel) }
         is Response.Error -> Util.printError(selectedFood.message)
     }
 }
@@ -184,7 +184,7 @@ fun DetailsContent(
         }
 
         //Add to cart button
-        ButtonAddToCart(detailsViewModel)
+        ButtonAddToCart(food,detailsViewModel, countFood)
 
         //Description food
         Description(food.description.toString())
@@ -243,7 +243,9 @@ fun CounterFood(
 
 @Composable
 fun ButtonAddToCart(
-    detailsViewModel: DetailsViewModel
+    food: Food,
+    detailsViewModel: DetailsViewModel,
+    countFood: MutableState<Int>
 ) {
     Button(
         modifier = Modifier
@@ -252,13 +254,13 @@ fun ButtonAddToCart(
         onClick = {
             detailsViewModel.insertFoodCart(
                 FoodCart(
-                    idFood = "1",
-                    name = "cupcake",
-                    category = "dessert",
-                    image = "https://firebasestorage.googleapis.com/v0/b/bakeryapp-d3dfa.appspot.com/o/foods_images%2Fcupcake.jpg?alt=media&token=889f2e4d-8de5-44c1-93bc-570c97a9b6e8",
-                    description = "description",
-                    quantity = 1,
-                    price = 10.0
+                    idFood = food.id,
+                    name = food.name,
+                    category = food.category,
+                    image = food.image,
+                    description = food.description,
+                    quantity = countFood.value,
+                    price = food.price?.toDouble()
                 )
             )
                   },
