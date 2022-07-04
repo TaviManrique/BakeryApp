@@ -42,7 +42,7 @@ fun SplashScreen(
                 screenNavController.navigate(Screen.Main.route)
             }
             else {
-                screenNavController.navigate(Screen.Main.route)
+                screenNavController.navigate(Screen.Login.route)
             }
         }
         else {

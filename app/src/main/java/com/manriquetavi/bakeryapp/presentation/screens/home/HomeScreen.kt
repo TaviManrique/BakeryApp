@@ -52,6 +52,7 @@ fun HomeContent(
     }
 }
 
+@ExperimentalCoilApi
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {

@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(
+class
+SplashViewModel @Inject constructor(
     private val useCasesAuthentication: UseCasesAuthentication,
     private val useCasesOnBoardingPage: UseCasesOnBoardingPage
 ): ViewModel() {

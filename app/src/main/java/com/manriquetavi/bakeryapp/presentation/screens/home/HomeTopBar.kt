@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,11 +35,12 @@ fun HomeTopBar(
     ) {
         Text(
             modifier = Modifier.weight(0.8f),
-            text = "What do you like to eat?",
+            text = "What would you like to eat today?",
             maxLines = 2,
             fontSize = MaterialTheme.typography.h4.fontSize,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.titleColor
+            color = MaterialTheme.colors.titleColor,
+            overflow = TextOverflow.Ellipsis
         )
         Icon(
             modifier = Modifier
@@ -54,7 +56,7 @@ fun HomeTopBar(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 fun HomeTopBarPreview() {
     HomeTopBar(screenNavController = rememberNavController())
