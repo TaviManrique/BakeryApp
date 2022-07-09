@@ -27,5 +27,4 @@ interface FoodCartDao {
 
     @Query("UPDATE food_cart_table SET quantity = quantity - 1 WHERE id =:foodCartId AND quantity > 0")
     suspend fun minusQuantityFoodCart(foodCartId: Int)
-
 }
