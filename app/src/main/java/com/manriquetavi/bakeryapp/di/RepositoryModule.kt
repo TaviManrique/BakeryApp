@@ -6,12 +6,14 @@ import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.get_auth_state.GetAuthState
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.is_user_authenticated.IsUserAuthenticated
-import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.read_onboarding.ReadOnBoardingUseCase
-import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.save_onboarding.SaveOnBoardingUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.read_onboarding.ReadOnBoardingUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.save_onboarding.SaveOnBoardingUseCase
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_in_credential.SignInWithCredential
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_in_email_password.SignInWithEmailAndPassword
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_out.SignOut
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.sign_up.SignUp
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.image_profile.ReadImageProfileUseCase
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.image_profile.SaveImageProfileUseCase
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.UseCasesFirestore
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_categories.GetAllCategories
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_foods.GetAllFoods
@@ -28,7 +30,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.get_all_foo
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.increase_quantity.IncreaseQuantityFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.insert_foodcart.InsertFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.minus_quantity.MinusQuantityFoodCart
-import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.UseCasesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,10 +63,12 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUseCasesOnBoardingPage(repositoryOnBoardingPage: RepositoryOnBoardingPage): UseCasesOnBoardingPage {
-        return UseCasesOnBoardingPage(
-            saveOnBoardingUseCase = SaveOnBoardingUseCase(repositoryOnBoardingPage),
-            readOnBoardingUseCase = ReadOnBoardingUseCase(repositoryOnBoardingPage)
+    fun provideUseCasesDataStore(repositoryDataStore: RepositoryDataStore): UseCasesDataStore {
+        return UseCasesDataStore(
+            saveOnBoardingUseCase = SaveOnBoardingUseCase(repositoryDataStore),
+            readOnBoardingUseCase = ReadOnBoardingUseCase(repositoryDataStore),
+            saveImageProfileUseCase = SaveImageProfileUseCase(repositoryDataStore),
+            readImageProfileUseCase = ReadImageProfileUseCase(repositoryDataStore)
         )
     }
 

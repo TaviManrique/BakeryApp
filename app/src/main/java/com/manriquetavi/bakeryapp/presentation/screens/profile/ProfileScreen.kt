@@ -9,17 +9,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -107,6 +110,7 @@ fun ProfileContentTest(
             }
             Button(
                 onClick = {
+                    profileViewModel.saveImageProfile(imageProfile = "")
                     profileViewModel.signOut()
                 }
             ) {
@@ -131,38 +135,28 @@ fun ProfileContent(
     ) {
         //Title
         Text(
-            text = "My Account",
-            fontStyle = MaterialTheme.typography.h1.fontStyle
+            text = "My Profile",
+            maxLines = 1,
+            fontSize = MaterialTheme.typography.h4.fontSize,
+            fontWeight = FontWeight.Bold
         )
-        ProfileImage()
-
-        Row() {
-            Text(
-                text = "uid: "
-            )
-            Text(
-                text = userDetails?.uid ?: " "
-            )
-        }
-        Row() {
-            Text(
-                text = "name: "
-            )
-            Text(
-                text = userDetails?.username ?: " "
-            )
-        }
-
-        Row() {
-            Text(
-                text = "email: "
-            )
-            Text(
-                text = userDetails?.email ?: " "
-            )
-        }
+        ProfileImage(
+            profileViewModel = profileViewModel
+        )
+        Text(
+            text = userDetails?.username.toString(),
+            maxLines = 2,
+            fontSize = MaterialTheme.typography.body1.fontSize,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            modifier = Modifier
+                .align(Alignment.Start),
+            text = "Payment method"
+        )
         Button(
             onClick = {
+                profileViewModel.saveImageProfile(imageProfile = "")
                 profileViewModel.signOut()
             }
         ) {
@@ -174,13 +168,29 @@ fun ProfileContent(
 }
 
 @Composable
-fun ProfileImage() {
-    val imageUri = rememberSaveable{ mutableStateOf("") }
-    val painter = rememberAsyncImagePainter(imageUri.value.ifEmpty { R.drawable.ic_placeholder })
+fun ProfileImage(
+    profileViewModel: ProfileViewModel
+) {
+    //val imageUri = rememberSaveable{ mutableStateOf("") }
+    val context = LocalContext.current
+    val imageUri = profileViewModel.imageProfileUri.collectAsState().value
+    //val painter = rememberAsyncImagePainter(imageUri.ifEmpty { R.drawable.ic_placeholder })
+    val painter = rememberAsyncImagePainter(
+        imageUri.ifEmpty {
+            R.drawable.ic_placeholder
+        }
+    )
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
     ) { it ->
-        it.let { imageUri.value = it.toString() }
+        //it.let { imageUri = it.toString() }
+        //it.let { profileViewModel.saveImageProfile(it.toString())
+        if (it == null) return@rememberLauncherForActivityResult
+
+        val input = context.contentResolver.openInputStream(it) ?: return@rememberLauncherForActivityResult
+        val outputFile = context.filesDir.resolve("profilePic.jpg")
+        input.copyTo(outputFile.outputStream())
+        profileViewModel.saveImageProfile(imageProfile = outputFile.toUri().toString())
     }
     Card(
         modifier = Modifier
@@ -197,4 +207,13 @@ fun ProfileImage() {
             contentScale = ContentScale.Crop
         )
     }
+}
+
+@Preview
+@Composable
+fun ProfileContentPreview() {
+    ProfileContent(
+        userDetails = null,
+        profileViewModel = hiltViewModel()
+    )
 }

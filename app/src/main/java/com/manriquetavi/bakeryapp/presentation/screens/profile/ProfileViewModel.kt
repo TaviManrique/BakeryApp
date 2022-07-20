@@ -8,9 +8,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.model.User
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.UseCasesDataStore
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.UseCasesFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +23,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val useCasesAuthentication: UseCasesAuthentication,
-    private val useCasesFirestore: UseCasesFirestore
+    private val useCasesFirestore: UseCasesFirestore,
+    private val useCasesDataStore: UseCasesDataStore
 ): ViewModel() {
 
     private val uid = auth.currentUser?.uid
@@ -29,8 +35,12 @@ class ProfileViewModel @Inject constructor(
     private val _signOutState = mutableStateOf<Response<Boolean>>(Response.Success(false))
     val signOutState: State<Response<Boolean>> = _signOutState
 
+    private val _imageProfileUri: MutableStateFlow<String> = MutableStateFlow("")
+    val imageProfileUri: StateFlow<String> = _imageProfileUri
+
     init {
         getUserDetails()
+        readImageProfile()
     }
     private fun getUserDetails() {
         uid?.let { uid ->
@@ -47,6 +57,19 @@ class ProfileViewModel @Inject constructor(
             useCasesAuthentication.signOut().collect { response ->
                 _signOutState.value = response
             }
+        }
+    }
+
+    private fun readImageProfile() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _imageProfileUri.value = useCasesDataStore.readImageProfileUseCase().stateIn(viewModelScope).value
+        }
+    }
+
+    fun saveImageProfile(imageProfile: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            useCasesDataStore.saveImageProfileUseCase(imageProfile = imageProfile)
+            _imageProfileUri.value = useCasesDataStore.readImageProfileUseCase().stateIn(viewModelScope).value
         }
     }
 }

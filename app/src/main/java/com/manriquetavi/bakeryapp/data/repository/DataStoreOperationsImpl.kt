@@ -2,10 +2,7 @@ package com.manriquetavi.bakeryapp.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.manriquetavi.bakeryapp.domain.repository.DataStoreOperations
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +15,7 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
 
     private object PreferenceKey {
         val onBoardingKey = booleanPreferencesKey(name = "on_boarding_completed")
+        val imageProfileKey = stringPreferencesKey(name = "image_profile")
     }
     private val dataStore = context.dataStore
 
@@ -42,4 +40,26 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
                 onBoardingState
             }
     }
+
+    override suspend fun saveImageProfile(imageProfile: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKey.imageProfileKey] = imageProfile
+        }
+    }
+
+    override fun readImageProfile(): Flow<String> =
+        dataStore
+            .data
+            .catch { exception ->
+                if(exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                val imageProfile = preferences[PreferenceKey.imageProfileKey] ?: ""
+                imageProfile
+            }
+
 }

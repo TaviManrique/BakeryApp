@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
-import com.manriquetavi.bakeryapp.domain.use_cases.on_boarding_page.UseCasesOnBoardingPage
+import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.UseCasesDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class
 SplashViewModel @Inject constructor(
     private val useCasesAuthentication: UseCasesAuthentication,
-    private val useCasesOnBoardingPage: UseCasesOnBoardingPage
+    private val useCasesDataStore: UseCasesDataStore
 ): ViewModel() {
 
     val isUserAuthenticated get() = useCasesAuthentication.isUserAuthenticated()
@@ -25,7 +25,7 @@ SplashViewModel @Inject constructor(
     val onBoardingCompleted: StateFlow<Boolean> = _onBoardingCompleted
     init {
         viewModelScope.launch(Dispatchers.IO){
-            _onBoardingCompleted.value = useCasesOnBoardingPage.readOnBoardingUseCase().stateIn(viewModelScope).value
+            _onBoardingCompleted.value = useCasesDataStore.readOnBoardingUseCase().stateIn(viewModelScope).value
         }
     }
 
