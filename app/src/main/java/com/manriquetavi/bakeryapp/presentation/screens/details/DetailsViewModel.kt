@@ -4,18 +4,22 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.UseCasesFirestore
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLocalDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +31,12 @@ class DetailsViewModel @Inject constructor(
 
     private val _selectedFood: MutableState<Response<Food?>> = mutableStateOf(Response.Loading)
     val selectedFood: State<Response<Food?>> = _selectedFood
+
+    var open = MutableLiveData<Boolean>()
+    var showToast = MutableLiveData<Boolean>()
+
+    //private val _open: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    //val open: StateFlow<Boolean> = _open
 
     init {
         getFoodSelected()
@@ -44,6 +54,24 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun insertFoodCart(foodCart: FoodCart) {
-        viewModelScope.launch { useCasesLocalDataSource.insertFoodCart(foodCart) }
+        viewModelScope.launch {
+            open.value = true
+            useCasesLocalDataSource.insertFoodCart(foodCart)
+            withContext(Dispatchers.Default) {
+                delay(2000)
+            }
+            open.value = false
+            showToast.value = true
+        }
+    }
+
+    fun startThread() {
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(1000)
+            }
+            showToast.value = true
+            open.value = false
+        }
     }
 }

@@ -44,7 +44,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.InputField
-import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
 
@@ -89,7 +89,7 @@ fun LoginScreen(
         }
     }
     when (response) {
-        is Response.Loading -> ProgressBar()
+        is Response.Loading -> ProgressBarCircular()
         is Response.Success ->
             if(response.data) {
                 LaunchedEffect(response.data) {

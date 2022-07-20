@@ -19,6 +19,7 @@ interface FoodCartDao {
     @Query("DELETE FROM food_cart_table")
     suspend fun deleteAllFoodsCart()
 
+    /*
     @Query("DELETE FROM food_cart_table WHERE id=:foodCartId")
     suspend fun deleteFoodCart(foodCartId: Int)
 
@@ -26,5 +27,5 @@ interface FoodCartDao {
     suspend fun increaseQuantityFoodCart(foodCartId: Int)
 
     @Query("UPDATE food_cart_table SET quantity = quantity - 1 WHERE id =:foodCartId AND quantity > 0")
-    suspend fun minusQuantityFoodCart(foodCartId: Int)
+    suspend fun minusQuantityFoodCart(foodCartId: Int)*/
 }

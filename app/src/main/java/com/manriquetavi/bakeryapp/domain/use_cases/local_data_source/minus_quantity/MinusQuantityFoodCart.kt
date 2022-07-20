@@ -5,5 +5,5 @@ import com.manriquetavi.bakeryapp.data.repository.RepositoryLocalDataSource
 class MinusQuantityFoodCart(
     private val repositoryLocalDataSource: RepositoryLocalDataSource
 ) {
-    suspend operator fun invoke(foodCartId: Int) = repositoryLocalDataSource.minusQuantityFoodCart(foodCartId)
+    //suspend operator fun invoke(foodCartId: Int) = repositoryLocalDataSource.minusQuantityFoodCart(foodCartId)
 }

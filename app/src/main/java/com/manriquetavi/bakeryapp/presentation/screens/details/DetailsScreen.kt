@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.screens.details
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,10 +11,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +32,12 @@ import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.model.Response
-import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.DialogBoxLoading
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.DialogBoxProgressAnimation
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
+import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
@@ -45,7 +47,7 @@ fun DetailsScreen(
 ) {
 
     when(val selectedFood = detailsViewModel.selectedFood.value) {
-        is Response.Loading -> ProgressBar()
+        is Response.Loading -> ProgressBarCircular()
         is Response.Success -> selectedFood.data?.let { DetailsScreenContent(it, screenNavController, detailsViewModel) }
         is Response.Error -> Util.printError(selectedFood.message)
     }
@@ -189,7 +191,6 @@ fun DetailsContent(
         //Description food
         Description(food.description.toString())
     }
-
 }
 
 @Composable
@@ -247,6 +248,17 @@ fun ButtonAddToCart(
     detailsViewModel: DetailsViewModel,
     countFood: MutableState<Int>
 ) {
+    val openDialog by detailsViewModel.open.observeAsState(false)
+    val showToast by detailsViewModel.showToast.observeAsState(false)
+    if (openDialog) {
+        //detailsViewModel.startThread()
+        DialogBoxProgressAnimation()
+    }
+
+    if (showToast) {
+        ToastMessage(duration = Toast.LENGTH_SHORT, message = "Food item added")
+        detailsViewModel.showToast.value = false
+    }
     Button(
         modifier = Modifier
             .padding(vertical = 8.dp)
@@ -254,7 +266,7 @@ fun ButtonAddToCart(
         onClick = {
             detailsViewModel.insertFoodCart(
                 FoodCart(
-                    idFood = food.id,
+                    id = food.id.toString(),
                     name = food.name,
                     category = food.category,
                     image = food.image,

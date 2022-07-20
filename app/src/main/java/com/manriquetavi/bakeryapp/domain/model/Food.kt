@@ -2,7 +2,6 @@ package com.manriquetavi.bakeryapp.domain.model
 
 import androidx.room.PrimaryKey
 
-
 data class Food(
     @PrimaryKey(autoGenerate = false)
     val id: String? = "",

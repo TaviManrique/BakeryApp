@@ -1,6 +1,5 @@
 package com.manriquetavi.bakeryapp.presentation.screens.profile
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.model.User
 import com.manriquetavi.bakeryapp.navigation.Screen
-import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
-import com.manriquetavi.bakeryapp.util.ToastMessage
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
@@ -34,10 +31,10 @@ fun ProfileScreen(
     Scaffold(
     ) {
         when(userDetails) {
-            is Response.Loading -> ProgressBar()
+            is Response.Loading -> ProgressBarCircular()
             is Response.Success ->
                 if (userDetails.data == null) {
-                    ProgressBar()
+                    ProgressBarCircular()
                 } else {
                     ProfileContent(userDetails = userDetails.data, profileViewModel = profileViewModel)
                 }
@@ -45,7 +42,7 @@ fun ProfileScreen(
         }
     }
     when(signOutState) {
-        is Response.Loading -> ProgressBar()
+        is Response.Loading -> ProgressBarCircular()
         is Response.Success ->
             if(signOutState.data) {
                 LaunchedEffect(signOutState.data) {

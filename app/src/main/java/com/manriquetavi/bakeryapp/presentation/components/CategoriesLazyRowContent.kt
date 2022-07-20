@@ -1,7 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.components
 
 import com.manriquetavi.bakeryapp.R
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,8 +23,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.domain.model.Category
 import com.manriquetavi.bakeryapp.domain.model.Response
@@ -119,7 +116,7 @@ fun CategoryProgressBar() {
             .height(72.dp)
             .fillMaxWidth()
     ) {
-        ProgressBar()
+        ProgressBarCircular()
     }
 }
 

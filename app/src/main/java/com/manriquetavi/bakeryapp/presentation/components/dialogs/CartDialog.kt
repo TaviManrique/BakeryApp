@@ -37,7 +37,7 @@ fun CartDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(160.dp)
-                        .background(color = MaterialTheme.colors.primary)
+                        .background(color = Color.Red)
                 ) {
                     Icon(
                         modifier = Modifier

@@ -166,7 +166,7 @@ fun FoodCartItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
-                            onClick = { foodCart.id?.let { cartViewModel.increaseQuantityFoodCart(it) } }
+                            onClick = { /*foodCart.id?.let { cartViewModel.increaseQuantityFoodCart(it) }*/ }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
@@ -181,9 +181,9 @@ fun FoodCartItem(
                         IconButton(
                             onClick = {
                                 if (foodCart.quantity != 0) {
-                                    foodCart.id?.let { cartViewModel.minusQuantityFoodCart(it) }
+                                    foodCart.id?.let { /*cartViewModel.minusQuantityFoodCart(it)*/ }
                                 } else {
-                                    foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
+                                    foodCart.id?.let { /*cartViewModel.deleteFoodCart(it)*/ }
                                 }
                             }
                         ) {
@@ -204,7 +204,7 @@ fun FoodCartItem(
                     }
                     if (foodCart.quantity != 0) {
                         IconButton(
-                            onClick = { foodCart.id?.let { cartViewModel.deleteFoodCart(it) } }
+                            onClick = { /*foodCart.id?.let { cartViewModel.deleteFoodCart(it) }*/ }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
@@ -224,8 +224,7 @@ fun FoodCartItem(
 fun FoodItemPreview() {
     FoodCartItem(
         foodCart = FoodCart(
-            id = 1,
-            idFood = "1",
+            id = "1",
             name = "Name",
             category = "category",
             image = "https://firebasestorage.googleapis.com/v0/b/bakeryapp-d3dfa.appspot.com/o/categories_images%2Fcategory_cracker.png?alt=media&token=a6855c95-4b1d-4f29-b1be-b79200b87d90",

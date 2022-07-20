@@ -6,6 +6,7 @@ import com.manriquetavi.bakeryapp.domain.model.Response
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseAuthSource {
+
     fun isUserAuthenticated(): Boolean
     suspend fun getAuthState(): Flow<Boolean>
     suspend fun firebaseAuthSignInWithEmailAndPassword(email: String, password: String): Flow<Response<Boolean>>

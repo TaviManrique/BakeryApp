@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.common.FoodItem
-import com.manriquetavi.bakeryapp.presentation.components.ProgressBar
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.presentation.components.SearchCakeInputField
 import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
 import com.manriquetavi.bakeryapp.util.Util
@@ -62,7 +61,7 @@ fun SearchActionComponent(
             focusManager = focusManager
         )
         when(searchedFoods) {
-            is Response.Loading -> ProgressBar()
+            is Response.Loading -> ProgressBarCircular()
             is Response.Success -> ListFoodFound(foods = searchedFoods.data, screenNavController = screenNavController)
             is Response.Error -> Util.printError(searchedFoods.message)
         }

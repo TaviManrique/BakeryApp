@@ -60,7 +60,7 @@ fun RegisterScreen(
     }
 
     when (response) {
-        is Response.Loading -> ProgressBar()
+        is Response.Loading -> ProgressBarCircular()
         is Response.Success -> if(response.data) {
             ToastMessage(duration = Toast.LENGTH_SHORT, message = "Success add new user")
         }
