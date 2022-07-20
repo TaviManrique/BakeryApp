@@ -218,12 +218,12 @@ fun CounterFood(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { if(countFood.value != 1) countFood.value-- }
+            onClick = { if(countFood.value != 20) countFood.value++ }
         ) {
             Icon(
-                imageVector = Icons.Filled.Remove,
+                imageVector = Icons.Filled.Add,
                 tint = MaterialTheme.colors.buttonBackgroundColor,
-                contentDescription = "Remove Icon",
+                contentDescription = "Add Icon",
             )
         }
         Text(
@@ -231,12 +231,12 @@ fun CounterFood(
             style = MaterialTheme.typography.h6
         )
         IconButton(
-            onClick = { if(countFood.value != 10) countFood.value++ }
+            onClick = { if(countFood.value != 1) countFood.value-- }
         ) {
             Icon(
-                imageVector = Icons.Filled.Add,
+                imageVector = Icons.Filled.Remove,
                 tint = MaterialTheme.colors.buttonBackgroundColor,
-                contentDescription = "Add Remove",
+                contentDescription = "Remove Icon",
             )
         }
     }

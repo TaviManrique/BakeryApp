@@ -33,14 +33,14 @@ class CartViewModel @Inject constructor(
     fun deleteAllFoodCart() {
         viewModelScope.launch { useCasesLocalDataSource.deleteAllFoodsCart() }
     }
-    /*
-    fun increaseQuantityFoodCart(foodCartId: Int) {
+
+    fun increaseQuantityFoodCart(foodCartId: String) {
         viewModelScope.launch { useCasesLocalDataSource.increaseQuantityFoodCart(foodCartId) }
     }
-    fun minusQuantityFoodCart(foodCartId: Int) {
+    fun minusQuantityFoodCart(foodCartId: String) {
         viewModelScope.launch { useCasesLocalDataSource.minusQuantityFoodCart(foodCartId) }
     }
-    fun deleteFoodCart(foodCartId: Int) {
+    fun deleteFoodCart(foodCartId: String) {
         viewModelScope.launch { useCasesLocalDataSource.deleteFoodCart(foodCartId) }
-    }*/
+    }
 }

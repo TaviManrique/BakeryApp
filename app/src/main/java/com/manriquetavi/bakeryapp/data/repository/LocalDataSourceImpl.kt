@@ -16,8 +16,8 @@ class LocalDataSourceImpl(
     override fun getAllFoodsCart(): Flow<List<FoodCart>> = foodCartDao.getAllFoodsCart()
     override suspend fun insertFoodCart(foodCart: FoodCart) = foodCartDao.insertFoodCart(foodCart)
     override suspend fun deleteAllFoodsCart() = foodCartDao.deleteAllFoodsCart()
-    //override suspend fun increaseQuantityFoodCart(foodCartId: Int) = foodCartDao.increaseQuantityFoodCart(foodCartId)
-    //override suspend fun minusQuantityFoodCart(foodCartId: Int) = foodCartDao.minusQuantityFoodCart(foodCartId)
-    //override suspend fun deleteFoodCart(foodCartId: Int) = foodCartDao.deleteFoodCart(foodCartId)
+    override suspend fun increaseQuantityFoodCart(foodCartId: String) = foodCartDao.increaseQuantityFoodCart(foodCartId)
+    override suspend fun minusQuantityFoodCart(foodCartId: String) = foodCartDao.minusQuantityFoodCart(foodCartId)
+    override suspend fun deleteFoodCart(foodCartId: String) = foodCartDao.deleteFoodCart(foodCartId)
 
 }

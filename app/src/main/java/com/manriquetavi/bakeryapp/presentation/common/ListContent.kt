@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +29,7 @@ import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogDeleteFoodCart
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 import com.manriquetavi.bakeryapp.ui.theme.*
 
@@ -96,6 +99,12 @@ fun FoodCartItem(
     foodCart: FoodCart,
     cartViewModel: CartViewModel,
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+    if (showDialog.value) AlertDialogDeleteFoodCart(
+        foodCart = foodCart,
+        cartViewModel = cartViewModel,
+        showDialog = showDialog
+    )
     Card(
         modifier = Modifier
             .padding(EXTRA_SMALL_PADDING)
@@ -166,7 +175,9 @@ fun FoodCartItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
-                            onClick = { /*foodCart.id?.let { cartViewModel.increaseQuantityFoodCart(it) }*/ }
+                            onClick = {
+                                foodCart.id?.let { cartViewModel.increaseQuantityFoodCart(it) }
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
@@ -180,14 +191,15 @@ fun FoodCartItem(
                         )
                         IconButton(
                             onClick = {
-                                if (foodCart.quantity != 0) {
-                                    foodCart.id?.let { /*cartViewModel.minusQuantityFoodCart(it)*/ }
+                                if (foodCart.quantity != 1) {
+                                    foodCart.id?.let { cartViewModel.minusQuantityFoodCart(it) }
                                 } else {
-                                    foodCart.id?.let { /*cartViewModel.deleteFoodCart(it)*/ }
+                                    showDialog.value = true
+                                    //foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
                                 }
                             }
                         ) {
-                            if (foodCart.quantity != 0) {
+                            if (foodCart.quantity != 1) {
                                 Icon(
                                     imageVector = Icons.Filled.Remove,
                                     tint = MaterialTheme.colors.buttonBackgroundColor,
@@ -202,9 +214,12 @@ fun FoodCartItem(
                             }
                         }
                     }
-                    if (foodCart.quantity != 0) {
+                    if (foodCart.quantity != 1) {
                         IconButton(
-                            onClick = { /*foodCart.id?.let { cartViewModel.deleteFoodCart(it) }*/ }
+                            onClick = {
+                                showDialog.value = true
+                                //foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,

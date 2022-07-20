@@ -5,5 +5,6 @@ data class User(
     var username: String = "",
     val email: String = "",
     val password: String = "",
-    val phoneNumber: String = ""
+    val phoneNumber: String = "",
+    val addresses: List<String> = listOf()
 )
