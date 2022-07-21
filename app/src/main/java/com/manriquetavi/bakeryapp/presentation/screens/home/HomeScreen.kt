@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,11 +42,11 @@ fun HomeContent(
     ) {
         PromotionsLazyRow(homeViewModel)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Category", style = MaterialTheme.typography.h6)
+        Text(text = "Category", style = MaterialTheme.typography.h6, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
         CategoriesLazyRow(homeViewModel, screenNavController)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Recommendation", style = MaterialTheme.typography.h6)
+        Text(text = "Recommendation", style = MaterialTheme.typography.h6, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
         RecommendationsLazyRow(homeViewModel, screenNavController)
         Spacer(modifier = Modifier.height(16.dp))

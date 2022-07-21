@@ -10,6 +10,7 @@ import com.manriquetavi.bakeryapp.domain.model.User
 import com.manriquetavi.bakeryapp.domain.use_cases.authentication.UseCasesAuthentication
 import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.UseCasesDataStore
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.UseCasesFirestore
+import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLocalDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,8 @@ class ProfileViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val useCasesAuthentication: UseCasesAuthentication,
     private val useCasesFirestore: UseCasesFirestore,
-    private val useCasesDataStore: UseCasesDataStore
+    private val useCasesDataStore: UseCasesDataStore,
+    private val useCasesLocalDataSource: UseCasesLocalDataSource
 ): ViewModel() {
 
     private val uid = auth.currentUser?.uid
@@ -71,5 +73,9 @@ class ProfileViewModel @Inject constructor(
             useCasesDataStore.saveImageProfileUseCase(imageProfile = imageProfile)
             _imageProfileUri.value = useCasesDataStore.readImageProfileUseCase().stateIn(viewModelScope).value
         }
+    }
+
+    fun deleteAllFoodCart() {
+        viewModelScope.launch { useCasesLocalDataSource.deleteAllFoodsCart() }
     }
 }

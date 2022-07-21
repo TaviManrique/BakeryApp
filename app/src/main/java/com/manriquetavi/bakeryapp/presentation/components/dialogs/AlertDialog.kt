@@ -1,6 +1,5 @@
 package com.manriquetavi.bakeryapp.presentation.components.dialogs
 
-import android.widget.Toast
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -13,27 +12,28 @@ import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 @Composable
 fun AlertDialogDeleteFoodCart(
     showDialog: MutableState<Boolean>,
-    foodCart: FoodCart,
-    cartViewModel: CartViewModel
+    title: String,
+    text: String,
+    confirmButtonClicked: () -> Unit
 )
 {
-    val context = LocalContext.current
     AlertDialog(
         onDismissRequest = {
             showDialog.value = false
                            },
         title = {
             Text(
-                text = "Title"
+                text = title
             ) },
         text = {
             Text(
-                text = "Text"
+                text = text
             ) },
         confirmButton = {
             TextButton(onClick = {
-                foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
                 showDialog.value = false
+                confirmButtonClicked.invoke()
+                //foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
             }) {
                 Text(
                     text = "YES"

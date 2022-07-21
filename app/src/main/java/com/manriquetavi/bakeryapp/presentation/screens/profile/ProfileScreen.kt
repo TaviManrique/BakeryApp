@@ -1,18 +1,27 @@
 package com.manriquetavi.bakeryapp.presentation.screens.profile
 
+import android.graphics.drawable.Icon
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowRight
+import androidx.compose.material.icons.outlined.ArrowRightAlt
+import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +41,11 @@ import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.util.Util
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogDeleteFoodCart
+import com.manriquetavi.bakeryapp.ui.theme.Purple700
+import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
+import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
+import com.manriquetavi.bakeryapp.ui.theme.titleColor
 import com.manriquetavi.bakeryapp.util.ToastMessage
 
 @Composable
@@ -74,61 +88,25 @@ fun ProfileScreen(
 }
 
 @Composable
-fun ProfileContentTest(
-    userDetails: User?,
-    profileViewModel: ProfileViewModel
-) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column {
-            Row() {
-                Text(
-                    text = "uid: "
-                )
-                Text(
-                    text = userDetails?.uid ?: " "
-                )
-            }
-            Row() {
-                Text(
-                    text = "name: "
-                )
-                Text(
-                    text = userDetails?.username ?: " "
-                )
-            }
-
-            Row() {
-                Text(
-                    text = "email: "
-                )
-                Text(
-                    text = userDetails?.email ?: " "
-                )
-            }
-            Button(
-                onClick = {
-                    profileViewModel.saveImageProfile(imageProfile = "")
-                    profileViewModel.signOut()
-                }
-            ) {
-                Text("SIGN OUT")
-            }
-        }
-    }
-}
-
-@Composable
 fun ProfileContent(
     userDetails: User?,
     profileViewModel: ProfileViewModel
 ) {
+    val context = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
+    if (showDialog.value) AlertDialogDeleteFoodCart(
+        title = "Bakery App",
+        text = "Are you sure to log out?",
+        showDialog = showDialog
+    ) {
+        profileViewModel.saveImageProfile(imageProfile = "")
+        profileViewModel.deleteAllFoodCart()
+        profileViewModel.signOut()
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
@@ -137,8 +115,9 @@ fun ProfileContent(
         Text(
             text = "My Profile",
             maxLines = 1,
-            fontSize = MaterialTheme.typography.h4.fontSize,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.h4,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.titleColor,
         )
         ProfileImage(
             profileViewModel = profileViewModel
@@ -146,23 +125,50 @@ fun ProfileContent(
         Text(
             text = userDetails?.username.toString(),
             maxLines = 2,
-            fontSize = MaterialTheme.typography.body1.fontSize,
+            style = MaterialTheme.typography.h5,
             fontWeight = FontWeight.Bold
         )
         Text(
             modifier = Modifier
+                .padding(vertical = 8.dp)
                 .align(Alignment.Start),
-            text = "Payment method"
+            text = "Address",
+            style = MaterialTheme.typography.h6,
+            fontWeight = FontWeight.Bold
         )
-        Button(
-            onClick = {
-                profileViewModel.saveImageProfile(imageProfile = "")
-                profileViewModel.signOut()
-            }
+        ProfileItemOptions(
+            icon = Icons.Filled.LocationOn,
+            description = "Address",
+            actionIcon = Icons.Filled.ArrowRightAlt
         ) {
-            Text("SIGN OUT")
+            Toast.makeText(context, "Address", Toast.LENGTH_SHORT).show()
         }
-
+        Text(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .align(Alignment.Start),
+            text = "Settings",
+            style = MaterialTheme.typography.h6,
+            fontWeight = FontWeight.Bold
+        )
+        ProfileItemOptions(
+            icon = Icons.Filled.Notifications,
+            description = "Notification"
+        ) {
+            Toast.makeText(context, "Notification", Toast.LENGTH_SHORT).show()
+        }
+        ProfileItemOptions(
+            icon = Icons.Filled.Language,
+            description = "Language"
+        ) {
+            Toast.makeText(context, "Language", Toast.LENGTH_SHORT).show()
+        }
+        ProfileItemOptions(
+            icon = Icons.Filled.Logout,
+            description = "Log Out"
+        ) {
+            showDialog.value = true
+        }
     }
 
 }
@@ -194,9 +200,10 @@ fun ProfileImage(
     }
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(16.dp)
             .size(100.dp),
-        shape = CircleShape
+        shape = CircleShape,
+        elevation = SMALL_PADDING
     ){
         Image(
             modifier = Modifier
@@ -209,11 +216,62 @@ fun ProfileImage(
     }
 }
 
-@Preview
 @Composable
-fun ProfileContentPreview() {
-    ProfileContent(
-        userDetails = null,
-        profileViewModel = hiltViewModel()
-    )
+fun ProfileItemOptions(
+    icon: ImageVector,
+    description: String,
+    actionIcon: ImageVector? = null,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(vertical = 1.dp)
+            .height(48.dp)
+            .fillMaxWidth()
+            .clip(shape = RoundedCornerShape(8.dp))
+            .background(Purple700.copy(alpha = 0.2f))
+            .clickable { onClick.invoke() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier
+                .padding(horizontal = SMALL_PADDING)
+                .size(32.dp),
+            imageVector = icon,
+            contentDescription = "Icon Profile Item",
+            tint = MaterialTheme.colors.primary
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = description,
+                fontSize = MaterialTheme.typography.body1.fontSize,
+                color = MaterialTheme.colors.descriptionColor
+            )
+            actionIcon?.let {
+                Icon(
+                    modifier = Modifier
+                        .padding(horizontal = SMALL_PADDING)
+                        .size(32.dp),
+                    imageVector = actionIcon,
+                    contentDescription = "Action Icon",
+                    tint = MaterialTheme.colors.primary
+                )
+            }
+        }
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun ProfileScreenPreview() {
+    ProfileItemOptions(
+        icon = Icons.Filled.LocationOn,
+        description = "Item Title"
+    ) {
+
+    }
 }

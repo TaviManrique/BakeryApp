@@ -101,10 +101,12 @@ fun FoodCartItem(
 ) {
     val showDialog = remember { mutableStateOf(false) }
     if (showDialog.value) AlertDialogDeleteFoodCart(
-        foodCart = foodCart,
-        cartViewModel = cartViewModel,
+        title = "Delete",
+        text = "Are you sure to remove this item?",
         showDialog = showDialog
-    )
+    ) {
+        foodCart.id?.let { cartViewModel.deleteFoodCart(it) }
+    }
     Card(
         modifier = Modifier
             .padding(EXTRA_SMALL_PADDING)
