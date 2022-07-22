@@ -1,6 +1,5 @@
 package com.manriquetavi.bakeryapp.presentation.screens.profile
 
-import android.graphics.drawable.Icon
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,16 +10,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ArrowRight
-import androidx.compose.material.icons.outlined.ArrowRightAlt
-import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -29,12 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.domain.model.User
 import com.manriquetavi.bakeryapp.navigation.Screen
@@ -46,7 +35,6 @@ import com.manriquetavi.bakeryapp.ui.theme.Purple700
 import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
 import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
 import com.manriquetavi.bakeryapp.ui.theme.titleColor
-import com.manriquetavi.bakeryapp.util.ToastMessage
 
 @Composable
 fun ProfileScreen(
@@ -66,7 +54,11 @@ fun ProfileScreen(
                 if (userDetails.data == null) {
                     ProgressBarCircular()
                 } else {
-                    ProfileContent(userDetails = userDetails.data, profileViewModel = profileViewModel)
+                    ProfileContent(
+                        userDetails = userDetails.data,
+                        profileViewModel = profileViewModel,
+                        screenNavController = screenNavController
+                    )
                 }
             is Response.Error -> Util.printError(userDetails.message)
         }
@@ -90,7 +82,8 @@ fun ProfileScreen(
 @Composable
 fun ProfileContent(
     userDetails: User?,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    screenNavController: NavHostController
 ) {
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
@@ -142,6 +135,7 @@ fun ProfileContent(
             actionIcon = Icons.Filled.ArrowRightAlt
         ) {
             Toast.makeText(context, "Address", Toast.LENGTH_SHORT).show()
+            screenNavController.navigate(Screen.Location.route)
         }
         Text(
             modifier = Modifier

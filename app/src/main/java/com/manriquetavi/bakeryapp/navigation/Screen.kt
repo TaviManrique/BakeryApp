@@ -29,6 +29,7 @@ sealed class Screen(
             return "details_screen/$foodId"
         }
     }
+    object Location: Screen("location_screen")
 
     //BottomNav Screens
     object Home: Screen(
