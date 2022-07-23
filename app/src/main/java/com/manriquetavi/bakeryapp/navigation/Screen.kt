@@ -30,6 +30,7 @@ sealed class Screen(
         }
     }
     object Location: Screen("location_screen")
+    object Checkout: Screen("checkout_screen")
 
     //BottomNav Screens
     object Home: Screen(

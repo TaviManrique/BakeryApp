@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.manriquetavi.bakeryapp.presentation.screens.checkout.CheckoutScreen
 import com.manriquetavi.bakeryapp.presentation.screens.details.DetailsScreen
 import com.manriquetavi.bakeryapp.presentation.screens.location.LocationScreen
 import com.manriquetavi.bakeryapp.presentation.screens.login.LoginScreen
@@ -64,10 +65,12 @@ fun SetupNavGraph(screenNavController: NavHostController) {
         ) {
             DetailsScreen(screenNavController = screenNavController)
         }
-        composable(
-            route = Screen.Location.route
-        ) {
+        composable(route = Screen.Location.route) {
             LocationScreen(screenNavController = screenNavController)
         }
+        composable(route = Screen.Checkout.route) {
+            CheckoutScreen(screenNavController = screenNavController)
+        }
+
     }
 }

@@ -19,7 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
+import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.common.FoodCartItem
 import com.manriquetavi.bakeryapp.ui.theme.Purple500
 import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
@@ -41,14 +43,15 @@ fun CartScreen(
             }
         }
     ) {
-        CartScreenContent(foodsCart, cartViewModel)
+        CartScreenContent(foodsCart, cartViewModel, screenNavController)
     }
 }
 
 @Composable
 fun CartScreenContent(
     foodsCart: List<FoodCart>,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    screenNavController: NavHostController
 ) {
     Column(
         modifier = Modifier
@@ -60,7 +63,7 @@ fun CartScreenContent(
     ) {
         ListFoodCart(foodsCart,cartViewModel)
         TotalPrice(foodsCart)
-        BottomCheckout()
+        BottomCheckout(screenNavController)
     }
 }
 
@@ -116,12 +119,12 @@ fun TotalPrice(foodsCart: List<FoodCart>) {
 }
 
 @Composable
-fun BottomCheckout() {
+fun BottomCheckout(screenNavController: NavHostController) {
     Button(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
-        onClick = {  },
+        onClick = { screenNavController.navigate(Screen.Checkout.route) },
         shape = RoundedCornerShape(16.dp)
     ) {
         Text(
@@ -141,7 +144,8 @@ fun CartScreenPreview() {
 
             )
         ),
-        cartViewModel = hiltViewModel()
+        cartViewModel = hiltViewModel(),
+        screenNavController = rememberNavController()
     )
 }
 
