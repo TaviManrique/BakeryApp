@@ -148,6 +148,7 @@ fun RegisterContent(
         ),
         errorMessage = "Please, input a valid phone number with 9 digits",
         isError = !validatePhoneNumber.value,
+        maxLength = 9
     )
     InputField(
         modifier = Modifier.padding(top = 16.dp),

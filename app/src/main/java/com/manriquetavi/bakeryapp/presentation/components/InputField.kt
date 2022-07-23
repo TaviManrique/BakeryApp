@@ -108,13 +108,20 @@ fun InputField(
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     isError: Boolean = false,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    maxLength: Int? = null
 ) {
     Column {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
             value = text.value,
-            onValueChange = { text.value = it},
+            onValueChange = {
+                maxLength?.let { maxLength ->
+                    if (it.length <= maxLength) text.value = it
+                } ?: run {
+                    text.value = it
+                }
+                            },
             placeholder = {
                 Text(
                     modifier = Modifier.alpha(alpha = ContentAlpha.medium),
