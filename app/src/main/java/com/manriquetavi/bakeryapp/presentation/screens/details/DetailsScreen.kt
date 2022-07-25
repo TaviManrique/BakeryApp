@@ -1,7 +1,10 @@
 package com.manriquetavi.bakeryapp.presentation.screens.details
 
 import android.widget.Toast
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +19,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,7 @@ import com.manriquetavi.bakeryapp.ui.theme.LightGray
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
 import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailsScreen(
@@ -250,6 +255,10 @@ fun ButtonAddToCart(
 ) {
     val openDialog by detailsViewModel.open.observeAsState(false)
     val showToast by detailsViewModel.showToast.observeAsState(false)
+    val coroutineScope = rememberCoroutineScope()
+    val scale = remember {
+        Animatable(1f)
+    }
     if (openDialog) {
         //detailsViewModel.startThread()
         DialogBoxProgressAnimation()
@@ -261,20 +270,36 @@ fun ButtonAddToCart(
     }
     Button(
         modifier = Modifier
+            .scale(scale = scale.value)
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
         onClick = {
-            detailsViewModel.insertFoodCart(
-                FoodCart(
-                    id = food.id.toString(),
-                    name = food.name,
-                    category = food.category,
-                    image = food.image,
-                    description = food.description,
-                    quantity = countFood.value,
-                    price = food.price?.toDouble()
+            coroutineScope.launch {
+                //Animation button
+                scale.animateTo(
+                    0.95f,
+                    animationSpec = tween(100),
                 )
-            )
+                scale.animateTo(
+                    1.05f,
+                    animationSpec = tween(100),
+                )
+                scale.animateTo(
+                    1.0f,
+                    animationSpec = tween(100),
+                )
+                detailsViewModel.insertFoodCart(
+                    FoodCart(
+                        id = food.id.toString(),
+                        name = food.name,
+                        category = food.category,
+                        image = food.image,
+                        description = food.description,
+                        quantity = countFood.value,
+                        price = food.price?.toDouble()
+                    )
+                )
+            }
                   },
         shape = RoundedCornerShape(16.dp)
     ) {

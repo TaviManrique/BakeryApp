@@ -89,7 +89,7 @@ fun CategoryItem(
                 model = ImageRequest
                     .Builder(LocalContext.current)
                     .data(category.image)
-                    .crossfade(2000)
+                    .crossfade(1000)
                     .build(),
                 placeholder = painterResource(R.drawable.ic_placeholder),
                 error = painterResource(R.drawable.ic_placeholder),

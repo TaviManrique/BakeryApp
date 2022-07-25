@@ -64,7 +64,7 @@ fun FoodItem(
                     model = ImageRequest
                         .Builder(LocalContext.current)
                         .data(food.image)
-                        .crossfade(2000)
+                        .crossfade(1000)
                         .build(),
                     placeholder = painterResource(R.drawable.ic_placeholder),
                     error = painterResource(R.drawable.ic_placeholder),
@@ -111,9 +111,9 @@ fun FoodCartItem(
         modifier = Modifier
             .padding(EXTRA_SMALL_PADDING)
             .fillMaxWidth()
-            .height(FOOD_ITEM_HEIGHT)
-            .background(color = Color.Green),
-        shape = RoundedCornerShape(8.dp)
+            .height(FOOD_ITEM_HEIGHT),
+        shape = RoundedCornerShape(16.dp),
+        backgroundColor = Purple200
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -124,22 +124,22 @@ fun FoodCartItem(
                     .padding(SMALL_PADDING)
                     .weight(0.5f)
                     .size(150.dp),
-                elevation = 4.dp
+                elevation = 4.dp,
+                color = Color.Transparent
             ) {
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.White),
+                        .clip(RoundedCornerShape(8.dp)),
                     model = ImageRequest
                         .Builder(LocalContext.current)
                         .data(foodCart.image)
-                        .crossfade(2000)
+                        .crossfade(1000)
                         .build(),
                     placeholder = painterResource(R.drawable.ic_placeholder),
                     error = painterResource(R.drawable.ic_placeholder),
                     contentScale = ContentScale.Crop,
-                    contentDescription = "Image Food"
+                    contentDescription = "Image Food",
                 )
             }
             Column(
@@ -158,11 +158,15 @@ fun FoodCartItem(
                     )
                     Text(
                         text = foodCart.category.toString(),
-                        style = MaterialTheme.typography.caption
+                        style = MaterialTheme.typography.caption,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = String.format("%.2f",foodCart.quantity?.let { foodCart.price?.times(it) }),
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.h6,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
                 Row(
@@ -225,8 +229,8 @@ fun FoodCartItem(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
-                                tint = Color.Gray,
-                                contentDescription = "Remove Icon",
+                                tint = MaterialTheme.colors.buttonBackgroundColor,
+                                contentDescription = "Remove Icon"
                             )
                         }
                     }
