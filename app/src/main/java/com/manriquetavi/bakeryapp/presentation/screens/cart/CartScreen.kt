@@ -77,7 +77,7 @@ fun ListFoodCart(
         modifier = Modifier
             .padding(top = SMALL_PADDING)
             .fillMaxWidth()
-            .height(480.dp),
+            .height(460.dp),
         contentPadding = PaddingValues(all = SMALL_PADDING),
         verticalArrangement = Arrangement.spacedBy(SMALL_PADDING),
     ) {
