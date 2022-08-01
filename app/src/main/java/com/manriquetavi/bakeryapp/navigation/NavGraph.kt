@@ -1,5 +1,7 @@
 package com.manriquetavi.bakeryapp.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
@@ -19,6 +21,8 @@ import com.manriquetavi.bakeryapp.presentation.screens.search.SearchScreen
 import com.manriquetavi.bakeryapp.presentation.screens.splash.SplashScreen
 import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalComposeUiApi

@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.screens.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -52,6 +53,7 @@ fun SearchActionComponent(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         SearchCakeInputField(
+            modifier = Modifier.padding(top = 16.dp),
             text = searchQuery,
             onTextChange = { searchViewModel.updateSearchQuery(query = it) },
             onSearchClicked = {

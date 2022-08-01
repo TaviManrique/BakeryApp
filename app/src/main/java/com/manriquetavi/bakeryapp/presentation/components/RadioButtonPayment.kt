@@ -3,21 +3,20 @@ package com.manriquetavi.bakeryapp.presentation.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun RadioButtonPayments() {
-    val radioOptions = listOf("Credit Card", "PayPal", "Debit Card (not available)")
 
+    val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
     var selectedItem by remember {
         mutableStateOf(radioOptions[0])
     }
@@ -56,5 +55,19 @@ fun RadioButtonPayments() {
                 )
             }
         }
+        //CashOptionContent()
     }
+}
+
+@Composable
+fun CashOptionContent() {
+    val focusManager = LocalFocusManager.current
+    val text = remember {
+        mutableStateOf("")
+    }
+    CashInputField(
+        modifier = Modifier.padding(top = 48.dp),
+        text = text,
+        focusManager = focusManager
+    )
 }

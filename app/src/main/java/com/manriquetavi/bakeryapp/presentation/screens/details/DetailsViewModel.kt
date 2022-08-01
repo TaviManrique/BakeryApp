@@ -16,8 +16,6 @@ import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.UseCasesLoc
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -32,7 +30,7 @@ class DetailsViewModel @Inject constructor(
     private val _selectedFood: MutableState<Response<Food?>> = mutableStateOf(Response.Loading)
     val selectedFood: State<Response<Food?>> = _selectedFood
 
-    var open = MutableLiveData<Boolean>()
+    var openDialog = MutableLiveData<Boolean>()
     var showToast = MutableLiveData<Boolean>()
 
     //private val _open: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -55,12 +53,12 @@ class DetailsViewModel @Inject constructor(
 
     fun insertFoodCart(foodCart: FoodCart) {
         viewModelScope.launch {
-            open.value = true
+            openDialog.value = true
             useCasesLocalDataSource.insertFoodCart(foodCart)
             withContext(Dispatchers.Default) {
                 delay(2000)
             }
-            open.value = false
+            openDialog.value = false
             showToast.value = true
         }
     }
@@ -71,7 +69,7 @@ class DetailsViewModel @Inject constructor(
                 delay(1000)
             }
             showToast.value = true
-            open.value = false
+            openDialog.value = false
         }
     }
 }

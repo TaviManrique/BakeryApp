@@ -2,8 +2,13 @@ package com.manriquetavi.bakeryapp.presentation.screens.register
 
 import android.util.Patterns
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,6 +25,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +42,9 @@ import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.*
 import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
+import kotlinx.coroutines.launch
 
+@ExperimentalFoundationApi
 @Composable
 fun RegisterScreen(
     screenNavController: NavHostController,
@@ -44,18 +53,22 @@ fun RegisterScreen(
 
     val response = registerViewModel.signUpState.value
 
+    val state = rememberLazyListState()
+
     Scaffold(
         topBar = {  }
     ) {
-        Column(
+        LazyColumn(
+            state = state,
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            RegisterContent(screenNavController, registerViewModel)
+            item {
+                RegisterContent(screenNavController, registerViewModel)
+            }
         }
     }
 
@@ -71,6 +84,7 @@ fun RegisterScreen(
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun RegisterContent(
     screenNavController: NavHostController,
@@ -78,6 +92,8 @@ fun RegisterContent(
 ) {
 
     val focusManager = LocalFocusManager.current
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
 
     //User New Account
     val username = remember { mutableStateOf("") }
@@ -151,7 +167,16 @@ fun RegisterContent(
         maxLength = 9
     )
     InputField(
-        modifier = Modifier.padding(top = 16.dp),
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .bringIntoViewRequester(bringIntoViewRequester)
+            .onFocusEvent { focusState ->
+                if (focusState.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         text = password,
         placeholder = "Password",
         leadingIconImageVector = Icons.Default.Lock,
@@ -172,7 +197,15 @@ fun RegisterContent(
     )
 
     InputField(
-        modifier = Modifier.padding(top = 16.dp),
+        modifier = Modifier.padding(top = 16.dp)
+            .bringIntoViewRequester(bringIntoViewRequester)
+            .onFocusEvent { focusState ->
+                if (focusState.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         text = repeatPassword,
         placeholder = "Repeat Password",
         leadingIconImageVector = Icons.Default.Lock,
@@ -316,6 +349,7 @@ fun validateData(
     return validateUsername.value && validateEmail.value && validatePhoneNumber.value && validatePassword.value && validateRepeatPassword.value
 }
 
+@ExperimentalFoundationApi
 @Preview(showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {

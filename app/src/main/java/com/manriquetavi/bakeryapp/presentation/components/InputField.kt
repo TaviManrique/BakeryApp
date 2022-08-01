@@ -30,6 +30,7 @@ import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
 
 @Composable
 fun SearchCakeInputField(
+    modifier: Modifier = Modifier,
     text: MutableState<String>,
     onTextChange: (String) -> Unit,
     onSearchClicked: (String) -> Unit,
@@ -37,8 +38,7 @@ fun SearchCakeInputField(
     focusManager: FocusManager?,
 ) {
     OutlinedTextField(
-        modifier = Modifier
-            .padding(top = 16.dp)
+        modifier = modifier
             .fillMaxWidth(),
         value = text.value,
         onValueChange = {
@@ -173,6 +173,58 @@ fun InputField(
     }
 }
 
+@Composable
+fun CashInputField(
+    modifier: Modifier = Modifier,
+    text: MutableState<String>,
+    focusManager: FocusManager?,
+) {
+    TextField(
+        modifier = modifier
+            .fillMaxWidth(),
+        value = text.value,
+        onValueChange = {
+            /* After need to change onTextChange(it)*/
+            text.value = it
+        },
+        label = {
+            Text(
+                modifier = Modifier.alpha(alpha = ContentAlpha.medium),
+                text = "How much money do you pay?"
+            )
+        },
+        placeholder = {
+            Text(
+                modifier = Modifier.alpha(alpha = ContentAlpha.medium),
+                text = "00.0"
+            )
+        },
+        textStyle = TextStyle(
+            color = MaterialTheme.colors.descriptionColor
+        ),
+        singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Payments,
+                contentDescription = "Money Icon",
+                tint = MaterialTheme.colors.descriptionColor
+            )
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager?.clearFocus()
+            }
+        ),
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.Transparent,
+            cursorColor = Purple500
+        )
+    )
+}
 @Preview(showBackground = true)
 @Composable
 fun SearchCakeInputFieldPreview() {

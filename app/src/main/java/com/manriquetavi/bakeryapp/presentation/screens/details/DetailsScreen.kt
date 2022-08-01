@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +36,6 @@ import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
-import com.manriquetavi.bakeryapp.presentation.components.dialogs.DialogBoxLoading
 import com.manriquetavi.bakeryapp.presentation.components.dialogs.DialogBoxProgressAnimation
 import com.manriquetavi.bakeryapp.ui.theme.LightGray
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
@@ -253,7 +251,7 @@ fun ButtonAddToCart(
     detailsViewModel: DetailsViewModel,
     countFood: MutableState<Int>
 ) {
-    val openDialog by detailsViewModel.open.observeAsState(false)
+    val openDialog by detailsViewModel.openDialog.observeAsState(false)
     val showToast by detailsViewModel.showToast.observeAsState(false)
     val coroutineScope = rememberCoroutineScope()
     val scale = remember {
@@ -265,7 +263,7 @@ fun ButtonAddToCart(
     }
 
     if (showToast) {
-        ToastMessage(duration = Toast.LENGTH_SHORT, message = "Food item added")
+        ToastMessage(duration = Toast.LENGTH_LONG, message = "Food item added")
         detailsViewModel.showToast.value = false
     }
     Button(
