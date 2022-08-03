@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.screens.checkout
 
+import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -9,22 +10,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.PlusOne
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -60,54 +56,59 @@ fun CheckoutScreen(
 fun CheckoutContent(
     screenNavController: NavHostController
 ) {
-    val text = remember { mutableStateOf("") }
+    val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
+    val selectedItem = remember { mutableStateOf("") }
+    val cash = remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
     val state = rememberLazyListState()
+    val validateCash = rememberSaveable { mutableStateOf(true) }
 
-    LazyColumn(
-        state = state,
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        item {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 8.dp),
-                text = "Delivery",
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.Bold
-            )
-            Row() {
-                DropDownAddress()
-                IconButton(
-                    onClick = { screenNavController.navigate(Screen.Location.route) }
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .padding(horizontal = SMALL_PADDING)
-                            .size(32.dp),
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Icon Profile Item",
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
+        Text(
+            modifier = Modifier
+                .padding(vertical = 8.dp),
+            text = "Delivery",
+            style = MaterialTheme.typography.h6,
+            fontWeight = FontWeight.Bold
+        )
+        Row() {
+            DropDownAddress()
+            IconButton(
+                onClick = { screenNavController.navigate(Screen.Location.route) }
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .padding(horizontal = SMALL_PADDING)
+                        .size(32.dp),
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Icon Profile Item",
+                    tint = MaterialTheme.colors.primary
+                )
             }
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 8.dp),
-                text = "Payment",
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.Bold
-            )
-            RadioButtonPayments()
+        }
+        Text(
+            modifier = Modifier
+                .padding(vertical = 8.dp),
+            text = "Payment",
+            style = MaterialTheme.typography.h6,
+            fontWeight = FontWeight.Bold
+        )
+        RadioButtonPayments(
+            radioOptions,
+            selectedItem
+        )
+        if (selectedItem.value == "Cash") {
             CashInputField(
                 modifier = Modifier
+                    .padding(bottom = 12.dp)
                     .bringIntoViewRequester(bringIntoViewRequester)
-                    .focusRequester(focusRequester)
                     .onFocusEvent { focusState ->
                         if (focusState.isFocused) {
                             coroutineScope.launch {
@@ -116,17 +117,29 @@ fun CheckoutContent(
                         }
                     }
                     .padding(top = 24.dp),
-                text = text,
-                focusManager = focusManager
+                text = cash,
+                focusManager = focusManager,
+                errorMessage = "Please, input a valid cash",
+                isError = !validateCash.value,
             )
-            BottomDone(screenNavController)
         }
+        BottomDone(
+            screenNavController = screenNavController,
+            cash = cash,
+            selectedItem = selectedItem,
+            validateCash = validateCash
+        )
     }
 }
 
 
 @Composable
-fun BottomDone(screenNavController: NavHostController) {
+fun BottomDone(
+    screenNavController: NavHostController,
+    cash: MutableState<String>,
+    selectedItem: MutableState<String>,
+    validateCash: MutableState<Boolean>
+) {
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -153,8 +166,20 @@ fun BottomDone(screenNavController: NavHostController) {
                     1.0f,
                     animationSpec = tween(100),
                 )
-                //SEND ORDER AND WAIT ORDER RESPONSE
-                Toast.makeText(context, "SEND ORDER", Toast.LENGTH_SHORT).show()
+                if (selectedItem.value != "Cash") {
+                    //SEND ORDER AND WAIT ORDER RESPONSE
+                    Toast.makeText(context, "SEND ORDER", Toast.LENGTH_SHORT).show()
+                } else {
+                    if (
+                        validateDataCheckout(
+                            cash = cash.value,
+                            validateCash = validateCash
+                        )
+                    ) {
+                        //SEND ORDER AND WAIT ORDER RESPONSE
+                        Toast.makeText(context, "SEND ORDER", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         },
         shape = RoundedCornerShape(16.dp)
@@ -166,6 +191,14 @@ fun BottomDone(screenNavController: NavHostController) {
     }
 }
 
+fun validateDataCheckout(
+    cash: String,
+    validateCash: MutableState<Boolean>
+): Boolean {
+    val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+    validateCash.value = cash.matches(regex)
+    return validateCash.value
+}
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi

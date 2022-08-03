@@ -14,13 +14,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RadioButtonPayments() {
-
-    val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
-    var selectedItem by remember {
-        mutableStateOf(radioOptions[0])
-    }
-
+fun RadioButtonPayments(
+    radioOptions: List<String>,
+    selectedItem: MutableState<String>
+) {
     Column(modifier = Modifier.selectableGroup()) {
         radioOptions.forEach { label ->
             Row(
@@ -28,18 +25,18 @@ fun RadioButtonPayments() {
                     .fillMaxWidth()
                     .height(56.dp)
                     .selectable(
-                        selected = (selectedItem == label),
-                        onClick = { selectedItem = label },
+                        selected = (selectedItem.value == label),
+                        onClick = { selectedItem.value = label },
                         role = Role.RadioButton,
                         // disable the debit card
                         enabled = (label != radioOptions[2])
                     )
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
                     modifier = Modifier.padding(end = 16.dp),
-                    selected = (selectedItem == label),
+                    selected = (selectedItem.value == label),
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MaterialTheme.colors.primary,
                         unselectedColor = Color.DarkGray,
@@ -55,19 +52,5 @@ fun RadioButtonPayments() {
                 )
             }
         }
-        //CashOptionContent()
     }
-}
-
-@Composable
-fun CashOptionContent() {
-    val focusManager = LocalFocusManager.current
-    val text = remember {
-        mutableStateOf("")
-    }
-    CashInputField(
-        modifier = Modifier.padding(top = 48.dp),
-        text = text,
-        focusManager = focusManager
-    )
 }

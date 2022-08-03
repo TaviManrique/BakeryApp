@@ -53,22 +53,18 @@ fun RegisterScreen(
 
     val response = registerViewModel.signUpState.value
 
-    val state = rememberLazyListState()
-
     Scaffold(
         topBar = {  }
     ) {
-        LazyColumn(
-            state = state,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            item {
-                RegisterContent(screenNavController, registerViewModel)
-            }
+            RegisterContent(screenNavController, registerViewModel)
         }
     }
 
@@ -197,7 +193,8 @@ fun RegisterContent(
     )
 
     InputField(
-        modifier = Modifier.padding(top = 16.dp)
+        modifier = Modifier
+            .padding(top = 16.dp)
             .bringIntoViewRequester(bringIntoViewRequester)
             .onFocusEvent { focusState ->
                 if (focusState.isFocused) {

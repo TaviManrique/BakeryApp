@@ -19,6 +19,7 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -178,6 +179,8 @@ fun CashInputField(
     modifier: Modifier = Modifier,
     text: MutableState<String>,
     focusManager: FocusManager?,
+    errorMessage: String,
+    isError: Boolean = false
 ) {
     TextField(
         modifier = modifier
@@ -190,7 +193,7 @@ fun CashInputField(
         label = {
             Text(
                 modifier = Modifier.alpha(alpha = ContentAlpha.medium),
-                text = "How much money do you pay?"
+                text = if(!isError) "How much money do you pay?" else errorMessage
             )
         },
         placeholder = {
@@ -199,8 +202,10 @@ fun CashInputField(
                 text = "00.0"
             )
         },
+        isError = isError,
         textStyle = TextStyle(
-            color = MaterialTheme.colors.descriptionColor
+            color = MaterialTheme.colors.descriptionColor,
+            fontWeight = FontWeight.Bold
         ),
         singleLine = true,
         leadingIcon = {
