@@ -1,6 +1,5 @@
 package com.manriquetavi.bakeryapp.presentation.screens.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,11 +29,12 @@ fun SearchScreen(
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     Scaffold(
-        topBar = { SearchTopBar(screenNavController) },
+        topBar = { SearchTopBar(screenNavController = screenNavController) },
         backgroundColor = Color.Transparent
-    ) {
+    ) { paddingValues ->
         SearchActionComponent(
             screenNavController = screenNavController,
+            paddingValues = paddingValues,
             searchViewModel = searchViewModel
         )
     }
@@ -43,6 +43,7 @@ fun SearchScreen(
 @Composable
 fun SearchActionComponent(
     screenNavController: NavHostController,
+    paddingValues: PaddingValues,
     searchViewModel: SearchViewModel
 ) {
     val focusManager = LocalFocusManager.current
@@ -50,7 +51,9 @@ fun SearchActionComponent(
     val searchedFoods = searchViewModel.searchedFoods.value
 
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(horizontal = 16.dp)
     ) {
         SearchCakeInputField(
             modifier = Modifier.padding(top = 16.dp),

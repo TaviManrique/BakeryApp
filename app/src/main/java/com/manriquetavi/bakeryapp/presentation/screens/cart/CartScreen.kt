@@ -31,35 +31,25 @@ import kotlinx.coroutines.launch
 @Composable
 fun CartScreen(
     screenNavController: NavHostController,
+    paddingValues: PaddingValues,
     cartViewModel: CartViewModel = hiltViewModel()
 ) {
     val foodsCart = cartViewModel.foodCardList.collectAsState().value
-    Scaffold(
-        topBar = {},
-        floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.padding(bottom = 50.dp),
-                onClick = { cartViewModel.deleteAllFoodCart() }
-            ) {
-
-            }
-        }
-    ) {
-        CartScreenContent(foodsCart, cartViewModel, screenNavController)
-    }
+    CartScreenContent(foodsCart, cartViewModel, screenNavController, paddingValues)
 }
 
 @Composable
 fun CartScreenContent(
     foodsCart: List<FoodCart>,
     cartViewModel: CartViewModel,
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    paddingValues: PaddingValues
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(start = 16.dp, end = 16.dp, bottom = 70.dp),
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ListFoodCart(foodsCart,cartViewModel)
@@ -165,7 +155,8 @@ fun CartScreenPreview() {
             )
         ),
         cartViewModel = hiltViewModel(),
-        screenNavController = rememberNavController()
+        screenNavController = rememberNavController(),
+        paddingValues = PaddingValues()
     )
 }
 

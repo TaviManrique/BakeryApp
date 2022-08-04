@@ -39,41 +39,37 @@ import com.manriquetavi.bakeryapp.ui.theme.titleColor
 @Composable
 fun ProfileScreen(
     screenNavController: NavHostController,
-    profileViewModel: ProfileViewModel = hiltViewModel(),
+    paddingValues: PaddingValues,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val signOutState = profileViewModel.signOutState.value
     val userDetails = profileViewModel.responseUserDetails.value
 
-
-    Scaffold(
-        topBar = {}
-    ) {
-        when(userDetails) {
-            is Response.Loading -> ProgressBarCircular()
-            is Response.Success ->
-                if (userDetails.data == null) {
-                    ProgressBarCircular()
-                } else {
-                    ProfileContent(
-                        userDetails = userDetails.data,
-                        profileViewModel = profileViewModel,
-                        screenNavController = screenNavController
-                    )
-                }
-            is Response.Error -> Util.printError(userDetails.message)
-        }
-        when(signOutState) {
-            is Response.Loading -> ProgressBarCircular()
-            is Response.Success ->
-                if(signOutState.data) {
-                    LaunchedEffect(signOutState.data) {
-                        screenNavController.popBackStack()
-                        screenNavController.navigate(Screen.Login.route)
-                    }
-                }
-            is Response.Error -> LaunchedEffect(Unit) {
-                Util.printError(signOutState.message)
+    when (userDetails) {
+        is Response.Loading -> ProgressBarCircular()
+        is Response.Success ->
+            if (userDetails.data == null) {
+                ProgressBarCircular()
+            } else {
+                ProfileContent(
+                    userDetails = userDetails.data,
+                    profileViewModel = profileViewModel,
+                    screenNavController = screenNavController
+                )
             }
+        is Response.Error -> Util.printError(userDetails.message)
+    }
+    when (signOutState) {
+        is Response.Loading -> ProgressBarCircular()
+        is Response.Success ->
+            if (signOutState.data) {
+                LaunchedEffect(signOutState.data) {
+                    screenNavController.popBackStack()
+                    screenNavController.navigate(Screen.Login.route)
+                }
+            }
+        is Response.Error -> LaunchedEffect(Unit) {
+            Util.printError(signOutState.message)
         }
     }
 

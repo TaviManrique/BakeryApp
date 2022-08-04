@@ -29,7 +29,7 @@ fun HomeTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -59,5 +59,5 @@ fun HomeTopBar(
 @Preview(showSystemUi = true)
 @Composable
 fun HomeTopBarPreview() {
-    HomeTopBar(screenNavController = rememberNavController())
+    //HomeTopBar(screenNavController = rememberNavController())
 }

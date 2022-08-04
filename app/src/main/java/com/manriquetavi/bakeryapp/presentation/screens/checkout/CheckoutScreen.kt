@@ -1,13 +1,10 @@
 package com.manriquetavi.bakeryapp.presentation.screens.checkout
 
-import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
@@ -19,9 +16,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -44,9 +41,10 @@ fun CheckoutScreen(
 ) {
 
     Scaffold(
-        topBar = { CheckoutTopBar(screenNavController = screenNavController) }
-    ) {
-        CheckoutContent(screenNavController)
+        topBar = { CheckoutTopBar(screenNavController = screenNavController) },
+        backgroundColor = Color.Transparent
+    ) { paddingValues ->
+        CheckoutContent(screenNavController, paddingValues)
     }
 }
 
@@ -54,7 +52,8 @@ fun CheckoutScreen(
 @ExperimentalMaterialApi
 @Composable
 fun CheckoutContent(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    paddingValues: PaddingValues
 ) {
     val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
     val selectedItem = remember { mutableStateOf("") }
@@ -62,13 +61,13 @@ fun CheckoutContent(
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
-    val state = rememberLazyListState()
     val validateCash = rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(paddingValues)
+            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Text(
@@ -78,7 +77,7 @@ fun CheckoutContent(
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold
         )
-        Row() {
+        Row {
             DropDownAddress()
             IconButton(
                 onClick = { screenNavController.navigate(Screen.Location.route) }

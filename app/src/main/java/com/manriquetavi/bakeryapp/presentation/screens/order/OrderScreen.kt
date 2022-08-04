@@ -2,6 +2,7 @@ package com.manriquetavi.bakeryapp.presentation.screens.order
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +19,8 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun OrderScreen(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    paddingValues: PaddingValues,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),

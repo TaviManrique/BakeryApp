@@ -76,10 +76,11 @@ fun LoginScreen(
 
     Scaffold(
         topBar = {  }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(paddingValues)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,

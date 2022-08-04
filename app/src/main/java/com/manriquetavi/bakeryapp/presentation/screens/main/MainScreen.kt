@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
+import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartScreen
 import com.manriquetavi.bakeryapp.presentation.screens.home.HomeScreen
 import com.manriquetavi.bakeryapp.presentation.screens.order.OrderScreen
@@ -39,12 +40,12 @@ fun MainScreen(
         bottomBar = {
             BottomBar(selectedItem) {selectedItem.value = it}
         }
-    ) {
+    ) { paddingValues ->
         when (selectedItem.value){
-            0 -> HomeScreen(screenNavController)
-            1 -> CartScreen(screenNavController)
-            2 -> OrderScreen(screenNavController)
-            3 -> ProfileScreen(screenNavController)
+            0 -> HomeScreen(screenNavController, paddingValues)
+            1 -> CartScreen(screenNavController, paddingValues)
+            2 -> OrderScreen(screenNavController, paddingValues)
+            3 -> ProfileScreen(screenNavController, paddingValues)
         }
     }
 }
@@ -69,63 +70,29 @@ fun BottomBar(
                 onSelectedItem(0)
             }
         }
+        val bottomScreens = listOf(
+            Screen.Home,
+            Screen.Cart,
+            Screen.Order,
+            Screen.Profile
+        )
 
-        BottomNavigationItem(
-            label = { Text(text = "Home") },
-            selected = selectedItem.value == 0,
-            onClick = {
-                if (selectedItem.value != 0) {
-                    onSelectedItem(0)
-                }
-            },
-            icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = "Person Icon") },
-            selectedContentColor = MaterialTheme.colors.primaryVariant,
-            unselectedContentColor = Color.LightGray,
-            enabled = true,
-            alwaysShowLabel = false
-        )
-        BottomNavigationItem(
-            label = { Text(text = "Cart") },
-            selected = selectedItem.value == 1,
-            onClick = {
-                if (selectedItem.value != 1) {
-                    onSelectedItem(1)
-                }
-            },
-            icon = { Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "Phone Icon") },
-            selectedContentColor = MaterialTheme.colors.primaryVariant,
-            unselectedContentColor = Color.LightGray,
-            enabled = true,
-            alwaysShowLabel = false
-        )
-        BottomNavigationItem(
-            label = { Text(text = "Order") },
-            selected = selectedItem.value == 2,
-            onClick = {
-                if (selectedItem.value != 2) {
-                    onSelectedItem(2)
-                }
-            },
-            icon = { Icon(imageVector = Icons.Filled.List, contentDescription = "Place Icon") },
-            selectedContentColor = MaterialTheme.colors.primaryVariant,
-            unselectedContentColor = Color.LightGray,
-            enabled = true,
-            alwaysShowLabel = false
-        )
-        BottomNavigationItem(
-            label = { Text(text = "Profile") },
-            selected = selectedItem.value == 3,
-            onClick = {
-                if (selectedItem.value != 3) {
-                    onSelectedItem(3)
-                }
-            },
-            icon = { Icon(imageVector = Icons.Filled.Person, contentDescription = "Place Icon") },
-            selectedContentColor = MaterialTheme.colors.primaryVariant,
-            unselectedContentColor = Color.LightGray,
-            enabled = true,
-            alwaysShowLabel = false
-        )
+        bottomScreens.forEach { screen ->
+            BottomNavigationItem(
+                label = { Text(text = screen.title.toString()) },
+                selected = selectedItem.value == bottomScreens.indexOf(screen),
+                onClick = {
+                    if (selectedItem.value != bottomScreens.indexOf(screen)) {
+                        onSelectedItem(bottomScreens.indexOf(screen))
+                    }
+                },
+                icon = { screen.icon?.let { Icon(imageVector = it, contentDescription = "Bottom Nav Icon") } },
+                selectedContentColor = MaterialTheme.colors.primaryVariant,
+                unselectedContentColor = Color.LightGray,
+                enabled = true,
+                alwaysShowLabel = false
+            )
+        }
     }
 }
 

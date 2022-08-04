@@ -18,9 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.presentation.screens.search.SearchTopBar
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
 import com.manriquetavi.bakeryapp.ui.theme.titleColor
 
@@ -51,4 +54,10 @@ fun CheckoutTopBar(
         backgroundColor = Color.Transparent,
         elevation = 0.dp
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CheckoutTopBarPreview() {
+    CheckoutTopBar(screenNavController = rememberNavController())
 }
