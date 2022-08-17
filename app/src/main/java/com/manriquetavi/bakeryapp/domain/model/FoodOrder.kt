@@ -1,11 +1,10 @@
 package com.manriquetavi.bakeryapp.domain.model
 
 import androidx.room.PrimaryKey
+import com.google.firebase.firestore.Exclude
 
 data class FoodOrder(
-    @PrimaryKey(autoGenerate = false)
-    val id: String? = "",
-    val quantity: Int?,
-    val image: String?,
-    val price: String?
+    @get:Exclude var id: String = "",
+    var name: String = "",
+    var quantity: Int = 0
 )

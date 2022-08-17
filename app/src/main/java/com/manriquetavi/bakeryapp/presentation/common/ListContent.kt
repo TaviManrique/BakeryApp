@@ -54,7 +54,8 @@ fun FoodItem(
                     .padding(SMALL_PADDING)
                     .weight(0.5f)
                     .size(150.dp),
-                elevation = 4.dp
+                elevation = 4.dp,
+                color = Color.Transparent
             ) {
                 AsyncImage(
                     modifier = Modifier
@@ -64,7 +65,7 @@ fun FoodItem(
                     model = ImageRequest
                         .Builder(LocalContext.current)
                         .data(food.image)
-                        .crossfade(1000)
+                        .crossfade(500)
                         .build(),
                     placeholder = painterResource(R.drawable.ic_placeholder),
                     error = painterResource(R.drawable.ic_placeholder),
@@ -130,11 +131,12 @@ fun FoodCartItem(
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White),
                     model = ImageRequest
                         .Builder(LocalContext.current)
                         .data(foodCart.image)
-                        .crossfade(1000)
+                        .crossfade(500)
                         .build(),
                     placeholder = painterResource(R.drawable.ic_placeholder),
                     error = painterResource(R.drawable.ic_placeholder),

@@ -80,6 +80,7 @@ fun ListFoodFound(
     screenNavController: NavHostController
 ) {
     LazyColumn(
+        modifier = Modifier.padding(top = SMALL_PADDING),
         contentPadding = PaddingValues(all = SMALL_PADDING),
         verticalArrangement = Arrangement.spacedBy(SMALL_PADDING)
     ) {

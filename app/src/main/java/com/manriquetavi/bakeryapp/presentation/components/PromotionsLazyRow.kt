@@ -103,7 +103,7 @@ fun PromotionItem(
                 model = ImageRequest
                     .Builder(LocalContext.current)
                     .data(promotion.image)
-                    .crossfade(2000)
+                    .crossfade(500)
                     .build(),
                 alignment = Alignment.CenterEnd,
                 contentScale = ContentScale.Crop,

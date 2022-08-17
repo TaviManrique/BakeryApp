@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -84,22 +85,28 @@ fun RecommendationItem(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
-            AsyncImage(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.White),
-                model = ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(food.image)
-                    .crossfade(2000)
-                    .build(),
-                placeholder = painterResource(R.drawable.ic_placeholder),
-                error = painterResource(R.drawable.ic_placeholder),
-                contentScale = ContentScale.Crop,
-                contentDescription = "Image Food"
-            )
+                    .height(100.dp),
+                elevation = 4.dp,
+                color = Color.Transparent
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White),
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(food.image)
+                        .build(),
+                    placeholder = painterResource(R.drawable.ic_placeholder),
+                    error = painterResource(R.drawable.ic_placeholder),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Image Food"
+                )
+            }
             Text(
                 modifier = Modifier.padding(top = 8.dp),
                 text = food.name.toString(),

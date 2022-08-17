@@ -25,7 +25,8 @@ import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
 @ExperimentalMaterialApi
 @Composable
 fun DropDownAddress(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectedAddress: MutableState<String>
 ){
     val contextForToast = LocalContext.current.applicationContext
     val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
@@ -39,6 +40,7 @@ fun DropDownAddress(
 
     // the box
     ExposedDropdownMenuBox(
+        modifier = modifier,
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
@@ -47,8 +49,8 @@ fun DropDownAddress(
 
         // text field
         OutlinedTextField(
-            modifier = modifier,
-            value = selectedItem,
+            modifier = Modifier.fillMaxWidth(),
+            value = selectedAddress.value,
             onValueChange = {},
             readOnly = true,
             placeholder = {
@@ -83,7 +85,7 @@ fun DropDownAddress(
             listItems.forEach { selectedOption ->
                 // menu item
                 DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
+                    selectedAddress.value = selectedOption
                     Toast.makeText(contextForToast, selectedOption, Toast.LENGTH_SHORT).show()
                     expanded = false
                 }) {
@@ -209,5 +211,5 @@ fun MyUI1() {
 @Preview(showSystemUi = true)
 @Composable
 fun DropDownMenuAddressPreview() {
-    DropDownAddress()
+    DropDownAddress(selectedAddress = remember { mutableStateOf("") })
 }

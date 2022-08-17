@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusEvent
@@ -24,12 +25,17 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.manriquetavi.bakeryapp.domain.model.FoodCart
+import com.manriquetavi.bakeryapp.domain.model.FoodOrder
+import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.CashInputField
 import com.manriquetavi.bakeryapp.presentation.components.DropDownAddress
 import com.manriquetavi.bakeryapp.presentation.components.RadioButtonPayments
+import com.manriquetavi.bakeryapp.presentation.screens.cart.TotalPrice
 import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
 import kotlinx.coroutines.launch
 
@@ -37,14 +43,14 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun CheckoutScreen(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    checkoutViewModel: CheckoutViewModel = hiltViewModel()
 ) {
-
     Scaffold(
         topBar = { CheckoutTopBar(screenNavController = screenNavController) },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
-        CheckoutContent(screenNavController, paddingValues)
+        CheckoutContent(screenNavController, paddingValues, checkoutViewModel)
     }
 }
 
@@ -53,15 +59,19 @@ fun CheckoutScreen(
 @Composable
 fun CheckoutContent(
     screenNavController: NavHostController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    checkoutViewModel: CheckoutViewModel
 ) {
+    val foodsCart = checkoutViewModel.foodCardList.collectAsState().value
+
     val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
-    val selectedItem = remember { mutableStateOf("") }
+    val selectedItem = rememberSaveable { mutableStateOf("") }
     val cash = remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
     val validateCash = rememberSaveable { mutableStateOf(true) }
+    val selectedAddress = rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -77,15 +87,23 @@ fun CheckoutContent(
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold
         )
-        Row {
-            DropDownAddress()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DropDownAddress(
+                modifier = Modifier.weight(0.9f),
+                selectedAddress = selectedAddress
+            )
             IconButton(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.1f),
                 onClick = { screenNavController.navigate(Screen.Location.route) }
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(horizontal = SMALL_PADDING)
-                        .size(32.dp),
+                        .fillMaxSize(),
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Icon Profile Item",
                     tint = MaterialTheme.colors.primary
@@ -122,11 +140,15 @@ fun CheckoutContent(
                 isError = !validateCash.value,
             )
         }
+        TotalPrice(foodsCart = foodsCart)
         BottomDone(
             screenNavController = screenNavController,
+            foodsCart = foodsCart,
             cash = cash,
             selectedItem = selectedItem,
-            validateCash = validateCash
+            validateCash = validateCash,
+            selectedAddress = selectedAddress,
+            checkoutViewModel = checkoutViewModel
         )
     }
 }
@@ -135,9 +157,12 @@ fun CheckoutContent(
 @Composable
 fun BottomDone(
     screenNavController: NavHostController,
+    foodsCart: List<FoodCart>,
     cash: MutableState<String>,
     selectedItem: MutableState<String>,
-    validateCash: MutableState<Boolean>
+    validateCash: MutableState<Boolean>,
+    selectedAddress: MutableState<String>,
+    checkoutViewModel: CheckoutViewModel
 ) {
 
     val context = LocalContext.current
@@ -145,6 +170,30 @@ fun BottomDone(
     val scale = remember {
         Animatable(1f)
     }
+    //Prepare order
+    val foods = hashMapOf<String, FoodOrder>()
+    val clientId = "12345"
+    var aux = 0.00
+    var totalPrice by remember {
+        mutableStateOf(0.00)
+    }
+    foodsCart.forEach { foodCart ->
+        foods[foodCart.id] = FoodOrder(
+            id = foodCart.id,
+            name = foodCart.name!!,
+            quantity = foodCart.quantity!!
+        )
+        foodCart.price?.let {
+            aux += foodCart.quantity!!.times(it)
+        }
+    }
+    totalPrice = aux
+    val order = Order(
+        clientId = clientId,
+        foods = foods,
+        totalPrice = totalPrice,
+        status = 1
+    )
     Button(
         modifier = Modifier
             .scale(scale = scale.value)
@@ -167,7 +216,6 @@ fun BottomDone(
                 )
                 if (selectedItem.value != "Cash") {
                     //SEND ORDER AND WAIT ORDER RESPONSE
-                    Toast.makeText(context, "SEND ORDER", Toast.LENGTH_SHORT).show()
                 } else {
                     if (
                         validateDataCheckout(
@@ -176,18 +224,24 @@ fun BottomDone(
                         )
                     ) {
                         //SEND ORDER AND WAIT ORDER RESPONSE
-                        Toast.makeText(context, "SEND ORDER", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         },
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        enabled = selectedItem.value.isNotEmpty() && selectedAddress.value.isNotEmpty()
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
             text = "Done"
         )
     }
+}
+
+fun prepareOrder(
+    checkoutViewModel: CheckoutViewModel
+) {
+
 }
 
 fun validateDataCheckout(

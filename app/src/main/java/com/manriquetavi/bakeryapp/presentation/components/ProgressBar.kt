@@ -25,8 +25,7 @@ import kotlinx.coroutines.delay
 fun ProgressBarCircular() {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ){
         CircularProgressIndicator()
