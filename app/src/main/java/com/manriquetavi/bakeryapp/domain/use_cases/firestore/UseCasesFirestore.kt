@@ -6,6 +6,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_foods_selec
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_all_promotions.GetAllPromotions
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_recommendations.GetRecommendations
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.get_selected_food.GetSelectedFood
+import com.manriquetavi.bakeryapp.domain.use_cases.firestore.orders.AddOrder
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.search_foods.SearchFoods
 import com.manriquetavi.bakeryapp.domain.use_cases.firestore.user.GetUserDetails
 
@@ -17,5 +18,6 @@ data class UseCasesFirestore(
     val getAllPromotions: GetAllPromotions,
     val getRecommendations: GetRecommendations,
     val getAllFoodsSelectedCategory: GetAllFoodsSelectedCategory,
-    val getAllFoods: GetAllFoods
+    val getAllFoods: GetAllFoods,
+    val addOrder: AddOrder
 )

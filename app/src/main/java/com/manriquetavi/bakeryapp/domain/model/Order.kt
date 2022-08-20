@@ -20,5 +20,6 @@ data class Order(
     var foods: Map<String, FoodOrder> = hashMapOf(),
     var totalPrice: Double = 0.0,
     var status: Int = 0,
+    var address: String = "",
     @ServerTimestamp var date: Timestamp? = null
 )

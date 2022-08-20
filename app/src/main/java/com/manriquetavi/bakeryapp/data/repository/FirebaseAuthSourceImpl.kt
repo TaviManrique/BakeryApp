@@ -72,10 +72,8 @@ class FirebaseAuthSourceImpl(
                 firestore.collection("users").document(uid).set(user).addOnSuccessListener {
 
                 }.await()
-                emit(Response.Success(wasOperationSuccessful))
-            } else {
-                emit(Response.Success(wasOperationSuccessful))
             }
+            emit(Response.Success(wasOperationSuccessful))
         } catch (e: Exception) {
             emit(Response.Error(e.message ?: e.toString()))
         }

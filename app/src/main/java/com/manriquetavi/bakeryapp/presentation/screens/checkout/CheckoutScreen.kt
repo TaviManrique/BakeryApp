@@ -14,6 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,12 +32,15 @@ import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.model.FoodOrder
 import com.manriquetavi.bakeryapp.domain.model.Order
+import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.CashInputField
 import com.manriquetavi.bakeryapp.presentation.components.DropDownAddress
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.presentation.components.RadioButtonPayments
 import com.manriquetavi.bakeryapp.presentation.screens.cart.TotalPrice
-import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
+import com.manriquetavi.bakeryapp.util.ToastMessage
+import com.manriquetavi.bakeryapp.util.Util
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -46,11 +50,29 @@ fun CheckoutScreen(
     screenNavController: NavHostController,
     checkoutViewModel: CheckoutViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val wasButtonDonePressed by checkoutViewModel.wasButtonDonePressed.observeAsState(false)
+    val response = checkoutViewModel.addOrderState.value
     Scaffold(
         topBar = { CheckoutTopBar(screenNavController = screenNavController) },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
         CheckoutContent(screenNavController, paddingValues, checkoutViewModel)
+    }
+    when (response) {
+        is Response.Loading -> ProgressBarCircular()
+        is Response.Success ->
+            if (wasButtonDonePressed) {
+                LaunchedEffect(true) {
+                    Toast.makeText(context, "Success send order", Toast.LENGTH_SHORT).show()
+                    screenNavController.popBackStack()
+                    screenNavController.navigate(Screen.Main.passItemPosition("3"))
+                }
+            }
+        is Response.Error -> {
+            Util.printError(response.message)
+            ToastMessage(duration = Toast.LENGTH_SHORT, message = "Error send order")
+        }
     }
 }
 
@@ -66,7 +88,7 @@ fun CheckoutContent(
 
     val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
     val selectedItem = rememberSaveable { mutableStateOf("") }
-    val cash = remember { mutableStateOf("") }
+    val cash = rememberSaveable { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -143,7 +165,7 @@ fun CheckoutContent(
         TotalPrice(foodsCart = foodsCart)
         BottomDone(
             screenNavController = screenNavController,
-            foodsCart = foodsCart,
+            foodCarts = foodsCart,
             cash = cash,
             selectedItem = selectedItem,
             validateCash = validateCash,
@@ -157,7 +179,7 @@ fun CheckoutContent(
 @Composable
 fun BottomDone(
     screenNavController: NavHostController,
-    foodsCart: List<FoodCart>,
+    foodCarts: List<FoodCart>,
     cash: MutableState<String>,
     selectedItem: MutableState<String>,
     validateCash: MutableState<Boolean>,
@@ -165,35 +187,11 @@ fun BottomDone(
     checkoutViewModel: CheckoutViewModel
 ) {
 
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val scale = remember {
         Animatable(1f)
     }
-    //Prepare order
-    val foods = hashMapOf<String, FoodOrder>()
-    val clientId = "12345"
-    var aux = 0.00
-    var totalPrice by remember {
-        mutableStateOf(0.00)
-    }
-    foodsCart.forEach { foodCart ->
-        foods[foodCart.id] = FoodOrder(
-            id = foodCart.id,
-            name = foodCart.name!!,
-            quantity = foodCart.quantity!!
-        )
-        foodCart.price?.let {
-            aux += foodCart.quantity!!.times(it)
-        }
-    }
-    totalPrice = aux
-    val order = Order(
-        clientId = clientId,
-        foods = foods,
-        totalPrice = totalPrice,
-        status = 1
-    )
+
     Button(
         modifier = Modifier
             .scale(scale = scale.value)
@@ -216,6 +214,8 @@ fun BottomDone(
                 )
                 if (selectedItem.value != "Cash") {
                     //SEND ORDER AND WAIT ORDER RESPONSE
+                    checkoutViewModel.addOrder(foodCarts, selectedAddress.value)
+                    checkoutViewModel.deleteAllFoodCart()
                 } else {
                     if (
                         validateDataCheckout(
@@ -224,6 +224,8 @@ fun BottomDone(
                         )
                     ) {
                         //SEND ORDER AND WAIT ORDER RESPONSE
+                        checkoutViewModel.addOrder(foodCarts, selectedAddress.value)
+                        checkoutViewModel.deleteAllFoodCart()
                     }
                 }
             }
@@ -238,11 +240,6 @@ fun BottomDone(
     }
 }
 
-fun prepareOrder(
-    checkoutViewModel: CheckoutViewModel
-) {
-
-}
 
 fun validateDataCheckout(
     cash: String,

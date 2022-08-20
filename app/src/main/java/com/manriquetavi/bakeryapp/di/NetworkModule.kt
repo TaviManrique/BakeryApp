@@ -39,6 +39,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseFirestoreRepositoryImpl(firestore: FirebaseFirestore): FirestoreDataSource = FirestoreDataSourceImpl(firestore = firestore)
+    fun provideFirebaseFirestoreRepositoryImpl(auth: FirebaseAuth, firestore: FirebaseFirestore): FirestoreDataSource = FirestoreDataSourceImpl(firestore = firestore, auth = auth)
 
 }

@@ -31,6 +31,7 @@ import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.increase_qu
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.insert_foodcart.InsertFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.local_data_source.minus_quantity.MinusQuantityFoodCart
 import com.manriquetavi.bakeryapp.domain.use_cases.data_store.on_boarding_page.UseCasesDataStore
+import com.manriquetavi.bakeryapp.domain.use_cases.firestore.orders.AddOrder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -83,7 +84,8 @@ object RepositoryModule {
             getAllPromotions = GetAllPromotions(repositoryFirestore),
             getRecommendations = GetRecommendations(repositoryFirestore),
             getAllFoodsSelectedCategory = GetAllFoodsSelectedCategory(repositoryFirestore),
-            getAllFoods = GetAllFoods(repositoryFirestore)
+            getAllFoods = GetAllFoods(repositoryFirestore),
+            addOrder = AddOrder(repositoryFirestore)
         )
     }
 

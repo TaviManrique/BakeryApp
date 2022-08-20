@@ -13,5 +13,5 @@ interface FirestoreDataSource {
     suspend fun getRecommendations(): Flow<Response<List<Food>?>>
     suspend fun getAllFoodsSelectedCategory(category: String): Flow<Response<List<Food>?>>
     suspend fun getAllFoods(): Flow<Response<List<Food>?>>
-
+    fun addOrder(foodCarts: List<FoodCart>, address: String): Flow<Response<Void?>>
 }

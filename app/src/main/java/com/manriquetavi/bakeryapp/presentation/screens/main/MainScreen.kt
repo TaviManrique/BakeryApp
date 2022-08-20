@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
@@ -31,11 +32,10 @@ import com.manriquetavi.bakeryapp.ui.theme.ShimmerMediumGray
 @ExperimentalCoilApi
 @Composable
 fun MainScreen(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
-
     val selectedItem = rememberSaveable { mutableStateOf(0) }
-
     Scaffold(
         bottomBar = {
             BottomBar(selectedItem) {selectedItem.value = it}
