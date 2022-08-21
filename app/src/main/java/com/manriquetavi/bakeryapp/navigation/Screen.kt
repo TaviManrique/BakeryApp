@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
+
 sealed class Screen(
     val route: String,
     val title: String? = null,
@@ -35,6 +36,7 @@ sealed class Screen(
     }
     object Location: Screen("location_screen")
     object Checkout: Screen("checkout_screen")
+    object Track: Screen("track_screen")
 
     //BottomNav Screens
     object Home: Screen(
@@ -65,3 +67,4 @@ val bottomScreens = listOf(
     Screen.Order,
     Screen.Profile,
 )
+

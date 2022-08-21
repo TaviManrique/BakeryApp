@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.navigation.bottomScreens
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartScreen
 import com.manriquetavi.bakeryapp.presentation.screens.home.HomeScreen
 import com.manriquetavi.bakeryapp.presentation.screens.order.OrderScreen
@@ -35,10 +36,11 @@ fun MainScreen(
     screenNavController: NavHostController,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val selectedItem = rememberSaveable { mutableStateOf(0) }
+    val selectedItem = mainViewModel.selectedItem
+
     Scaffold(
         bottomBar = {
-            BottomBar(selectedItem) {selectedItem.value = it}
+            BottomBar(selectedItem) { mainViewModel.updateSelectedItem(it) }
         }
     ) { paddingValues ->
         when (selectedItem.value){
@@ -52,8 +54,8 @@ fun MainScreen(
 
 @Composable
 fun BottomBar(
-    selectedItem: MutableState<Int>,
-    onSelectedItem: (Int) -> Unit,
+    selectedItem: State<Int>,
+    onSelectedItem: (Int) -> Unit
 ) {
     BottomNavigation(
         modifier = Modifier
@@ -70,12 +72,6 @@ fun BottomBar(
                 onSelectedItem(0)
             }
         }
-        val bottomScreens = listOf(
-            Screen.Home,
-            Screen.Cart,
-            Screen.Order,
-            Screen.Profile
-        )
 
         bottomScreens.forEach { screen ->
             BottomNavigationItem(

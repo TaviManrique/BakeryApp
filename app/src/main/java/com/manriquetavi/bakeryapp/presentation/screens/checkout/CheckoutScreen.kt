@@ -66,7 +66,9 @@ fun CheckoutScreen(
                 LaunchedEffect(true) {
                     Toast.makeText(context, "Success send order", Toast.LENGTH_SHORT).show()
                     screenNavController.popBackStack()
-                    screenNavController.navigate(Screen.Main.passItemPosition("3"))
+                    screenNavController.navigate(Screen.Main.passItemPosition("2"))
+                    screenNavController.navigate(Screen.Track.route)
+                    checkoutViewModel.deleteAllFoodCart()
                 }
             }
         is Response.Error -> {
@@ -215,7 +217,6 @@ fun BottomDone(
                 if (selectedItem.value != "Cash") {
                     //SEND ORDER AND WAIT ORDER RESPONSE
                     checkoutViewModel.addOrder(foodCarts, selectedAddress.value)
-                    checkoutViewModel.deleteAllFoodCart()
                 } else {
                     if (
                         validateDataCheckout(
@@ -225,7 +226,6 @@ fun BottomDone(
                     ) {
                         //SEND ORDER AND WAIT ORDER RESPONSE
                         checkoutViewModel.addOrder(foodCarts, selectedAddress.value)
-                        checkoutViewModel.deleteAllFoodCart()
                     }
                 }
             }

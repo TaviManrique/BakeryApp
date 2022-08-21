@@ -19,6 +19,7 @@ import com.manriquetavi.bakeryapp.presentation.screens.main.MainScreen
 import com.manriquetavi.bakeryapp.presentation.screens.register.RegisterScreen
 import com.manriquetavi.bakeryapp.presentation.screens.search.SearchScreen
 import com.manriquetavi.bakeryapp.presentation.screens.splash.SplashScreen
+import com.manriquetavi.bakeryapp.presentation.screens.track.TrackScreen
 import com.manriquetavi.bakeryapp.presentation.screens.welcome.WelcomeScreen
 
 @ExperimentalFoundationApi
@@ -83,6 +84,10 @@ fun SetupNavGraph(screenNavController: NavHostController) {
         }
         composable(route = Screen.Checkout.route) {
             CheckoutScreen(screenNavController = screenNavController)
+        }
+
+        composable(route = Screen.Track.route) {
+            TrackScreen(screenNavController = screenNavController)
         }
 
     }
