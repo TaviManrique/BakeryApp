@@ -32,7 +32,7 @@ fun SearchScreen(
         topBar = { SearchTopBar(screenNavController = screenNavController) },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
-        SearchActionComponent(
+        SearchScreenContent(
             screenNavController = screenNavController,
             paddingValues = paddingValues,
             searchViewModel = searchViewModel
@@ -41,7 +41,7 @@ fun SearchScreen(
 }
 
 @Composable
-fun SearchActionComponent(
+fun SearchScreenContent(
     screenNavController: NavHostController,
     paddingValues: PaddingValues,
     searchViewModel: SearchViewModel

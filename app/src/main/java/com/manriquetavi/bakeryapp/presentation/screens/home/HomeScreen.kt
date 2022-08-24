@@ -30,7 +30,7 @@ fun HomeScreen(
             .verticalScroll(rememberScrollState()),
     ) {
         HomeTopBar(screenNavController = screenNavController)
-        HomeContent(
+        HomeScreenContent(
             screenNavController = screenNavController,
             homeViewModel = homeViewModel
         )
@@ -39,7 +39,7 @@ fun HomeScreen(
 
 @ExperimentalCoilApi
 @Composable
-fun HomeContent(
+fun HomeScreenContent(
     homeViewModel: HomeViewModel,
     screenNavController: NavHostController
 ) {
