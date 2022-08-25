@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.navigation.Graph
 import com.manriquetavi.bakeryapp.util.ToastMessage
 
 @Composable
@@ -39,7 +40,7 @@ fun SplashScreen(
         if(onBoardingPageCompleted) {
             Log.d("Splash Screen", "OnBoardingPage: Completed")
             if(isUserAuthenticated) {
-                screenNavController.navigate(Screen.Main.route)
+                screenNavController.navigate(Graph.MAIN)
             }
             else {
                 screenNavController.navigate(Screen.Login.route)

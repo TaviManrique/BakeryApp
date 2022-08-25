@@ -44,6 +44,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.navigation.Graph
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.InputField
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
@@ -98,7 +99,7 @@ fun LoginScreen(
             if(response.data) {
                 LaunchedEffect(response.data) {
                     screenNavController.popBackStack()
-                    screenNavController.navigate(Screen.Main.route)
+                    screenNavController.navigate(Graph.MAIN)
                 }
             } else {
                 ToastMessage(duration = Toast.LENGTH_SHORT, message = "Sign In Failed")

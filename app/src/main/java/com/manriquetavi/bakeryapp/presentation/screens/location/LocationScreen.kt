@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun LocationScreen(
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,5 +31,5 @@ fun LocationScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun LocationScreenPreview() {
-    LocationScreen(screenNavController = rememberNavController())
+    LocationScreen(navController = rememberNavController())
 }

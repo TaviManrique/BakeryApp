@@ -25,15 +25,15 @@ import com.manriquetavi.bakeryapp.util.Util
 @ExperimentalComposeUiApi
 @Composable
 fun SearchScreen(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     Scaffold(
-        topBar = { SearchTopBar(screenNavController = screenNavController) },
+        topBar = { SearchTopBar(navController = navController) },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
         SearchScreenContent(
-            screenNavController = screenNavController,
+            navController = navController,
             paddingValues = paddingValues,
             searchViewModel = searchViewModel
         )
@@ -42,7 +42,7 @@ fun SearchScreen(
 
 @Composable
 fun SearchScreenContent(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     paddingValues: PaddingValues,
     searchViewModel: SearchViewModel
 ) {
@@ -62,12 +62,12 @@ fun SearchScreenContent(
             onSearchClicked = {
                 searchViewModel.searchFoods(query = it)
                               },
-            onCloseClicked = { screenNavController.popBackStack() },
+            onCloseClicked = { navController.popBackStack() },
             focusManager = focusManager
         )
         when(searchedFoods) {
             is Response.Loading -> ProgressBarCircular()
-            is Response.Success -> ListFoodFound(foods = searchedFoods.data, screenNavController = screenNavController)
+            is Response.Success -> ListFoodFound(foods = searchedFoods.data, screenNavController = navController)
             is Response.Error -> Util.printError(searchedFoods.message)
         }
     }
@@ -101,6 +101,6 @@ fun ListFoodFound(
 @Preview(showBackground = true)
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(screenNavController = rememberNavController())
+    SearchScreen(navController = rememberNavController())
 }
 

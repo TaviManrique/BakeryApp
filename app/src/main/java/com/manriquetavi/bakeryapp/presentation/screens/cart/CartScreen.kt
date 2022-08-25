@@ -23,16 +23,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CartScreen(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     paddingValues: PaddingValues,
     cartViewModel: CartViewModel = hiltViewModel()
 ) {
-    CartScreenContent(screenNavController, paddingValues, cartViewModel)
+    CartScreenContent(navController, paddingValues, cartViewModel)
 }
 
 @Composable
 fun CartScreenContent(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     paddingValues: PaddingValues,
     cartViewModel: CartViewModel
 ) {
@@ -47,7 +47,7 @@ fun CartScreenContent(
         ListFoodCart(foodsCart,cartViewModel)
         Column {
             TotalPrice(foodsCart)
-            BottomCheckout(screenNavController, foodsCart)
+            BottomCheckout(navController, foodsCart)
         }
     }
 }
@@ -79,7 +79,7 @@ fun ListFoodCart(
 @Composable
 fun TotalPrice(foodsCart: List<FoodCart>) {
     var aux = 0.00
-    val totalPrice = remember {
+    var totalPrice = remember {
         mutableStateOf(0.00)
     }
     foodsCart.forEach { foodCart ->
@@ -98,7 +98,7 @@ fun TotalPrice(foodsCart: List<FoodCart>) {
 
 @Composable
 fun BottomCheckout(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     foodsCart: List<FoodCart>,
 ) {
 
@@ -126,7 +126,7 @@ fun BottomCheckout(
                     1.0f,
                     animationSpec = tween(100),
                 )
-                screenNavController.navigate(Screen.Checkout.route)
+                navController.navigate(Screen.Checkout.route)
             }
                   },
         shape = RoundedCornerShape(16.dp),
@@ -145,7 +145,7 @@ fun BottomCheckout(
 fun CartScreenPreview() {
     CartScreenContent(
         cartViewModel = hiltViewModel(),
-        screenNavController = rememberNavController(),
+        navController = rememberNavController(),
         paddingValues = PaddingValues()
     )
 }

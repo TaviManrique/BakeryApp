@@ -20,7 +20,6 @@ class FirestoreDataSourceImpl(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth
 ): FirestoreDataSource {
-    var wasOperationSuccessful: Boolean = false
 
     override suspend fun getUserDetails(uid: String): Flow<Response<User>> = callbackFlow {
         val snapshotListener = firestore
@@ -199,7 +198,7 @@ class FirestoreDataSourceImpl(
             val order = Order(
                 clientId = clientId,
                 foods = foods,
-                totalPrice = totalPrice,
+                totalPrice = String.format("%.2f", totalPrice).toDouble(),
                 status = 1,
                 address = address
             )

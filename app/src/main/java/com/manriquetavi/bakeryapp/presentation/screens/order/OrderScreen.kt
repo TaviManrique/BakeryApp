@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun OrderScreen(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
     Box(

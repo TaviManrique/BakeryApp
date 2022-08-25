@@ -19,13 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.manriquetavi.bakeryapp.ui.theme.Purple500
 import com.manriquetavi.bakeryapp.ui.theme.buttonBackgroundColor
 import com.manriquetavi.bakeryapp.ui.theme.titleColor
 
 @Composable
 fun SearchTopBar(
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     TopAppBar(
         title = {
@@ -33,7 +32,7 @@ fun SearchTopBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    modifier = Modifier.clickable { screenNavController.popBackStack() },
+                    modifier = Modifier.clickable { navController.popBackStack() },
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back Icon",
                     tint = MaterialTheme.colors.buttonBackgroundColor
@@ -55,5 +54,5 @@ fun SearchTopBar(
 @Preview(showBackground = true)
 @Composable
 fun SearchTopBarPreview() {
-    SearchTopBar(screenNavController = rememberNavController())
+    SearchTopBar(navController = rememberNavController())
 }

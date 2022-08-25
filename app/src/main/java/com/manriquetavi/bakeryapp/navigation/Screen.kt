@@ -1,18 +1,13 @@
 package com.manriquetavi.bakeryapp.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 
 sealed class Screen(
-    val route: String,
-    val title: String? = null,
-    val icon: ImageVector? = null
+    val route: String
 ) {
     //Screens
     object Splash: Screen("splash_screen")
@@ -37,34 +32,41 @@ sealed class Screen(
     object Location: Screen("location_screen")
     object Checkout: Screen("checkout_screen")
     object Track: Screen("track_screen")
+}
 
+sealed class BottomBarScreen(
+    val route: String,
+    val title: String,
+    val icon: ImageVector
+) {
     //BottomNav Screens
-    object Home: Screen(
+    object Home: BottomBarScreen(
         route = "home_screen",
         title = "Home",
         icon = Icons.Outlined.Home
     )
-    object Order: Screen(
+    object Order: BottomBarScreen(
         route = "order_screen",
         title = "Order",
         icon = Icons.Outlined.List
     )
-    object Cart: Screen(
+    object Cart: BottomBarScreen(
         route = "cart_screen",
         title = "Cart",
         icon = Icons.Outlined.ShoppingCart
     )
-    object Profile: Screen(
+    object Profile: BottomBarScreen(
         route = "profile_screen",
         title = "Profile",
         icon = Icons.Outlined.Person
     )
 }
 
+
 val bottomScreens = listOf(
-    Screen.Home,
-    Screen.Cart,
-    Screen.Order,
-    Screen.Profile,
+    BottomBarScreen.Home,
+    BottomBarScreen.Cart,
+    BottomBarScreen.Order,
+    BottomBarScreen.Profile,
 )
 

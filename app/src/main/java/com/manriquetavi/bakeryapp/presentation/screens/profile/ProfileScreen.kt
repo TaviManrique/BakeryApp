@@ -38,6 +38,7 @@ import com.manriquetavi.bakeryapp.ui.theme.titleColor
 
 @Composable
 fun ProfileScreen(
+    navController: NavHostController,
     screenNavController: NavHostController,
     paddingValues: PaddingValues,
     profileViewModel: ProfileViewModel = hiltViewModel()
@@ -54,7 +55,7 @@ fun ProfileScreen(
                 ProfileContent(
                     userDetails = userDetails.data,
                     profileViewModel = profileViewModel,
-                    screenNavController = screenNavController
+                    screenNavController = navController
                 )
             }
         is Response.Error -> Util.printError(userDetails.message)

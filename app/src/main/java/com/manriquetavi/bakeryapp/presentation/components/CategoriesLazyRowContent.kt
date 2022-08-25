@@ -34,11 +34,11 @@ import com.manriquetavi.bakeryapp.util.Util
 @Composable
 fun CategoriesLazyRow(
     homeViewModel: HomeViewModel,
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     when(val allCategories = homeViewModel.allCategories.value) {
         is Response.Loading -> CategoryProgressBar()
-        is Response.Success -> CategoriesLazyRowContent(categories = allCategories.data, screenNavController = screenNavController)
+        is Response.Success -> CategoriesLazyRowContent(categories = allCategories.data, navController = navController)
         is Response.Error -> Util.printError(allCategories.message)
     }
 }
@@ -47,7 +47,7 @@ fun CategoriesLazyRow(
 @Composable
 fun CategoriesLazyRowContent(
     categories: List<Category>?,
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -60,7 +60,7 @@ fun CategoriesLazyRowContent(
                     category.id!!
                 }
             ) { category ->
-                CategoryItem(category, screenNavController)
+                CategoryItem(category, navController)
             }
         }
     }
@@ -70,12 +70,12 @@ fun CategoriesLazyRowContent(
 @Composable
 fun CategoryItem(
     category: Category,
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     Card(
         modifier = Modifier
             .width(72.dp)
-            .clickable { screenNavController.navigate(Screen.Search.passCategory(category = category.name))},
+            .clickable { navController.navigate(Screen.Search.passCategory(category = category.name))},
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp
     ) {

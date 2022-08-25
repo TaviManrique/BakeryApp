@@ -18,7 +18,7 @@ import com.manriquetavi.bakeryapp.presentation.components.*
 @ExperimentalCoilApi
 @Composable
 fun HomeScreen(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     paddingValues: PaddingValues,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -29,9 +29,9 @@ fun HomeScreen(
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             .verticalScroll(rememberScrollState()),
     ) {
-        HomeTopBar(screenNavController = screenNavController)
+        HomeTopBar(navController = navController)
         HomeScreenContent(
-            screenNavController = screenNavController,
+            navController = navController,
             homeViewModel = homeViewModel
         )
     }
@@ -41,17 +41,17 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     homeViewModel: HomeViewModel,
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     PromotionsLazyRow(homeViewModel)
     Spacer(modifier = Modifier.height(16.dp))
     Text(text = "Category", style = MaterialTheme.typography.h6, fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(16.dp))
-    CategoriesLazyRow(homeViewModel, screenNavController)
+    CategoriesLazyRow(homeViewModel, navController)
     Spacer(modifier = Modifier.height(16.dp))
     Text(text = "Recommendation", style = MaterialTheme.typography.h6, fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(16.dp))
-    RecommendationsLazyRow(homeViewModel, screenNavController)
+    RecommendationsLazyRow(homeViewModel, navController)
     Spacer(modifier = Modifier.height(16.dp))
 
 }
@@ -60,5 +60,5 @@ fun HomeScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(screenNavController = rememberNavController(), paddingValues = PaddingValues())
+    HomeScreen(navController = rememberNavController(), paddingValues = PaddingValues())
 }

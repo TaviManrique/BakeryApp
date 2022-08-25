@@ -45,13 +45,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DetailsScreen(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     detailsViewModel: DetailsViewModel = hiltViewModel()
 ) {
 
     when(val selectedFood = detailsViewModel.selectedFood.value) {
         is Response.Loading -> ProgressBarCircular()
-        is Response.Success -> selectedFood.data?.let { DetailsScreenContent(it, screenNavController, detailsViewModel) }
+        is Response.Success -> selectedFood.data?.let { DetailsScreenContent(it, navController, detailsViewModel) }
         is Response.Error -> Util.printError(selectedFood.message)
     }
 }
@@ -59,14 +59,14 @@ fun DetailsScreen(
 @Composable
 fun DetailsScreenContent(
     food: Food,
-    screenNavController: NavHostController,
+    navController: NavHostController,
     detailsViewModel: DetailsViewModel
 ) {
     Column {
         ParallaxToolbar(food)
         DetailsContent(food, detailsViewModel)
     }
-    IconsToolbar(screenNavController)
+    IconsToolbar(navController)
 }
 
 @Composable
@@ -326,5 +326,5 @@ fun Description(
 @Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {
-    DetailsScreen(screenNavController = rememberNavController())
+    DetailsScreen(navController = rememberNavController())
 }

@@ -27,12 +27,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
-import com.manriquetavi.bakeryapp.domain.model.FoodOrder
-import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.navigation.BottomBarScreen
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.CashInputField
 import com.manriquetavi.bakeryapp.presentation.components.DropDownAddress
@@ -47,27 +47,31 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun CheckoutScreen(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     checkoutViewModel: CheckoutViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val wasButtonDonePressed by checkoutViewModel.wasButtonDonePressed.observeAsState(false)
     val response = checkoutViewModel.addOrderState.value
     Scaffold(
-        topBar = { CheckoutTopBar(screenNavController = screenNavController) },
+        topBar = { CheckoutTopBar(screenNavController = navController) },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
-        CheckoutContent(screenNavController, paddingValues, checkoutViewModel)
+        CheckoutContent(navController, paddingValues, checkoutViewModel)
     }
+
     when (response) {
         is Response.Loading -> ProgressBarCircular()
         is Response.Success ->
             if (wasButtonDonePressed) {
                 LaunchedEffect(true) {
                     Toast.makeText(context, "Success send order", Toast.LENGTH_SHORT).show()
-                    screenNavController.popBackStack()
-                    screenNavController.navigate(Screen.Main.passItemPosition("2"))
-                    screenNavController.navigate(Screen.Track.route)
+                    navController.popBackStack()
+                    navController.navigate(BottomBarScreen.Order.route) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                    navController.navigate(Screen.Track.route)
                     checkoutViewModel.deleteAllFoodCart()
                 }
             }
@@ -82,7 +86,7 @@ fun CheckoutScreen(
 @ExperimentalMaterialApi
 @Composable
 fun CheckoutContent(
-    screenNavController: NavHostController,
+    navController: NavHostController,
     paddingValues: PaddingValues,
     checkoutViewModel: CheckoutViewModel
 ) {
@@ -123,7 +127,7 @@ fun CheckoutContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.1f),
-                onClick = { screenNavController.navigate(Screen.Location.route) }
+                onClick = { navController.navigate(Screen.Location.route) }
             ) {
                 Icon(
                     modifier = Modifier
@@ -166,7 +170,6 @@ fun CheckoutContent(
         }
         TotalPrice(foodsCart = foodsCart)
         BottomDone(
-            screenNavController = screenNavController,
             foodCarts = foodsCart,
             cash = cash,
             selectedItem = selectedItem,
@@ -180,7 +183,6 @@ fun CheckoutContent(
 
 @Composable
 fun BottomDone(
-    screenNavController: NavHostController,
     foodCarts: List<FoodCart>,
     cash: MutableState<String>,
     selectedItem: MutableState<String>,
@@ -255,5 +257,5 @@ fun validateDataCheckout(
 @Preview(showSystemUi = true)
 @Composable
 fun CheckoutScreenPreview() {
-    CheckoutScreen(screenNavController = rememberNavController())
+    CheckoutScreen(navController = rememberNavController())
 }

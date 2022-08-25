@@ -1,109 +1,108 @@
 package com.manriquetavi.bakeryapp.presentation.screens.main
 
-import android.app.Activity
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
-import com.manriquetavi.bakeryapp.navigation.Screen
+import com.manriquetavi.bakeryapp.navigation.BottomBarScreen
+import com.manriquetavi.bakeryapp.navigation.MainNavGraph
 import com.manriquetavi.bakeryapp.navigation.bottomScreens
-import com.manriquetavi.bakeryapp.presentation.screens.cart.CartScreen
-import com.manriquetavi.bakeryapp.presentation.screens.home.HomeScreen
-import com.manriquetavi.bakeryapp.presentation.screens.order.OrderScreen
-import com.manriquetavi.bakeryapp.presentation.screens.profile.ProfileScreen
-import com.manriquetavi.bakeryapp.ui.theme.ShimmerMediumGray
 
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @Composable
 fun MainScreen(
-    screenNavController: NavHostController,
-    mainViewModel: MainViewModel = hiltViewModel()
+    navController: NavHostController = rememberNavController(),
+    screenNavController: NavHostController
 ) {
-    val selectedItem = mainViewModel.selectedItem
-
     Scaffold(
-        bottomBar = {
-            BottomBar(selectedItem) { mainViewModel.updateSelectedItem(it) }
-        }
+        bottomBar = { BottomBar(navController = navController) }
     ) { paddingValues ->
-        when (selectedItem.value){
-            0 -> HomeScreen(screenNavController, paddingValues)
-            1 -> CartScreen(screenNavController, paddingValues)
-            2 -> OrderScreen(screenNavController, paddingValues)
-            3 -> ProfileScreen(screenNavController, paddingValues)
-        }
+        MainNavGraph(
+            navController = navController,
+            paddingValues = paddingValues,
+            screenNavController = screenNavController
+        )
     }
 }
 
 @Composable
 fun BottomBar(
-    selectedItem: State<Int>,
-    onSelectedItem: (Int) -> Unit
+    navController: NavHostController
 ) {
-    BottomNavigation(
-        modifier = Modifier
-            .padding(start = 16.dp, bottom = 8.dp, end = 16.dp)
-            .clip(RoundedCornerShape(30)),
-        backgroundColor = ShimmerMediumGray,
-        elevation = 10.dp
-    ) {
-        val activity = (LocalContext.current as? Activity)
-        BackHandler {
-            if (selectedItem.value == 0) {
-                activity?.finish()
-            } else {
-                onSelectedItem(0)
-            }
-        }
+    val screens = bottomScreens
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
-        bottomScreens.forEach { screen ->
-            BottomNavigationItem(
-                label = { Text(text = screen.title.toString()) },
-                selected = selectedItem.value == bottomScreens.indexOf(screen),
-                onClick = {
-                    if (selectedItem.value != bottomScreens.indexOf(screen)) {
-                        onSelectedItem(bottomScreens.indexOf(screen))
-                    }
-                },
-                icon = { screen.icon?.let { Icon(imageVector = it, contentDescription = "Bottom Nav Icon") } },
-                selectedContentColor = MaterialTheme.colors.primaryVariant,
-                unselectedContentColor = Color.LightGray,
-                enabled = true,
-                alwaysShowLabel = false
-            )
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+    if (bottomBarDestination) {
+        BottomNavigation {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
+            }
         }
     }
 }
 
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
+    BottomNavigationItem(
+        label = {
+            Text(text = screen.title)
+        },
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = "Navigation Icon"
+            )
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
+        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        onClick = {
+            navController.navigate(screen.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        }
+    )
+}
+
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen(screenNavController = rememberNavController())
+    MainScreen(navController = rememberNavController(), screenNavController = rememberNavController())
 }
 
 @Preview(showBackground = true)
 @Composable
 fun BottomBarPreview() {
     BottomBar(
-        selectedItem = remember { mutableStateOf(1) },
-        onSelectedItem = {  }
+        navController = rememberNavController()
     )
 }
