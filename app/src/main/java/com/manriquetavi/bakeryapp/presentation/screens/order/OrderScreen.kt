@@ -1,31 +1,94 @@
 package com.manriquetavi.bakeryapp.presentation.screens.order
 
-import android.widget.Toast
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import java.util.concurrent.TimeUnit
+import androidx.navigation.compose.rememberNavController
+import com.manriquetavi.bakeryapp.domain.model.Order
+import com.manriquetavi.bakeryapp.presentation.common.OrderItem
+
 
 @Composable
 fun OrderScreen(
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    val orders = listOf(
+        Order(
+            id = "ASD123ASD123",
+            address = "Av. Javier Prado 1234",
+            status = 1
+        ),
+        Order(
+            id = "DFGH1234SDFG",
+            address = "Av. Javier Prado 1234",
+            status = 2
+        ),
+        Order(
+            id = "KFJFHS9756SA",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        ),
+        Order(
+            id = "ASD123ASD124",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        ),
+        Order(
+            id = "DFGH1234SDFH",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        ),
+        Order(
+            id = "KFJFHS9756SB",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        ),
+        Order(
+            id = "ASD123ASD122",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        ),
+        Order(
+            id = "DFGH1234SDFJ",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        ),
+        Order(
+            id = "KFJFHS9756SQ",
+            address = "Av. Javier Prado 1234",
+            status = 5
+        )
+    )
+    LazyColumn(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
     ) {
-        Text("Order Screen")
+        items(
+            items = orders,
+            key = { order ->
+                order.id
+            }
+        ) { order ->
+            OrderItem(order = order, navController = navController)
+        }
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun OrderScreenPreview() {
+    OrderScreen(
+        navController = rememberNavController(),
+        paddingValues = PaddingValues()
+    )
 }

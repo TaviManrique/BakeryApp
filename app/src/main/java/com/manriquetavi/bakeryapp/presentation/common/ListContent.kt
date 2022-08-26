@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,16 +16,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
+import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogDeleteFoodCart
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
@@ -242,7 +243,68 @@ fun FoodCartItem(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun OrderItem(
+    order: Order,
+    navController: NavHostController
+) {
+    Card(
+        modifier = Modifier
+            .padding(EXTRA_SMALL_PADDING)
+            .fillMaxWidth()
+            .height(90.dp)
+            .clickable { navController.navigate(Screen.Track.route) },
+        elevation = 6.dp,
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(
+            1.dp,
+            if (order.status != 5) Color.Green.copy(0.5f) else Color.DarkGray
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(EXTRA_SMALL_PADDING)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text(
+                    text = "Order ID: ${order.id}",
+                    style = MaterialTheme.typography.h6
+                )
+                Text(
+                    text = "Address: ${order.address}",
+                    style = MaterialTheme.typography.caption
+                )
+                Text(
+                    text = "Date: 13:10, 20 December",
+                    style = MaterialTheme.typography.caption
+                )
+                Text(
+                    text =
+                    when(order.status) {
+                        0 -> "Canceled"
+                        1,2,3,4 -> "In Process..."
+                        5 -> "Completed"
+                        else -> { "Unknown" }
+                    },
+                    style = MaterialTheme.typography.caption,
+                    fontWeight = FontWeight.Light
+                )
+            }
+            Icon(
+                modifier = Modifier
+                    .size(25.dp),
+                imageVector = Icons.Filled.NavigateNext,
+                contentDescription = "More Details Icon",
+                tint = Color.DarkGray
+            )
+        }
+    }
+}
+
+//@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun FoodItemPreview() {
     FoodCartItem(
@@ -256,5 +318,30 @@ fun FoodItemPreview() {
             price = 10.0
         ),
         cartViewModel = hiltViewModel()
+    )
+}
+
+@Preview
+@Composable
+fun OrderItem1Preview() {
+    OrderItem(
+        Order(
+            id = "ASD123ASD123",
+            address = "Av. Javier Prado 1234",
+            status = 2
+        ),
+        rememberNavController()
+    )
+}
+@Preview
+@Composable
+fun OrderItem2Preview() {
+    OrderItem(
+        Order(
+            id = "ASD123ASD123",
+            address = "Av. Javier Prado 1234",
+            status = 1
+        ),
+        rememberNavController()
     )
 }

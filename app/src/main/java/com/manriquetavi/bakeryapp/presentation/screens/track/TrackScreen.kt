@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.screens.track
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.R
+import com.manriquetavi.bakeryapp.domain.model.FoodOrder
 import com.manriquetavi.bakeryapp.ui.theme.*
 
 @Composable
@@ -101,15 +103,71 @@ fun TrackScreenContent(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
-        DetailOrderCard()
+        DetailOrderCard(
+
+        )
     }
 }
 
 @Composable
-fun DetailOrderCard() {
+fun DetailOrderCard(
+
+) {
+    val foodOrders = listOf(
+        FoodOrder(
+            id = "1",
+            name = "Cupcake",
+            quantity = 2,
+            unitPrice = "2.50"
+        ),
+        FoodOrder(
+            id = "2",
+            name = "Chocolate",
+            quantity = 3,
+            unitPrice = "1.50"
+        ),
+        FoodOrder(
+            id = "3",
+            name = "Ciabatta",
+            quantity = 5,
+            unitPrice = "1.60"
+        ),
+        FoodOrder(
+            id = "4",
+            name = "Bread",
+            quantity = 8,
+            unitPrice = "0.80"
+        ),
+        FoodOrder(
+            id = "5",
+            name = "Wholewheat",
+            quantity = 10,
+            unitPrice = "3.50"
+        ),
+        FoodOrder(
+            id = "6",
+            name = "Cupcake",
+            quantity = 8,
+            unitPrice = "1.50"
+        ),
+        FoodOrder(
+            id = "7",
+            name = "Cupcake",
+            quantity = 4,
+            unitPrice = "0.50"
+        ),
+        FoodOrder(
+            id = "8",
+            name = "Cupcake",
+            quantity = 5,
+            unitPrice = "0.20"
+        )
+    )
     var expanded by remember { mutableStateOf(false) }
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .padding(vertical = SMALL_PADDING)
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = 4.dp
     ) {
@@ -170,6 +228,13 @@ fun DetailOrderCard() {
                     fontWeight = FontWeight.SemiBold
                 )
             }
+            AnimatedVisibility(visible = expanded) {
+                Column {
+                    foodOrders.forEach { foodOrder ->
+                        FoodItemDetail(foodOrder)
+                    }
+                }
+            }
             Divider(modifier = Modifier.padding(horizontal = 4.dp))
             Row(
                 modifier = Modifier
@@ -191,6 +256,37 @@ fun DetailOrderCard() {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun FoodItemDetail(
+    foodOrder: FoodOrder
+) {
+    Divider(modifier = Modifier
+        .padding(horizontal = 4.dp)
+    )
+    Row(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        val totalPrice = foodOrder.quantity.times(foodOrder.unitPrice.toDouble())
+        Row {
+            Text(
+                text = foodOrder.quantity.toString() + "x",
+                style = MaterialTheme.typography.caption
+            )
+            Text(
+                text = foodOrder.name,
+                style = MaterialTheme.typography.caption
+            )
+        }
+        Text(
+            text = totalPrice.toString(),
+            style = MaterialTheme.typography.caption
+        )
     }
 }
 

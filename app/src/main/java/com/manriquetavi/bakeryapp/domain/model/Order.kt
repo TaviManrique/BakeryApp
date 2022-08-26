@@ -17,7 +17,7 @@ data class Order(
 data class Order(
     @get:Exclude var id: String = "",
     var clientId: String = "",
-    var foods: Map<String, FoodOrder> = hashMapOf(),
+    var foodOrders: Map<String, FoodOrder> = hashMapOf(),
     var totalPrice: Double = 0.0,
     var status: Int = 0,
     var address: String = "",

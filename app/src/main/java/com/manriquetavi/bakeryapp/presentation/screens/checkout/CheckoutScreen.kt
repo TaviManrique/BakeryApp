@@ -242,7 +242,6 @@ fun BottomDone(
     }
 }
 
-
 fun validateDataCheckout(
     cash: String,
     validateCash: MutableState<Boolean>

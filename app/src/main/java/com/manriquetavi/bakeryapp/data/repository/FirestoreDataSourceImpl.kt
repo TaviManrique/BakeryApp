@@ -1,8 +1,6 @@
 package com.manriquetavi.bakeryapp.data.repository
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -13,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.text.DecimalFormat
 import javax.inject.Singleton
 
 @Singleton
@@ -181,13 +180,14 @@ class FirestoreDataSourceImpl(
     override fun addOrder(foodCarts: List<FoodCart>, address: String): Flow<Response<Void?>> = flow {
         try {
             emit(Response.Loading)
-            val foods = hashMapOf<String, FoodOrder>()
+            val foodOrders = hashMapOf<String, FoodOrder>()
             val clientId = auth.currentUser!!.uid
             var aux = 0.00
             foodCarts.forEach { foodCart ->
-                foods[foodCart.id] = FoodOrder(
+                foodOrders[foodCart.id] = FoodOrder(
                     id = foodCart.id,
                     name = foodCart.name!!,
+                    unitPrice = String.format("%.2f", foodCart.price!!),
                     quantity = foodCart.quantity!!
                 )
                 foodCart.price?.let {
@@ -197,7 +197,7 @@ class FirestoreDataSourceImpl(
             val totalPrice: Double = aux
             val order = Order(
                 clientId = clientId,
-                foods = foods,
+                foodOrders = foodOrders,
                 totalPrice = String.format("%.2f", totalPrice).toDouble(),
                 status = 1,
                 address = address
