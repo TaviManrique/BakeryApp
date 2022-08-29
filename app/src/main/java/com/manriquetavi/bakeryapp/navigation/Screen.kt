@@ -31,7 +31,11 @@ sealed class Screen(
     }
     object Location: Screen("location_screen")
     object Checkout: Screen("checkout_screen")
-    object Track: Screen("track_screen")
+    object Track: Screen("track_screen/{orderId}") {
+        fun passOrderId(orderId: String): String {
+            return "track_screen/$orderId"
+        }
+    }
 }
 
 sealed class BottomBarScreen(

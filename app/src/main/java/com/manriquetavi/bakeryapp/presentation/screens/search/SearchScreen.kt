@@ -1,5 +1,6 @@
 package com.manriquetavi.bakeryapp.presentation.screens.search
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,7 @@ import com.manriquetavi.bakeryapp.presentation.common.FoodItem
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.presentation.components.SearchCakeInputField
 import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
+import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
 
 @ExperimentalComposeUiApi
@@ -67,7 +69,7 @@ fun SearchScreenContent(
         )
         when(searchedFoods) {
             is Response.Loading -> ProgressBarCircular()
-            is Response.Success -> ListFoodFound(foods = searchedFoods.data, screenNavController = navController)
+            is Response.Success -> ListFoodFound(foods = searchedFoods.data, navController = navController)
             is Response.Error -> Util.printError(searchedFoods.message)
         }
     }
@@ -77,7 +79,7 @@ fun SearchScreenContent(
 @Composable
 fun ListFoodFound(
     foods: List<Food>?,
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     LazyColumn(
         modifier = Modifier.padding(top = SMALL_PADDING),
@@ -91,7 +93,7 @@ fun ListFoodFound(
                     food.id!!
                 }
             ) { food ->
-                FoodItem(food = food, screenNavController = screenNavController)
+                FoodItem(food = food, navController = navController)
             }
         }
     }

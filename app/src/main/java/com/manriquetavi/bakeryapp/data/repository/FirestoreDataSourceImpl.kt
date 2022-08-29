@@ -1,6 +1,5 @@
 package com.manriquetavi.bakeryapp.data.repository
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import java.text.DecimalFormat
 import javax.inject.Singleton
 
 @Singleton
@@ -67,7 +65,6 @@ class FirestoreDataSourceImpl(
                 val response =
                     if (document != null) {
                         val food = document.toObject(Food::class.java)
-                        Log.d("TAG", "DocumentSnapshot data food: ${document.data}")
                         Response.Success(food)
                     } else {
                         Response.Success(null)
@@ -147,7 +144,6 @@ class FirestoreDataSourceImpl(
                 val response =
                     if (snapshot != null) {
                         val foods = snapshot.toObjects(Food::class.java)
-                        Log.d("TAG", "DocumentSnapshot all foods selected category: ${snapshot.documents}")
                         Response.Success(foods)
                     } else {
                         Response.Error(e?.message ?: e.toString())
@@ -195,14 +191,15 @@ class FirestoreDataSourceImpl(
                 }
             }
             val totalPrice: Double = aux
+            val orderId = firestore.collection("orders").document().id
             val order = Order(
+                id = orderId,
                 clientId = clientId,
                 foodOrders = foodOrders,
                 totalPrice = String.format("%.2f", totalPrice).toDouble(),
                 status = 1,
                 address = address
             )
-            val orderId = firestore.collection("orders").document().id
             val addition = firestore
                 .collection("orders")
                 .document(orderId).set(order)
@@ -212,6 +209,45 @@ class FirestoreDataSourceImpl(
             emit(Response.Success(addition))
         } catch (e: Exception) {
             emit(Response.Error(e.message ?: e.toString()))
+        }
+    }
+
+    override fun getAllOrderByUser(id: String): Flow<Response<List<Order>?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("orders")
+            .whereEqualTo("clientId", id)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val orders = snapshot.toObjects(Order::class.java)
+                        Response.Success(orders)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+    }
+
+    override fun getSelectedOrder(orderId: String): Flow<Response<Order?>> = callbackFlow {
+        val snapshotListener = firestore
+            .collection("orders")
+            .document(orderId)
+            .addSnapshotListener { snapshot, e ->
+                val response =
+                    if (snapshot != null) {
+                        val order = snapshot.toObject(Order::class.java)
+                        Response.Success(order)
+                    } else {
+                        Response.Error(e?.message ?: e.toString())
+                    }
+                trySend(response).isSuccess
+            }
+        awaitClose {
+            snapshotListener.remove()
         }
     }
 }

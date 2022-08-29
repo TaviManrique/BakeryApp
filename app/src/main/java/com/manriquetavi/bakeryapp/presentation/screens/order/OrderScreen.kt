@@ -3,83 +3,55 @@ package com.manriquetavi.bakeryapp.presentation.screens.order
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.domain.model.Order
+import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.common.OrderItem
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
+import com.manriquetavi.bakeryapp.util.Util
 
 
 @Composable
 fun OrderScreen(
     navController: NavHostController,
     paddingValues: PaddingValues,
+    orderViewModel: OrderViewModel = hiltViewModel()
 ) {
-    val orders = listOf(
-        Order(
-            id = "ASD123ASD123",
-            address = "Av. Javier Prado 1234",
-            status = 1
-        ),
-        Order(
-            id = "DFGH1234SDFG",
-            address = "Av. Javier Prado 1234",
-            status = 2
-        ),
-        Order(
-            id = "KFJFHS9756SA",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        ),
-        Order(
-            id = "ASD123ASD124",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        ),
-        Order(
-            id = "DFGH1234SDFH",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        ),
-        Order(
-            id = "KFJFHS9756SB",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        ),
-        Order(
-            id = "ASD123ASD122",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        ),
-        Order(
-            id = "DFGH1234SDFJ",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        ),
-        Order(
-            id = "KFJFHS9756SQ",
-            address = "Av. Javier Prado 1234",
-            status = 5
-        )
-    )
+
+    when(val allOrders = orderViewModel.allOrders.value) {
+        is Response.Loading -> ProgressBarCircular()
+        is Response.Success -> OrderScreenContent(allOrders.data, navController, paddingValues)
+        is Response.Error -> Util.printError(allOrders.message)
+    }
+}
+
+@Composable
+fun OrderScreenContent(
+    orders: List<Order>?,
+    navController: NavHostController,
+    paddingValues: PaddingValues
+) {
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        items(
-            items = orders,
-            key = { order ->
-                order.id
+        orders?.let {
+            items(
+                items = orders,
+                key = { order ->
+                    order.id!!
+                }
+            ) { order ->
+                OrderItem(order = order, navController = navController)
             }
-        ) { order ->
-            OrderItem(order = order, navController = navController)
         }
     }
 }

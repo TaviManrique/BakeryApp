@@ -33,18 +33,19 @@ import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogDeleteFoodCart
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 import com.manriquetavi.bakeryapp.ui.theme.*
+import java.util.*
 
 @Composable
 fun FoodItem(
     food: Food,
-    screenNavController: NavHostController
+    navController: NavHostController
 ) {
     Card(
         modifier = Modifier
             .padding(EXTRA_SMALL_PADDING)
             .fillMaxWidth()
             .height(FOOD_ITEM_HEIGHT)
-            .clickable { screenNavController.navigate(Screen.Details.passFoodId(food.id!!)) },
+            .clickable { navController.navigate(Screen.Details.passFoodId(food.id!!)) },
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -253,7 +254,7 @@ fun OrderItem(
             .padding(EXTRA_SMALL_PADDING)
             .fillMaxWidth()
             .height(90.dp)
-            .clickable { navController.navigate(Screen.Track.route) },
+            .clickable { navController.navigate(Screen.Track.passOrderId(orderId = order.id!!)) },
         elevation = 6.dp,
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
@@ -271,15 +272,21 @@ fun OrderItem(
             Column {
                 Text(
                     text = "Order ID: ${order.id}",
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "Address: ${order.address}",
-                    style = MaterialTheme.typography.caption
+                    style = MaterialTheme.typography.caption,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "Date: 13:10, 20 December",
-                    style = MaterialTheme.typography.caption
+                    text = "Date: ${dateToStringFormat(order.date!!.toDate())}",
+                    style = MaterialTheme.typography.caption,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text =
@@ -290,7 +297,9 @@ fun OrderItem(
                         else -> { "Unknown" }
                     },
                     style = MaterialTheme.typography.caption,
-                    fontWeight = FontWeight.Light
+                    fontWeight = FontWeight.Light,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             Icon(
@@ -319,6 +328,29 @@ fun FoodItemPreview() {
         ),
         cartViewModel = hiltViewModel()
     )
+}
+
+fun dateToStringFormat(date: Date): String {
+    val dateSplit = date.toString().split(" ")
+    val month = when (dateSplit[1]) {
+        "Jan" -> 1
+        "Feb" -> 2
+        "Mar" -> 3
+        "Apr" -> 4
+        "May" -> 5
+        "Jun" -> 6
+        "Jul" -> 7
+        "Aug" -> 8
+        "Sep" -> 9
+        "Oct" -> 10
+        "Nov" -> 11
+        "Dec" -> 12
+        else -> {
+            0
+        }
+    }
+    val hourSplit = dateSplit[3].split(":")
+    return hourSplit[0] + ":" + hourSplit[1] + "  " + dateSplit[2] + "/" + month + "/" + dateSplit[5]
 }
 
 @Preview

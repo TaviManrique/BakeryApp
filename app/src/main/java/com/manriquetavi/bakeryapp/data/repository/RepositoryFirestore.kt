@@ -20,4 +20,6 @@ class RepositoryFirestore
     suspend fun getAllFoodsSelectedCategory(category: String) = firestore.getAllFoodsSelectedCategory(category)
     suspend fun getAllFoods() = firestore.getAllFoods()
     fun addOrder(foodCarts: List<FoodCart>, address: String): Flow<Response<Void?>> = firestore.addOrder(foodCarts, address)
+    fun getAllOrderByUser(id: String): Flow<Response<List<Order>?>> = firestore.getAllOrderByUser(id)
+    fun getSelectedOrder(orderId: String): Flow<Response<Order?>> = firestore.getSelectedOrder(orderId)
 }

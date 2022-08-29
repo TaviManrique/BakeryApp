@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val auth: FirebaseAuth,
+    auth: FirebaseAuth,
     private val useCasesAuthentication: UseCasesAuthentication,
     private val useCasesFirestore: UseCasesFirestore,
     private val useCasesDataStore: UseCasesDataStore,

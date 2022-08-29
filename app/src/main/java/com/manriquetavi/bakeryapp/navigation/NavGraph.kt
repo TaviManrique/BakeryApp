@@ -107,7 +107,14 @@ fun MainNavGraph(navController: NavHostController, paddingValues: PaddingValues,
         composable(route = Screen.Checkout.route) {
             CheckoutScreen(navController = navController)
         }
-        composable(route = Screen.Track.route) {
+        composable(
+            route = Screen.Track.route,
+            arguments = listOf(
+                navArgument("orderId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
             TrackScreen(navController = navController)
         }
     }

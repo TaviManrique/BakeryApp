@@ -22,26 +22,38 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.FoodOrder
+import com.manriquetavi.bakeryapp.domain.model.Order
+import com.manriquetavi.bakeryapp.domain.model.Response
+import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
+import com.manriquetavi.bakeryapp.presentation.screens.details.DetailsScreenContent
 import com.manriquetavi.bakeryapp.ui.theme.*
+import com.manriquetavi.bakeryapp.util.Util
 
 @Composable
 fun TrackScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    trackViewModel: TrackViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = { TrackTopBar(navController) },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
-        TrackScreenContent(paddingValues)
+        when(val selectedOrder = trackViewModel.selectedOrder.value) {
+            is Response.Loading -> ProgressBarCircular()
+            is Response.Success -> selectedOrder.data?.let { TrackScreenContent(selectedOrder.data, paddingValues) }
+            is Response.Error -> Util.printError(selectedOrder.message)
+        }
     }
 }
 
 @Composable
 fun TrackScreenContent(
+    order: Order,
     paddingValues: PaddingValues
 ) {
     Column(
@@ -83,13 +95,54 @@ fun TrackScreenContent(
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
-            Spacer(modifier = Modifier.weight(0.2f))
-            LinearProgressIndicator(modifier = Modifier.weight(2f))
-            Spacer(modifier = Modifier.weight(0.2f))
-            LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 0f)
-            Spacer(modifier = Modifier.weight(0.2f))
-            LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
+            when(order.status) {
+                0 -> {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 0f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 0f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
+                }
+                1 ->  {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f))
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 0f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
+                }
+                2 -> {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f))
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
+                }
+                3 -> {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f))
+                }
+                4 -> {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
+                }
+                else -> { Unit }
+            }
         }
         Text(
             modifier = Modifier
@@ -104,14 +157,20 @@ fun TrackScreenContent(
             overflow = TextOverflow.Ellipsis
         )
         DetailOrderCard(
-
+            order = order
         )
     }
 }
 
 @Composable
-fun DetailOrderCard(
+fun ProgressIndicatorByStatus(status: Int) {
+    for(i in 0..status) {
 
+    }
+}
+@Composable
+fun DetailOrderCard(
+    order: Order
 ) {
     val foodOrders = listOf(
         FoodOrder(

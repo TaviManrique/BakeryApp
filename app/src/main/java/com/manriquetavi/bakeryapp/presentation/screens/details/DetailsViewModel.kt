@@ -33,9 +33,6 @@ class DetailsViewModel @Inject constructor(
     var openDialog = MutableLiveData<Boolean>()
     var showToast = MutableLiveData<Boolean>()
 
-    //private val _open: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    //val open: StateFlow<Boolean> = _open
-
     init {
         getFoodSelected()
     }
@@ -63,6 +60,7 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
+    /*
     fun startThread() {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
@@ -71,5 +69,5 @@ class DetailsViewModel @Inject constructor(
             showToast.value = true
             openDialog.value = false
         }
-    }
+    }*/
 }
