@@ -10,7 +10,7 @@ import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 
 @Composable
-fun AlertDialogDeleteFoodCart(
+fun AlertDialogCommon(
     showDialog: MutableState<Boolean>,
     title: String,
     text: String,

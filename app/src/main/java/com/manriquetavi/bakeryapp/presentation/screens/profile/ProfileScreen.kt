@@ -30,7 +30,7 @@ import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.util.Util
 import com.manriquetavi.bakeryapp.R
-import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogDeleteFoodCart
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogCommon
 import com.manriquetavi.bakeryapp.ui.theme.Purple700
 import com.manriquetavi.bakeryapp.ui.theme.SMALL_PADDING
 import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
@@ -84,15 +84,16 @@ fun ProfileContent(
 ) {
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
-    if (showDialog.value) AlertDialogDeleteFoodCart(
+    if (showDialog.value)
+        AlertDialogCommon(
         title = "Bakery App",
         text = "Are you sure to log out?",
         showDialog = showDialog
-    ) {
-        profileViewModel.saveImageProfile(imageProfile = "")
-        profileViewModel.deleteAllFoodCart()
-        profileViewModel.signOut()
-    }
+        ) {
+            profileViewModel.saveImageProfile(imageProfile = "")
+            profileViewModel.deleteAllFoodCart()
+            profileViewModel.signOut()
+        }
     Column(
         modifier = Modifier
             .fillMaxWidth()

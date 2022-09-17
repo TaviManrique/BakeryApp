@@ -30,7 +30,7 @@ import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
 import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.navigation.Screen
-import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogDeleteFoodCart
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogCommon
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 import com.manriquetavi.bakeryapp.ui.theme.*
 import java.util.*
@@ -103,7 +103,7 @@ fun FoodCartItem(
     cartViewModel: CartViewModel,
 ) {
     val showDialog = remember { mutableStateOf(false) }
-    if (showDialog.value) AlertDialogDeleteFoodCart(
+    if (showDialog.value) AlertDialogCommon(
         title = "Delete",
         text = "Are you sure to remove this item?",
         showDialog = showDialog

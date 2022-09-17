@@ -1,5 +1,15 @@
 package com.manriquetavi.bakeryapp.presentation.screens.track
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,12 +26,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -30,16 +45,43 @@ import com.manriquetavi.bakeryapp.domain.model.FoodOrder
 import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
+import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogCommon
 import com.manriquetavi.bakeryapp.ui.theme.*
+import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
+
+fun Context.getActivity(): AppCompatActivity? = when (this) {
+    is AppCompatActivity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
+}
 
 @Composable
 fun TrackScreen(
     navController: NavHostController,
     trackViewModel: TrackViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+    val showDialog = remember { mutableStateOf(false) }
+    if (showDialog.value)
+        AlertDialogCommon(
+            showDialog = showDialog,
+            title = "Title",
+            text = "text tet text?"
+        ) {
+            if(ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CALL_PHONE), 101)
+            } else {
+                makeACall(context, "+51947475537")
+            }
+        }
     Scaffold(
-        topBar = { TrackTopBar(navController) },
+        topBar = {
+            TrackTopBar(navController) {
+                showDialog.value = true
+            }
+                 },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
         when(val selectedOrder = trackViewModel.selectedOrder.value) {
@@ -320,6 +362,12 @@ fun FoodItemDetail(
             style = MaterialTheme.typography.caption
         )
     }
+}
+
+fun makeACall(context: Context, phoneNumber: String) {
+    val callIntent = Intent(Intent.ACTION_CALL)
+    callIntent.data = Uri.parse("tel:$phoneNumber")
+    startActivity(context, callIntent, bundleOf())
 }
 
 @Preview(showSystemUi = true)
