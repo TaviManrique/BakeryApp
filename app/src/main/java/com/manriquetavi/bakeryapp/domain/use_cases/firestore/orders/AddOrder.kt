@@ -7,5 +7,5 @@ import com.manriquetavi.bakeryapp.domain.model.Order
 class AddOrder(
     private val repositoryFirestore: RepositoryFirestore
 ) {
-    operator fun invoke(foodCarts: List<FoodCart>, address: String) = repositoryFirestore.addOrder(foodCarts, address)
+    operator fun invoke(orderId: String, foodCarts: List<FoodCart>, address: String, methodPayment: String) = repositoryFirestore.addOrder(orderId, foodCarts, address, methodPayment)
 }

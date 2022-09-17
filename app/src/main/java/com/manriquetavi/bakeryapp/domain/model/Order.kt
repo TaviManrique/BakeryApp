@@ -13,5 +13,6 @@ data class Order(
     var totalPrice: Double = 0.0,
     var status: Int = 0,
     var address: String = "",
-    @ServerTimestamp var date: Timestamp? = null
+    @ServerTimestamp var date: Timestamp? = null,
+    var methodPayment: String = ""
 )

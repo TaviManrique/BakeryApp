@@ -116,15 +116,15 @@ fun BottomCheckout(
             coroutineScope.launch {
                 scale.animateTo(
                     0.95f,
-                    animationSpec = tween(100),
+                    animationSpec = tween(80),
                 )
                 scale.animateTo(
                     1.05f,
-                    animationSpec = tween(100),
+                    animationSpec = tween(80),
                 )
                 scale.animateTo(
                     1.0f,
-                    animationSpec = tween(100),
+                    animationSpec = tween(80),
                 )
                 navController.navigate(Screen.Checkout.route)
             }

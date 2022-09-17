@@ -71,7 +71,7 @@ fun CheckoutScreen(
                         popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
                     }
-                    navController.navigate(Screen.Track.route)
+                    navController.navigate(Screen.Track.passOrderId(checkoutViewModel.orderId.value))
                     checkoutViewModel.deleteAllFoodCart()
                 }
             }
@@ -91,13 +91,11 @@ fun CheckoutContent(
     checkoutViewModel: CheckoutViewModel
 ) {
     val foodsCart = checkoutViewModel.foodCardList.collectAsState().value
-
     val radioOptions = listOf("Cash", "Plin or Yape", "Debit or Credit Card (not available)")
     val selectedItem = rememberSaveable { mutableStateOf("") }
     val cash = rememberSaveable { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
     val validateCash = rememberSaveable { mutableStateOf(true) }
     val selectedAddress = rememberSaveable { mutableStateOf("") }
 
@@ -149,25 +147,6 @@ fun CheckoutContent(
             radioOptions,
             selectedItem
         )
-        if (selectedItem.value == "Cash") {
-            CashInputField(
-                modifier = Modifier
-                    .padding(bottom = 12.dp)
-                    .bringIntoViewRequester(bringIntoViewRequester)
-                    .onFocusEvent { focusState ->
-                        if (focusState.isFocused) {
-                            coroutineScope.launch {
-                                bringIntoViewRequester.bringIntoView()
-                            }
-                        }
-                    }
-                    .padding(top = 24.dp),
-                text = cash,
-                focusManager = focusManager,
-                errorMessage = "Please, input a valid cash",
-                isError = !validateCash.value,
-            )
-        }
         TotalPrice(foodsCart = foodsCart)
         BottomDone(
             foodCarts = foodsCart,
@@ -206,30 +185,17 @@ fun BottomDone(
             coroutineScope.launch {
                 scale.animateTo(
                     0.95f,
-                    animationSpec = tween(100),
+                    animationSpec = tween(80),
                 )
                 scale.animateTo(
                     1.05f,
-                    animationSpec = tween(100),
+                    animationSpec = tween(80),
                 )
                 scale.animateTo(
                     1.0f,
-                    animationSpec = tween(100),
+                    animationSpec = tween(80),
                 )
-                if (selectedItem.value != "Cash") {
-                    //SEND ORDER AND WAIT ORDER RESPONSE
-                    checkoutViewModel.addOrder(foodCarts, selectedAddress.value)
-                } else {
-                    if (
-                        validateDataCheckout(
-                            cash = cash.value,
-                            validateCash = validateCash
-                        )
-                    ) {
-                        //SEND ORDER AND WAIT ORDER RESPONSE
-                        checkoutViewModel.addOrder(foodCarts, selectedAddress.value)
-                    }
-                }
+                checkoutViewModel.addOrder(foodCarts, selectedAddress.value, selectedItem.value)
             }
         },
         shape = RoundedCornerShape(16.dp),

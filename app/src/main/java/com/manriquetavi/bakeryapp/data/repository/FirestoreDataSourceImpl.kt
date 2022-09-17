@@ -173,7 +173,7 @@ class FirestoreDataSourceImpl(
         }
     }
 
-    override fun addOrder(foodCarts: List<FoodCart>, address: String): Flow<Response<Void?>> = flow {
+    override fun addOrder(orderId: String, foodCarts: List<FoodCart>, address: String, methodPayment: String): Flow<Response<Void?>> = flow {
         try {
             emit(Response.Loading)
             val foodOrders = hashMapOf<String, FoodOrder>()
@@ -191,14 +191,15 @@ class FirestoreDataSourceImpl(
                 }
             }
             val totalPrice: Double = aux
-            val orderId = firestore.collection("orders").document().id
+            //val orderId = firestore.collection("orders").document().id
             val order = Order(
                 id = orderId,
                 clientId = clientId,
                 foodOrders = foodOrders,
                 totalPrice = String.format("%.2f", totalPrice).toDouble(),
                 status = 1,
-                address = address
+                address = address,
+                methodPayment = methodPayment
             )
             val addition = firestore
                 .collection("orders")

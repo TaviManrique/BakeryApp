@@ -30,7 +30,6 @@ import com.manriquetavi.bakeryapp.domain.model.FoodOrder
 import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
-import com.manriquetavi.bakeryapp.presentation.screens.details.DetailsScreenContent
 import com.manriquetavi.bakeryapp.ui.theme.*
 import com.manriquetavi.bakeryapp.util.Util
 
@@ -85,9 +84,17 @@ fun TrackScreenContent(
                 .padding(vertical = 24.dp)
                 .width(240.dp)
                 .height(150.dp),
-            painter = painterResource(id = R.drawable.order_state),
+            painter = when(order.status) {
+                1 -> painterResource(id = R.drawable.order_state_1)
+                2 -> painterResource(id = R.drawable.order_state_2) //Accepted
+                3 -> painterResource(id = R.drawable.order_state_3) //Prepared
+                4 -> painterResource(id = R.drawable.order_state_4) //Driver received
+                5 -> painterResource(id = R.drawable.order_state_5) //Arrived home client
+                0 -> painterResource(id = R.drawable.order_state_cancel) //Order canceled
+                else -> painterResource(id = R.drawable.order_state_cancel) //Unknown
+            },
             contentDescription = "Image Order State",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Fit
         )
         Row(
             modifier = Modifier
@@ -96,7 +103,7 @@ fun TrackScreenContent(
                 .wrapContentHeight()
         ) {
             when(order.status) {
-                0 -> {
+                1 -> {
                     LinearProgressIndicator(modifier = Modifier.weight(1f))
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 0f)
@@ -105,21 +112,12 @@ fun TrackScreenContent(
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
                 }
-                1 ->  {
+                2 ->  {
                     LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(2f))
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 0f)
-                    Spacer(modifier = Modifier.weight(0.2f))
-                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
-                }
-                2 -> {
-                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
-                    Spacer(modifier = Modifier.weight(0.2f))
-                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
-                    Spacer(modifier = Modifier.weight(0.2f))
-                    LinearProgressIndicator(modifier = Modifier.weight(2f))
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
                 }
@@ -128,9 +126,9 @@ fun TrackScreenContent(
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
                     Spacer(modifier = Modifier.weight(0.2f))
-                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    LinearProgressIndicator(modifier = Modifier.weight(2f))
                     Spacer(modifier = Modifier.weight(0.2f))
-                    LinearProgressIndicator(modifier = Modifier.weight(1f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 0f)
                 }
                 4 -> {
                     LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
@@ -139,8 +137,18 @@ fun TrackScreenContent(
                     Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
                     Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(1f))
+                }
+                5 -> {
+                    LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
+                    LinearProgressIndicator(modifier = Modifier.weight(2f), progress = 1f)
+                    Spacer(modifier = Modifier.weight(0.2f))
                     LinearProgressIndicator(modifier = Modifier.weight(1f), progress = 1f)
                 }
+                0 -> { Unit }
                 else -> { Unit }
             }
         }
@@ -148,7 +156,15 @@ fun TrackScreenContent(
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth(),
-            text = "We've got you a rider! They're heading to the restaurant.",
+            text = when(order.status) {
+                1 -> "Esperando que el pedido sea aceptado."
+                2 -> "Orden Aceptada"
+                3 -> "Preparando la orden."
+                4 -> "Motorizado recogiendo la orden."
+                5 -> "Orden entregada al cliente."
+                0 -> "Orden cancelada."
+                else -> ""
+            },
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h6,
             color = MaterialTheme.colors.titleColor,
@@ -163,65 +179,9 @@ fun TrackScreenContent(
 }
 
 @Composable
-fun ProgressIndicatorByStatus(status: Int) {
-    for(i in 0..status) {
-
-    }
-}
-@Composable
 fun DetailOrderCard(
     order: Order
 ) {
-    val foodOrders = listOf(
-        FoodOrder(
-            id = "1",
-            name = "Cupcake",
-            quantity = 2,
-            unitPrice = "2.50"
-        ),
-        FoodOrder(
-            id = "2",
-            name = "Chocolate",
-            quantity = 3,
-            unitPrice = "1.50"
-        ),
-        FoodOrder(
-            id = "3",
-            name = "Ciabatta",
-            quantity = 5,
-            unitPrice = "1.60"
-        ),
-        FoodOrder(
-            id = "4",
-            name = "Bread",
-            quantity = 8,
-            unitPrice = "0.80"
-        ),
-        FoodOrder(
-            id = "5",
-            name = "Wholewheat",
-            quantity = 10,
-            unitPrice = "3.50"
-        ),
-        FoodOrder(
-            id = "6",
-            name = "Cupcake",
-            quantity = 8,
-            unitPrice = "1.50"
-        ),
-        FoodOrder(
-            id = "7",
-            name = "Cupcake",
-            quantity = 4,
-            unitPrice = "0.50"
-        ),
-        FoodOrder(
-            id = "8",
-            name = "Cupcake",
-            quantity = 5,
-            unitPrice = "0.20"
-        )
-    )
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -289,8 +249,24 @@ fun DetailOrderCard(
             }
             AnimatedVisibility(visible = expanded) {
                 Column {
-                    foodOrders.forEach { foodOrder ->
+                    order.foodOrders.values.forEach { foodOrder ->
                         FoodItemDetail(foodOrder)
+                    }
+                    Divider(modifier = Modifier.padding(horizontal = 4.dp))
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = SMALL_PADDING)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Delivery:",
+                            style = MaterialTheme.typography.caption
+                        )
+                        Text(
+                            text = "5.00",
+                            style = MaterialTheme.typography.caption
+                        )
                     }
                 }
             }
@@ -308,7 +284,7 @@ fun DetailOrderCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "PEN 12.75",
+                    text = "PEN ${order.totalPrice}",
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.titleColor,
                     fontWeight = FontWeight.SemiBold
@@ -322,12 +298,9 @@ fun DetailOrderCard(
 fun FoodItemDetail(
     foodOrder: FoodOrder
 ) {
-    Divider(modifier = Modifier
-        .padding(horizontal = 4.dp)
-    )
     Row(
         modifier = Modifier
-            .padding(vertical = 8.dp)
+            .padding(vertical = SMALL_PADDING)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

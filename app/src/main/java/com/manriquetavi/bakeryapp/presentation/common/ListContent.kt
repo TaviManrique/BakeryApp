@@ -259,7 +259,10 @@ fun OrderItem(
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
             1.dp,
-            if (order.status != 5) Color.Green.copy(0.5f) else Color.DarkGray
+            when (order.status) {
+                1,2,3,4 -> Color.Green.copy(0.5f)
+                else -> Color.DarkGray
+            }
         )
     ) {
         Row(

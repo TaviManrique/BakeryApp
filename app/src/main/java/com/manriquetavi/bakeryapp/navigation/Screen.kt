@@ -14,11 +14,7 @@ sealed class Screen(
     object Welcome: Screen("welcome_screen")
     object Login: Screen("login_screen")
     object Register: Screen("register_screen")
-    object Main: Screen("main_screen?itemPosition={itemPosition}") {
-        fun passItemPosition(itemPosition: String? = null): String {
-            return "main_screen?itemPosition=$itemPosition"
-        }
-    }
+    object Main: Screen("main_screen")
     object Search: Screen("search_screen?category={category}") {
         fun passCategory(category: String? = null): String {
             return "search_screen?category=$category"
