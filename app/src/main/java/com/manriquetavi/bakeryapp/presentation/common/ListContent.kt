@@ -260,6 +260,7 @@ fun OrderItem(
         border = BorderStroke(
             1.dp,
             when (order.status) {
+                0 -> Color.Red.copy(0.5f)
                 1,2,3,4 -> Color.Green.copy(0.5f)
                 else -> Color.DarkGray
             }
@@ -352,8 +353,8 @@ fun dateToStringFormat(date: Date): String {
             0
         }
     }
-    val hourSplit = dateSplit[3].split(":")
-    return hourSplit[0] + ":" + hourSplit[1] + "  " + dateSplit[2] + "/" + month + "/" + dateSplit[5]
+    val timeSplit = dateSplit[3].split(":")
+    return timeSplit[0] + ":" + timeSplit[1] + "  " + dateSplit[2] + "/" + month + "/" + dateSplit[5]
 }
 
 @Preview

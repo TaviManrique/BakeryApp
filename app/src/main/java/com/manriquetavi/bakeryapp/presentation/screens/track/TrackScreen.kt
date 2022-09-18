@@ -7,8 +7,6 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -34,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,8 +44,9 @@ import com.manriquetavi.bakeryapp.domain.model.Response
 import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogCommon
 import com.manriquetavi.bakeryapp.ui.theme.*
-import com.manriquetavi.bakeryapp.util.ToastMessage
 import com.manriquetavi.bakeryapp.util.Util
+import java.text.DecimalFormat
+import java.util.*
 
 fun Context.getActivity(): AppCompatActivity? = when (this) {
     is AppCompatActivity -> this
@@ -105,22 +103,24 @@ fun TrackScreenContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Estimated time of delivery",
-            style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.descriptionColor,
-            fontWeight = FontWeight.Normal,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = "18:00 - 18:15",
-            style = MaterialTheme.typography.h5,
-            color = MaterialTheme.colors.titleColor,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        if (order.status != 0 || order.status!= 5) {
+            Text(
+                text = "Estimated time of delivery",
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.descriptionColor,
+                fontWeight = FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = calculateTimeEstimated(order.date!!.toDate()),
+                style = MaterialTheme.typography.h5,
+                color = MaterialTheme.colors.titleColor,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
         Image(
             modifier = Modifier
                 .padding(vertical = 24.dp)
@@ -200,9 +200,9 @@ fun TrackScreenContent(
                 .fillMaxWidth(),
             text = when(order.status) {
                 1 -> "Esperando que el pedido sea aceptado."
-                2 -> "Orden Aceptada"
-                3 -> "Preparando la orden."
-                4 -> "Motorizado recogiendo la orden."
+                2 -> "Orden Aceptada, preparando la orden"
+                3 -> "Motorizado recogiendo la orden en tienda."
+                4 -> "Motorizado en camino."
                 5 -> "Orden entregada al cliente."
                 0 -> "Orden cancelada."
                 else -> ""
@@ -362,6 +362,29 @@ fun FoodItemDetail(
             style = MaterialTheme.typography.caption
         )
     }
+}
+
+fun calculateTimeEstimated(date: Date): String {
+    val timeSplit = date.toString().split(" ")[3].split(":")
+    val hour = timeSplit[0].toInt()
+    val minute = timeSplit[1].toInt()
+    var hourEstimated1: Int = hour
+    var minuteEstimated1: Int = minute + 30
+    if (minuteEstimated1 > 60) {
+        minuteEstimated1 -= 60
+        hourEstimated1 += 1
+    }
+    var hourEstimated2: Int = hour
+    var minuteEstimated2: Int = minute + 45
+    if (minuteEstimated2 >60) {
+        minuteEstimated2 -= 60
+        hourEstimated2 += 1
+    }
+    return "${formatTwoDigits(hourEstimated1)}:${formatTwoDigits(minuteEstimated1)} - ${formatTwoDigits(hourEstimated2)}:${formatTwoDigits(minuteEstimated2)}"
+}
+
+fun formatTwoDigits(int: Int): String {
+    return DecimalFormat("00").format(int)
 }
 
 fun makeACall(context: Context, phoneNumber: String) {
