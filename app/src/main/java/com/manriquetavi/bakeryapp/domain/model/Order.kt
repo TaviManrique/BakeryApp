@@ -2,7 +2,6 @@ package com.manriquetavi.bakeryapp.domain.model
 
 import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
 
 data class Order(

@@ -28,11 +28,13 @@ import coil.request.ImageRequest
 import com.manriquetavi.bakeryapp.R
 import com.manriquetavi.bakeryapp.domain.model.Food
 import com.manriquetavi.bakeryapp.domain.model.FoodCart
+import com.manriquetavi.bakeryapp.domain.model.FoodOrder
 import com.manriquetavi.bakeryapp.domain.model.Order
 import com.manriquetavi.bakeryapp.navigation.Screen
 import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogCommon
 import com.manriquetavi.bakeryapp.presentation.screens.cart.CartViewModel
 import com.manriquetavi.bakeryapp.ui.theme.*
+import com.manriquetavi.bakeryapp.util.removeLastNchars
 import java.util.*
 
 @Composable
@@ -273,9 +275,11 @@ fun OrderItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(0.9f)
+            ) {
                 Text(
-                    text = "Order ID: ${order.id}",
+                    text = "Order: ${formatFoodOrdersToString(order.foodOrders)}",
                     style = MaterialTheme.typography.h6,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -308,6 +312,7 @@ fun OrderItem(
             }
             Icon(
                 modifier = Modifier
+                    .weight(0.1f)
                     .size(25.dp),
                 imageVector = Icons.Filled.NavigateNext,
                 contentDescription = "More Details Icon",
@@ -355,6 +360,14 @@ fun dateToStringFormat(date: Date): String {
     }
     val timeSplit = dateSplit[3].split(":")
     return timeSplit[0] + ":" + timeSplit[1] + "  " + dateSplit[2] + "/" + month + "/" + dateSplit[5]
+}
+
+fun formatFoodOrdersToString(foodOrders: Map<String, FoodOrder>): String {
+    val response = StringBuilder()
+    foodOrders.keys.forEach {
+        response.append(foodOrders[it]?.name).append(", ")
+    }
+    return removeLastNchars(response.toString(), 2)
 }
 
 @Preview

@@ -46,7 +46,7 @@ fun OrderScreenContent(
         orders?.let {
             items(
                 items = orders,
-                key = { order ->
+                key = {  order ->
                     order.id!!
                 }
             ) { order ->

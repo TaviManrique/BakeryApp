@@ -23,7 +23,7 @@ class OrderViewModel @Inject constructor(
 ): ViewModel() {
 
     private val uid = auth.currentUser?.uid
-    private val _allOrders = mutableStateOf<Response<List<Order>?>>(Response.Success(null))
+    private val _allOrders = mutableStateOf<Response<List<Order>?>>(Response.Loading)
     val allOrders: MutableState<Response<List<Order>?>> = _allOrders
 
     init {
