@@ -2,14 +2,17 @@ package com.manriquetavi.bakeryapp.presentation.screens.cart
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,24 +47,27 @@ fun CartScreenContent(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        ListFoodCart(foodsCart,cartViewModel)
-        Column {
-            TotalPrice(foodsCart)
-            BottomCheckout(navController, foodsCart)
-        }
+        ListFoodCart(
+            modifier = Modifier.weight(0.82f),
+            foodsCart,
+            cartViewModel
+        )
+        TotalPrice(modifier = Modifier.weight(0.08f), foodsCart)
+        BottomCheckout(modifier = Modifier.weight(0.1f),navController, foodsCart)
+
     }
 }
 
 @Composable
 fun ListFoodCart(
+    modifier: Modifier,
     foodsCart: List<FoodCart>,
     cartViewModel: CartViewModel
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .padding(top = SMALL_PADDING)
-            .fillMaxWidth()
-            .height(460.dp),
+            .fillMaxWidth(),
         contentPadding = PaddingValues(all = SMALL_PADDING),
         verticalArrangement = Arrangement.spacedBy(SMALL_PADDING),
     ) {
@@ -77,9 +83,9 @@ fun ListFoodCart(
 }
 
 @Composable
-fun TotalPrice(foodsCart: List<FoodCart>) {
+fun TotalPrice(modifier:Modifier, foodsCart: List<FoodCart>) {
     var aux = 0.00
-    var totalPrice = remember {
+    val totalPrice = remember {
         mutableStateOf(0.00)
     }
     foodsCart.forEach { foodCart ->
@@ -89,15 +95,20 @@ fun TotalPrice(foodsCart: List<FoodCart>) {
     }
     totalPrice.value = aux
 
-    Text(
-        text = "Total: $${String.format("%.2f",totalPrice.value)}",
-        style = MaterialTheme.typography.h5
-    )
-
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Total: $${String.format("%.2f",totalPrice.value)}",
+            style = MaterialTheme.typography.h5
+        )
+    }
 }
 
 @Composable
 fun BottomCheckout(
+    modifier: Modifier,
     navController: NavHostController,
     foodsCart: List<FoodCart>,
 ) {
@@ -106,36 +117,40 @@ fun BottomCheckout(
     val scale = remember {
         Animatable(1f)
     }
-    Button(
-        modifier = Modifier
-            .scale(scale = scale.value)
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
-        onClick = {
-            //Animation button
-            coroutineScope.launch {
-                scale.animateTo(
-                    0.95f,
-                    animationSpec = tween(80),
-                )
-                scale.animateTo(
-                    1.05f,
-                    animationSpec = tween(80),
-                )
-                scale.animateTo(
-                    1.0f,
-                    animationSpec = tween(80),
-                )
-                navController.navigate(Screen.Checkout.route)
-            }
-                  },
-        shape = RoundedCornerShape(16.dp),
-        enabled = foodsCart.isNotEmpty()
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = "Checkout"
-        )
+        Button(
+            modifier = Modifier
+                .scale(scale = scale.value)
+                .fillMaxWidth(),
+            onClick = {
+                //Animation button
+                coroutineScope.launch {
+                    scale.animateTo(
+                        0.95f,
+                        animationSpec = tween(80),
+                    )
+                    scale.animateTo(
+                        1.05f,
+                        animationSpec = tween(80),
+                    )
+                    scale.animateTo(
+                        1.0f,
+                        animationSpec = tween(80),
+                    )
+                    navController.navigate(Screen.Checkout.route)
+                }
+            },
+            shape = RoundedCornerShape(16.dp),
+            enabled = foodsCart.isNotEmpty()
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = "Checkout"
+            )
+        }
     }
 }
 

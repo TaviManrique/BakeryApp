@@ -147,7 +147,7 @@ fun CheckoutContent(
             radioOptions,
             selectedItem
         )
-        TotalPrice(foodsCart = foodsCart)
+        TotalPrice(modifier = Modifier, foodsCart = foodsCart)
         BottomDone(
             foodCarts = foodsCart,
             cash = cash,
