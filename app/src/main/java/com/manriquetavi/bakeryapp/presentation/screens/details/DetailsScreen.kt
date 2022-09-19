@@ -77,25 +77,17 @@ fun IconsToolbar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 16.dp),
+                .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Start
         ) {
-            Icon(
-                modifier = Modifier
-                    .clickable { screenNavController.popBackStack() },
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back Icon",
-                tint = MaterialTheme.colors.buttonBackgroundColor
-            )
-
-            Icon(
-                modifier = Modifier
-                    .clickable { },
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = "Favorite Icon",
-                tint = MaterialTheme.colors.buttonBackgroundColor
-            )
+            IconButton(onClick = { screenNavController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back Icon",
+                    tint = MaterialTheme.colors.buttonBackgroundColor
+                )
+            }
         }
     }
 }
