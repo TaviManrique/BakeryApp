@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.manriquetavi.bakeryapp.ui.theme.Purple500
 import com.manriquetavi.bakeryapp.ui.theme.descriptionColor
+import com.manriquetavi.bakeryapp.ui.theme.titleColor
 
 @Composable
 fun SearchCakeInputField(
@@ -52,9 +53,7 @@ fun SearchCakeInputField(
                 text = "Search your favorite cake here ..."
             )
         },
-        textStyle = TextStyle(
-            color = MaterialTheme.colors.descriptionColor
-        ),
+        textStyle = if (text.value.isNotEmpty()) TextStyle(color = MaterialTheme.colors.titleColor) else TextStyle(color = MaterialTheme.colors.descriptionColor),
         singleLine = true,
         leadingIcon = {
             Icon(
