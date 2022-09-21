@@ -332,7 +332,7 @@ fun FoodItemDetail(
         val totalPrice = foodOrder.quantity.times(foodOrder.unitPrice.toDouble())
         Row {
             Text(
-                text = foodOrder.quantity.toString() + "x",
+                text = foodOrder.quantity.toString() + "x ",
                 style = MaterialTheme.typography.caption
             )
             Text(
@@ -341,7 +341,7 @@ fun FoodItemDetail(
             )
         }
         Text(
-            text = totalPrice.toString(),
+            text = "%.2f".format(totalPrice),
             style = MaterialTheme.typography.caption
         )
     }
