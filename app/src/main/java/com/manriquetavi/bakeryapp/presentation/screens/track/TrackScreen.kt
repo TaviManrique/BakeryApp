@@ -45,14 +45,9 @@ import com.manriquetavi.bakeryapp.presentation.components.ProgressBarCircular
 import com.manriquetavi.bakeryapp.presentation.components.dialogs.AlertDialogCommon
 import com.manriquetavi.bakeryapp.ui.theme.*
 import com.manriquetavi.bakeryapp.util.Util
+import com.manriquetavi.bakeryapp.util.calculateTimeEstimated
 import java.text.DecimalFormat
 import java.util.*
-
-fun Context.getActivity(): AppCompatActivity? = when (this) {
-    is AppCompatActivity -> this
-    is ContextWrapper -> baseContext.getActivity()
-    else -> null
-}
 
 @Composable
 fun TrackScreen(
@@ -65,8 +60,8 @@ fun TrackScreen(
     if (showDialog.value)
         AlertDialogCommon(
             showDialog = showDialog,
-            title = "Title",
-            text = "text tet text?"
+            title = "Help Center",
+            text = "Are you sure to call phone 958574708?"
         ) {
             if(ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CALL_PHONE), 101)
@@ -270,25 +265,13 @@ fun DetailOrderCard(
                     )
                 }
             }
-            Row(
-                modifier = Modifier
-                    .padding(bottom = SMALL_PADDING)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Order number",
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.descriptionColor,
-                    fontWeight = FontWeight.Normal
-                )
-                Text(
-                    text = "#ASDF-#ASDF",
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                modifier = Modifier.padding(bottom = 16.dp),
+                text = "Address: ${order.address}",
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.descriptionColor,
+                fontWeight = FontWeight.Normal,
+            )
             AnimatedVisibility(visible = expanded) {
                 Column {
                     order.foodOrders.values.forEach { foodOrder ->
@@ -362,29 +345,6 @@ fun FoodItemDetail(
             style = MaterialTheme.typography.caption
         )
     }
-}
-
-fun calculateTimeEstimated(date: Date): String {
-    val timeSplit = date.toString().split(" ")[3].split(":")
-    val hour = timeSplit[0].toInt()
-    val minute = timeSplit[1].toInt()
-    var hourEstimated1: Int = hour
-    var minuteEstimated1: Int = minute + 30
-    if (minuteEstimated1 > 60) {
-        minuteEstimated1 -= 60
-        hourEstimated1 += 1
-    }
-    var hourEstimated2: Int = hour
-    var minuteEstimated2: Int = minute + 45
-    if (minuteEstimated2 >60) {
-        minuteEstimated2 -= 60
-        hourEstimated2 += 1
-    }
-    return "${formatTwoDigits(hourEstimated1)}:${formatTwoDigits(minuteEstimated1)} - ${formatTwoDigits(hourEstimated2)}:${formatTwoDigits(minuteEstimated2)}"
-}
-
-fun formatTwoDigits(int: Int): String {
-    return DecimalFormat("00").format(int)
 }
 
 fun makeACall(context: Context, phoneNumber: String) {
